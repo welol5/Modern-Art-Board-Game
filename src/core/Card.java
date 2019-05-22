@@ -1,7 +1,19 @@
 package core;
 
 public class Card {
-	private String color;//the color of the card
-	private int modfier;//this will be used to tell what kind of auction is happening (WIP)
+	private Artist artist;//artist of the painting
+	private AuctionType auctionType;//the type of auction
 	
+	public Card(Artist a, AuctionType t) {
+		artist = a;
+		auctionType = t;
+	}
+	
+	public Artist getArtist() {
+		return artist;
+	}
+	
+	public AuctionType getAuctionType() {
+		return auctionType;
+	}
 }
