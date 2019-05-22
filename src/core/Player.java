@@ -3,9 +3,9 @@ package core;
 import java.util.ArrayList;
 
 public abstract class Player {
-	private String name;
-	private int money;
-	private ArrayList<Card> hand;
+	protected String name;
+	protected int money;
+	protected ArrayList<Card> hand;
 	
 	public Player(String name) {
 		this.name = name;
