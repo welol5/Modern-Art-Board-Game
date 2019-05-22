@@ -14,4 +14,5 @@ public abstract class Player {
 	}
 	
 	public abstract Card chooseCard();
+	public abstract int getBid(Card card);
 }

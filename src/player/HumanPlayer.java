@@ -25,4 +25,10 @@ public class HumanPlayer extends Player{
 		return hand.remove(index);
 	}
 
+	@Override
+	public int getBid(Card card) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }
