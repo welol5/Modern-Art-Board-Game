@@ -13,6 +13,16 @@ public abstract class Player {
 		hand = new ArrayList<Card>();
 	}
 	
+	/**
+	 * Have the player choose a card they would like to bid on.
+	 * @return the card to bid on
+	 */
 	public abstract Card chooseCard();
+	
+	/**
+	 * Used to get the price the player would like to bid
+	 * @param card being bid on
+	 * @return the price the player is willing to pay
+	 */
 	public abstract int getBid(Card card);
 }
