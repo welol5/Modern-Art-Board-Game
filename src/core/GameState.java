@@ -38,6 +38,20 @@ public class GameState {
 		artistValues = new HashMap<Artist, Integer>();
 	}
 	
+	/**
+	 * Call this on a painting being sold to keep track of how many are sold from that artist
+	 * @param artist
+	 * @return true of the season has ended
+	 */
+	public boolean sell(Artist artist) {
+		seasonValues.put(artist, seasonValues.get(artist)+1);
+		
+		if(seasonValues.get(artist) == 5) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
 	
 	/**
