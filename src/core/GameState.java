@@ -1,6 +1,7 @@
 package core;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 /**
@@ -11,11 +12,14 @@ import java.util.Random;
  *
  */
 public class GameState {
-	private Player[] players;
-	private ArrayList<Card> deck = new ArrayList<Card>();
+	private Player[] players;//The players
+	private ArrayList<Card> deck = new ArrayList<Card>();//the deck of cards that no palyer can see
+	
+	private HashMap<Artist, Integer> seasonValues;//contains counts of how many times an artists paintings have been sold for the season
+	private HashMap<Artist, Integer> artistValues;//contains the values for each artists paintings
 	
 	/**
-	 * This is used to setup a new game.
+	 * This is used to setup a new game. It resets and shuffles the deck, resets players and painting values.
 	 * @param players
 	 */
 	public GameState(String[] players) {
@@ -29,6 +33,19 @@ public class GameState {
 		makeDeck();
 		shuffleDeck();
 		printDeck();
+		
+		seasonValues = new HashMap<Artist, Integer>();
+		artistValues = new HashMap<Artist, Integer>();
+	}
+	
+	
+	
+	/**
+	 * This method gets the count of how many times an artists painting has been sold during the current season.
+	 * @return a HashMap of the values
+	 */
+	public HashMap<Artist, Integer> getSeasonValues(){
+		return seasonValues;
 	}
 	
 	/**
