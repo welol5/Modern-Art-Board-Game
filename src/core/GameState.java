@@ -27,6 +27,7 @@ public class GameState {
 		
 		//now the deck needs to be created and shuffled
 		makeDeck();
+		shuffleDeck();
 	}
 	
 	/**
