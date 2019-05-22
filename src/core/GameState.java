@@ -101,6 +101,15 @@ public class GameState {
 	}
 	
 	/**
+	 * Get the player at an index
+	 * @param index
+	 * @return the player
+	 */
+	public Player getPlayer(int index) {
+		return players[index];
+	}
+	
+	/**
 	 * Prints the current state of the deck
 	 */
 	public void printDeck() {
