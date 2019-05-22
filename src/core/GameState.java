@@ -36,10 +36,23 @@ public class GameState {
 		
 		seasonValues = new HashMap<Artist, Integer>();
 		artistValues = new HashMap<Artist, Integer>();
+		for(Artist artist: Artist.values()) {
+			artistValues.put(artist, 0);
+		}
 	}
 	
 	/**
-	 * Call this on a painting being sold to keep track of how many are sold from that artist
+	 * Resets the counts of the paintings sold
+	 */
+	public void resetSeason() {
+		for(Artist artist : Artist.values()) {
+			seasonValues.put(artist, 0);
+		}
+	}
+	
+	/**
+	 * Call this on a painting being sold to keep track of how many are sold from that artist.
+	 * Also if the season has ended it will update the values of the paintings.
 	 * @param artist
 	 * @return true of the season has ended
 	 */
@@ -47,6 +60,31 @@ public class GameState {
 		seasonValues.put(artist, seasonValues.get(artist)+1);
 		
 		if(seasonValues.get(artist) == 5) {
+			//update the highest artist
+			artistValues.put(artist, artistValues.get(artist)+30);
+			//update the second highest
+			Artist artist2 = null;;
+			for(Artist artistTemp : Artist.values()) {
+				//the line below checks if the artist is not the highest amount sold
+				//if there is an artist in second place
+				//if the artist in second (currently) should not be there
+				if(artistTemp != artist && (artist2 == null || seasonValues.get(artistTemp) > seasonValues.get(artist2))) {
+					artist2 = artistTemp;
+				}
+			}
+			artistValues.put(artist2, artistValues.get(artist2)+20);
+			//update the third highest
+			Artist artist3 = null;;
+			for(Artist artistTemp : Artist.values()) {
+				//the line below checks if the artist is not the highest amount sold
+				//the artist should not be the second highest
+				//if there is an artist in second place
+				//if the artist in second (currently) should not be there
+				if(artistTemp != artist && artistTemp != artist2 && (artist3 == null || seasonValues.get(artistTemp) > seasonValues.get(artist3))) {
+					artist3 = artistTemp;
+				}
+			}
+			artistValues.put(artist3,artistValues.get(artist3)+10);
 			return true;
 		} else {
 			return false;
