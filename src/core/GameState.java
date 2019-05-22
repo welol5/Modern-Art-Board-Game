@@ -28,6 +28,17 @@ public class GameState {
 		//now the deck needs to be created and shuffled
 		makeDeck();
 		shuffleDeck();
+		printDeck();
+	}
+	
+	/**
+	 * Prints the current state of the deck
+	 */
+	public void printDeck() {
+		System.out.println("Deck from top to bottom");
+		for(Card card : deck) {
+			System.out.println(card);
+		}
 	}
 	
 	/**

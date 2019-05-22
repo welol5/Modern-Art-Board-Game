@@ -1,3 +1,4 @@
+import core.GameDriver;
 import io.IOType;
 
 /**
@@ -10,7 +11,9 @@ import io.IOType;
 public class Main {
 
 	public static void main(String[] args) {
-		
+		GameDriver driver = new GameDriver(IOType.COMMAND_LINE);
+		Thread driverThread = new Thread(driver);
+		driverThread.start();
 	}
 
 }

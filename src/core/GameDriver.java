@@ -27,7 +27,10 @@ public class GameDriver implements Runnable{
 	public void run() {
 		//need to know how many players
 		String[] players = io.getPlayers();
+		//setup the game state
 		state = new GameState(players);
+		
+		//the game is now ready for the first season
 	}
 	
 }

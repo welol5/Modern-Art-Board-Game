@@ -10,15 +10,13 @@ public class CommandLine extends BasicIO{
 		String playerName = null;//temporary storage of the current name of a player
 		ArrayList<String> players = new ArrayList<String>();//the names of all of the current players
 		Scanner input = new Scanner(System.in);//the input method for the names
-		System.out.println("Enter the names of the players. When you are done, leave the line blank.");
-		while(true) {
-			System.out.print("Enter a players name: ");
+		System.out.print("How many players? (3 to 5 are allowed) : ");
+		int playerCount = input.nextInt();
+		input.nextLine();
+		for(int i = 0; i < playerCount; i++) {
+			System.out.print("Enter a player's name: ");
 			playerName = input.nextLine();//get a players name
-			if(playerName != "") {//if the line is not blank
-				players.add(playerName);//add that player to the list
-			} else {
-				break;
-			}
+			//System.out.println(playerName);//debug
 		}
 		input.close();
 		
