@@ -29,6 +29,9 @@ public class GameState {
 		makeDeck();
 	}
 	
+	/**
+	 * Shuffles the deck of cards
+	 */
 	private void shuffleDeck() {
 		Random random = new Random();
 		Card temp;
