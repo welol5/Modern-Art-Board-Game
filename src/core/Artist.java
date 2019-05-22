@@ -1,9 +1,9 @@
 package core;
 
 public enum Artist {
+	LITE_METAL,
 	YOKO,
-	KARL_GITTER,
-	KRYPTO,
 	CHRISTIN_P,
-	LITE_METAL
+	KARL_GITTER,
+	KRYPTO
 }
