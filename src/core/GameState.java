@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import player.HumanPlayer;
+
 /**
  * 
  * @author William Elliman
@@ -26,7 +28,7 @@ public class GameState {
 		//first all the new players need to be created
 		this.players = new Player[players.length];
 		for(int i = 0; i < players.length; i++) {
-			this.players[i] = new Player(players[i]);
+			this.players[i] = new HumanPlayer(players[i]);
 		}
 		
 		//now the deck needs to be created and shuffled
