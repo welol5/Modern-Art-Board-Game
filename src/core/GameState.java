@@ -1,6 +1,7 @@
 package core;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * 
@@ -26,6 +27,16 @@ public class GameState {
 		
 		//now the deck needs to be created and shuffled
 		makeDeck();
+	}
+	
+	private void shuffleDeck() {
+		Random random = new Random();
+		Card temp;
+		//randomly move cards to the top 10000 times
+		for(int i = 0; i < 10000; i++) {
+			temp = deck.remove(random.nextInt(deck.size()));
+			deck.add(temp);
+		}
 	}
 	
 	/**
