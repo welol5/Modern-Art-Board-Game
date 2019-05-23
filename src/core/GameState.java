@@ -108,8 +108,8 @@ public class GameState {
 	 * @param index
 	 * @return the player
 	 */
-	public Player getPlayer(int index) {
-		return players[index];
+	public Player[] getPlayers() {
+		return players;
 	}
 	
 	/**
