@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import io.BasicIO;
 import player.HumanPlayer;
 
 /**
@@ -30,11 +31,11 @@ public class GameState {
 	 * This is used to setup a new game. It resets and shuffles the deck, resets players and painting values.
 	 * @param players
 	 */
-	public GameState(String[] players) {
+	public GameState(String[] players, BasicIO io) {
 		//first all the new players need to be created
 		this.players = new Player[players.length];
 		for(int i = 0; i < players.length; i++) {
-			this.players[i] = new HumanPlayer(players[i]);
+			this.players[i] = new HumanPlayer(players[i], io);
 		}
 		
 		//now the deck needs to be created and shuffled
