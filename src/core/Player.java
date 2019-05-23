@@ -14,6 +14,14 @@ public abstract class Player {
 	}
 	
 	/**
+	 * Deal a painting card to the player
+	 * @param card that the player will receive
+	 */
+	public void deal(Card card) {
+		hand.add(card);
+	}
+	
+	/**
 	 * The player will lose an amount of money
 	 * @param amount that will be lost
 	 */
