@@ -138,6 +138,10 @@ public class GameState {
 		}
 	}
 	
+	/**
+	 * Draw a card from the deck
+	 * @return
+	 */
 	public Card drawCard() {
 		return deck.remove(0);
 	}
