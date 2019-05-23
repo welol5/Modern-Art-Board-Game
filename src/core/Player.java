@@ -13,10 +13,18 @@ public abstract class Player {
 		hand = new ArrayList<Card>();
 	}
 	
+	/**
+	 * The player will lose an amount of money
+	 * @param amount that will be lost
+	 */
 	public void pay(int amount) {
 		money -= amount;
 	}
 	
+	/**
+	 * The player will be paid an amount of money
+	 * @param amount to be paid
+	 */
 	public void recive(int amount) {
 		money += amount;
 	}
