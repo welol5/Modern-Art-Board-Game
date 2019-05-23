@@ -25,4 +25,8 @@ public class CommandLine extends BasicIO{
 		return players.toArray(p);
 	}
 
+	@Override
+	public void startSeason(int s) {
+		System.out.println("Season " + s + " is starting...");
+	}
 }
