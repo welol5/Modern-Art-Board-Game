@@ -12,6 +12,7 @@ public abstract class Player {
 		this.name = name;
 		money = 50;
 		hand = new ArrayList<Card>();
+		winnings = new ArrayList<Card>();
 	}
 	
 	/**

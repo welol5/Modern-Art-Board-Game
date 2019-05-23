@@ -72,7 +72,7 @@ public class GameDriver implements Runnable{
 					break;
 				}
 			}
-			
+
 			//the season is over by this point
 			for(Player player: players) {
 				ArrayList<Card> paintings = player.getWinnings();
@@ -103,27 +103,28 @@ public class GameDriver implements Runnable{
 		int highestBid = 0;
 		int highestBidder = turn;
 		//while there is more than 1 player bidding
-		while(true) {
-			//checks for winner
-			boolean hasWinner = false;
-			for(int b = 0; b < bidding.length; b++) {
-				hasWinner = hasWinner^bidding[b];
-			}
-			//break out if there is a winner
-			if(hasWinner) {
-				break;
-			}
-
+		int stillBidding;//used for checking how many players are bidding
+		do {
+			stillBidding = 0;
 			//hasWinner will only be true if only one player has not backed out of bidding
 			for(int biddingTurn = 0; biddingTurn < players.length; biddingTurn++) {
 				int bid = players[(turn+biddingTurn)%players.length].getBid(card);
 				if(bid==-1 || bid < highestBid) {
 					bidding[(turn+biddingTurn)%players.length] = false;
+				} else {
+					highestBid = bid;
+					highestBidder = (turn+biddingTurn)%players.length;
 				}
-				highestBid = bid;
-				highestBidder = (turn+biddingTurn)%players.length;
 			}
-		}
+
+			//checks for winner
+			for(int b = 0; b < bidding.length; b++) {
+				if(bidding[b]) {
+					stillBidding++;
+				}
+			}
+
+		} while(stillBidding > 1);
 		return new Bid(highestBidder,highestBid);
 	}
 
