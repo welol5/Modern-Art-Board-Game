@@ -103,31 +103,33 @@ public class GameDriver implements Runnable{
 		int highestBid = 0;
 		int highestBidder = turn;
 		//while there is more than 1 player bidding
-		int stillBidding;//used for checking how many players are bidding
+		int stillBidding = 0;//used for checking how many players are bidding
 		do {
-			stillBidding = 0;
 			//hasWinner will only be true if only one player has not backed out of bidding
 			for(int biddingTurn = 0; biddingTurn < players.length; biddingTurn++) {
 				//skip people who are no longer in
-				if(!bidding[(turn+biddingTurn)%players.length]) {
+				if(!bidding[(turn+biddingTurn+1)%players.length]) {
 					continue;
 				}
 				
 				//get the price a player is willing to pay
-				int bid = players[(turn+biddingTurn)%players.length].getBid(card);
-				if(bid==-1 || bid < highestBid) {
-					bidding[(turn+biddingTurn)%players.length] = false;
+				int bid = players[(turn+biddingTurn+1)%players.length].getBid(card);
+				if(bid==-1 || bid <= highestBid) {
+					bidding[(turn+biddingTurn+1)%players.length] = false;
 				} else {
 					highestBid = bid;
-					highestBidder = (turn+biddingTurn)%players.length;
+					highestBidder = (turn+biddingTurn+1)%players.length;
 				}
 				
 				//checks for winner
+				stillBidding = 0;
 				for(int b = 0; b < bidding.length; b++) {
 					if(bidding[b]) {
 						stillBidding++;
 					}
+					System.out.print(bidding[b] + " ");
 				}
+				System.out.println(" " + stillBidding);
 				if(stillBidding < 2) {
 					break;
 				}
