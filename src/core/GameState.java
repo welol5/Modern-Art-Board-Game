@@ -56,9 +56,9 @@ public class GameState {
 	 * Call this on a painting being sold to keep track of how many are sold from that artist.
 	 * Also if the season has ended it will update the values of the paintings.
 	 * @param artist
-	 * @return true of the season has ended
+	 * @return an array of the top 3 artists if the season has ended
 	 */
-	public boolean sell(Artist artist) {
+	public Artist[] sell(Artist artist) {
 		seasonValues.put(artist, seasonValues.get(artist)+1);
 		
 		if(seasonValues.get(artist) == 5) {
@@ -87,9 +87,10 @@ public class GameState {
 				}
 			}
 			artistValues.put(artist3,artistValues.get(artist3)+10);
-			return true;
+			Artist[] retVal = {artist,artist2,artist3};
+			return retVal;
 		} else {
-			return false;
+			return null;
 		}
 	}
 	
