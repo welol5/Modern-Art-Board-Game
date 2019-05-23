@@ -3,7 +3,7 @@ package core;
 import java.util.ArrayList;
 
 public abstract class Player {
-	protected String name;
+	public final String name;
 	protected int money;
 	protected ArrayList<Card> hand;
 	protected ArrayList<Card> winnings;

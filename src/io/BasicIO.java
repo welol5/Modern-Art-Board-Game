@@ -3,6 +3,7 @@ package io;
 import java.util.ArrayList;
 
 import core.Card;
+import core.Player;
 
 public abstract class BasicIO {
 	/**
@@ -15,5 +16,5 @@ public abstract class BasicIO {
 	public abstract void showHand(ArrayList<Card> hand);
 	public abstract int getHandIndex(int maxVal);
 	public abstract void end();
-	public abstract int getBid();
+	public abstract int getBid(Player player);
 }

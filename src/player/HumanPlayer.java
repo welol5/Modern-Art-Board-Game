@@ -23,7 +23,7 @@ public class HumanPlayer extends Player{
 
 	@Override
 	public int getBid(Card card) {
-		return io.getBid();
+		return io.getBid(this);
 	}
 
 }

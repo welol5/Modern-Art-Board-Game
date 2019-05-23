@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import core.Card;
+import core.Player;
 
 public class CommandLine extends BasicIO{
 
@@ -80,8 +81,8 @@ public class CommandLine extends BasicIO{
 	}
 
 	@Override
-	public int getBid() {
-		System.out.print("How much would you like to bid? (-1 to abstain) : ");
+	public int getBid(Player player) {
+		System.out.print(player.name + ", how much would you like to bid? (-1 to abstain) : ");
 		int bid = -1;
 		try {
 			while(true) {
