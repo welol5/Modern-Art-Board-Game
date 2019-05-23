@@ -6,11 +6,27 @@ public abstract class Player {
 	protected String name;
 	protected int money;
 	protected ArrayList<Card> hand;
+	protected ArrayList<Card> winnings;
 	
 	public Player(String name) {
 		this.name = name;
 		money = 50;
 		hand = new ArrayList<Card>();
+	}
+	
+	/**
+	 * 
+	 * @return the list of paintings won by the player
+	 */
+	public ArrayList<Card> getWinnings(){
+		return winnings;
+	}
+	
+	/**
+	 * Removes all paintings that the player has won
+	 */
+	public void clearWinnings() {
+		winnings.clear();
 	}
 	
 	/**
