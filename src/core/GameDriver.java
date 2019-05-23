@@ -30,7 +30,7 @@ public class GameDriver implements Runnable{
 	@Override
 	public void run() {
 		//setup the game state
-		state = new GameState(io.getPlayers());
+		state = new GameState(io.getPlayers(), io);
 		//get the players list to use later
 		players = state.getPlayers();
 		int turn = 0;//keeps track of whose turn it is
