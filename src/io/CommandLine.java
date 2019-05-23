@@ -3,6 +3,8 @@ package io;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import core.Card;
+
 public class CommandLine extends BasicIO{
 
 	@Override
@@ -26,5 +28,22 @@ public class CommandLine extends BasicIO{
 	@Override
 	public void startSeason(int s) {
 		System.out.println("Season " + s + " is starting...");
+	}
+
+	@Override
+	public void showHand(ArrayList<Card> hand) {
+		System.out.println("Your hand contains");
+		for(int i = 0; i < hand.size(); i++) {
+			System.out.println(i + " : " + hand.get(i));
+		}
+	}
+
+	@Override
+	public int getHandIndex() {
+		System.out.println("Choose and index of the painting you want to bid on : ");
+		Scanner input = new Scanner(System.in);
+		int index = input.nextInt();
+		input.close();
+		return index;
 	}
 }

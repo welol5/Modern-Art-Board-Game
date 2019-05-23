@@ -17,15 +17,10 @@ public class HumanPlayer extends Player{
 	@Override
 	public Card chooseCard() {
 		
-		System.out.println("Your hand contains");
-		for(int i = 0; i < hand.size(); i++) {
-			System.out.println(i + " : " + hand.get(i));
-		}
+		io.showHand(hand);
 		
-		System.out.println("Choose and index of the painting you want to bid on : ");
-		Scanner input = new Scanner(System.in);
-		int index = input.nextInt();
-		input.close();
+		//this should be redone to use the io stuff
+		int index = io.getHandIndex();
 		return hand.remove(index);
 	}
 

@@ -1,5 +1,9 @@
 package io;
 
+import java.util.ArrayList;
+
+import core.Card;
+
 public abstract class BasicIO {
 	/**
 	 * This method should be used to get all of the names of the players in the game.
@@ -8,4 +12,6 @@ public abstract class BasicIO {
 	 */
 	public abstract String[] getPlayers();
 	public abstract void startSeason(int s);
+	public abstract void showHand(ArrayList<Card> hand);
+	public abstract int getHandIndex();
 }
