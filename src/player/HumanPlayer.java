@@ -18,16 +18,13 @@ public class HumanPlayer extends Player{
 	public Card chooseCard() {
 		
 		io.showHand(hand);
-		
-		//this should be redone to use the io stuff
 		int index = io.getHandIndex(hand.size());
 		return hand.remove(index);
 	}
 
 	@Override
 	public int getBid(Card card) {
-		// TODO Auto-generated method stub
-		return 0;
+		return io.getBid();
 	}
 
 }
