@@ -7,4 +7,5 @@ public abstract class BasicIO {
 	 * @return the names of all of the players
 	 */
 	public abstract String[] getPlayers();
+	public abstract void startSeason(int s);
 }
