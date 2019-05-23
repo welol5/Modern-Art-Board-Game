@@ -40,7 +40,7 @@ public class GameState {
 		//now the deck needs to be created and shuffled
 		makeDeck();
 		shuffleDeck();
-		printDeck();
+		//printDeck();
 		
 		seasonValues = new HashMap<Artist, Integer>();
 		artistValues = new HashMap<Artist, Integer>();
