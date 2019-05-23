@@ -138,6 +138,10 @@ public class GameState {
 		}
 	}
 	
+	public Card drawCard() {
+		return deck.remove(0);
+	}
+	
 	/**
 	 * Shuffles the deck of cards
 	 */
