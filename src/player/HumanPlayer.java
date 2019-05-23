@@ -3,11 +3,15 @@ import java.util.Scanner;
 
 import core.Card;
 import core.Player;
+import io.BasicIO;
 
 public class HumanPlayer extends Player{
+	
+	BasicIO io;
 
-	public HumanPlayer(String name) {
+	public HumanPlayer(String name, BasicIO io) {
 		super(name);
+		this.io = io;
 	}
 
 	@Override
