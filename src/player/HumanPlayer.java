@@ -31,4 +31,9 @@ public class HumanPlayer extends Player{
 		return io.getFixedPrice(card);
 	}
 
+	@Override
+	public boolean buy(Card card, int price) {
+		return io.askPlayertoBuy(card, price);
+	}
+
 }

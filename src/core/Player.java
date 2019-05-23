@@ -80,4 +80,12 @@ public abstract class Player {
 	 * @return the price
 	 */
 	public abstract int getFixedPrice(Card card);
+	
+	/**
+	 * Asks the player if they will buy the card
+	 * @param card the player might buy
+	 * @param price the player would buy the card at
+	 * @return the players answer
+	 */
+	public abstract boolean buy(Card card, int price);
 }

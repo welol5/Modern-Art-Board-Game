@@ -120,4 +120,20 @@ public class CommandLine extends BasicIO{
 		}
 		return price;
 	}
+
+	@Override
+	public boolean askPlayertoBuy(Card card, int price) {
+		System.out.println("Would you like to buy the painting? (y/n)" + card.getArtist());
+		try {
+			String answer = input.readLine();
+			if(answer.matches("[yY]")) {
+				return true;
+			}
+		} catch(IOException e) {
+			System.out.println("IO exception occured. The program will now shut down.");
+			e.printStackTrace();
+			System.exit(1);
+		}
+		return false;
+	}
 }
