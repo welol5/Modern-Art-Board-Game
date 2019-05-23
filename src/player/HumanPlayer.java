@@ -20,7 +20,7 @@ public class HumanPlayer extends Player{
 		io.showHand(hand);
 		
 		//this should be redone to use the io stuff
-		int index = io.getHandIndex();
+		int index = io.getHandIndex(hand.size());
 		return hand.remove(index);
 	}
 

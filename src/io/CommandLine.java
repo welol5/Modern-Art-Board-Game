@@ -1,26 +1,38 @@
 package io;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import core.Card;
 
 public class CommandLine extends BasicIO{
-	
-	Scanner input = new Scanner(System.in);//the main input method for this IO type
+
+	BufferedReader input = new BufferedReader(new InputStreamReader(System.in));//the main input method for this IO type
 
 	@Override
 	public String[] getPlayers() {
-		String[] players;;//the names of all of the current players
-		System.out.print("How many players? (3 to 5 are allowed) : ");
-		int playerCount = input.nextInt();
-		input.nextLine();
-		players = new String[playerCount];
-		for(int i = 0; i < playerCount; i++) {
-			System.out.print("Enter a player's name: ");
-			players[i] = input.nextLine();//get a players name
+		String[] players = null;//the names of all of the current players
+		System.out.println("How many players? (3 to 5 are allowed).");
+		try {
+			int playerCount = -1;
+			while(playerCount < 3 || playerCount > 5) {
+				System.out.print("Please enter a valid number: ");
+				playerCount = Integer.parseInt(input.readLine());
+			}
+			players = new String[playerCount];
+			for(int i = 0; i < playerCount; i++) {
+				System.out.print("Enter a player's name: ");
+				players[i] = input.readLine();//get a players name
+			}
+		} catch (IOException e) {
+			System.out.println("IO exception occured. The program will now shut down.");
+			e.printStackTrace();
+			System.exit(1);
 		}
-		
+
 		return players;
 	}
 
@@ -38,14 +50,29 @@ public class CommandLine extends BasicIO{
 	}
 
 	@Override
-	public int getHandIndex() {
-		System.out.println("Choose and index of the painting you want to bid on : ");
-		int index = input.nextInt();
+	public int getHandIndex(int maxVal) {
+		System.out.println("Choose and index of the painting you want to bid on.");
+		int index = -1;
+		try {
+			while(index < 0 || index > maxVal) {
+				System.out.print("Please enter a valid number: ");
+				index = Integer.parseInt(input.readLine());
+			}
+		} catch (IOException e) {
+			System.out.println("IO exception occured. The program will now shut down.");
+			e.printStackTrace();
+			System.exit(1);
+		}
 		return index;
 	}
 
 	@Override
 	public void end() {
-		input.close();
+		try {
+			input.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
