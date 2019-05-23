@@ -18,7 +18,6 @@ public class CommandLine extends BasicIO{
 		for(int i = 0; i < playerCount; i++) {
 			System.out.print("Enter a player's name: ");
 			players[i] = input.nextLine();//get a players name
-			//System.out.println(playerName);//debug
 		}
 		input.close();
 		
