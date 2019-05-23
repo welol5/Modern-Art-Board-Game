@@ -59,6 +59,7 @@ public class GameState {
 	 * @return an array of the top 3 artists if the season has ended
 	 */
 	public Artist[] sell(Artist artist) {
+		//the code for this is really weird and could probably be improved quite a bit
 		seasonValues.put(artist, seasonValues.get(artist)+1);
 		
 		if(seasonValues.get(artist) == 5) {
