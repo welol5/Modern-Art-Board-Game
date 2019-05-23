@@ -13,6 +13,14 @@ public abstract class Player {
 		hand = new ArrayList<Card>();
 	}
 	
+	public void pay(int amount) {
+		money -= amount;
+	}
+	
+	public void recive(int amount) {
+		money += amount;
+	}
+	
 	/**
 	 * Have the player choose a card they would like to bid on.
 	 * @return the card to bid on
