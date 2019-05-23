@@ -6,11 +6,12 @@ import java.util.Scanner;
 import core.Card;
 
 public class CommandLine extends BasicIO{
+	
+	Scanner input = new Scanner(System.in);//the main input method for this IO type
 
 	@Override
 	public String[] getPlayers() {
 		String[] players;;//the names of all of the current players
-		Scanner input = new Scanner(System.in);//the input method for the names
 		System.out.print("How many players? (3 to 5 are allowed) : ");
 		int playerCount = input.nextInt();
 		input.nextLine();
@@ -19,7 +20,6 @@ public class CommandLine extends BasicIO{
 			System.out.print("Enter a player's name: ");
 			players[i] = input.nextLine();//get a players name
 		}
-		input.close();
 		
 		return players;
 	}
@@ -40,9 +40,12 @@ public class CommandLine extends BasicIO{
 	@Override
 	public int getHandIndex() {
 		System.out.println("Choose and index of the painting you want to bid on : ");
-		Scanner input = new Scanner(System.in);
 		int index = input.nextInt();
-		input.close();
 		return index;
+	}
+
+	@Override
+	public void end() {
+		input.close();
 	}
 }

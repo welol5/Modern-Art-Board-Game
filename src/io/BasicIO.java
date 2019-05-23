@@ -14,4 +14,5 @@ public abstract class BasicIO {
 	public abstract void startSeason(int s);
 	public abstract void showHand(ArrayList<Card> hand);
 	public abstract int getHandIndex();
+	public abstract void end();
 }
