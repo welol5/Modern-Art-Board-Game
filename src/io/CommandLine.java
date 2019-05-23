@@ -43,8 +43,8 @@ public class CommandLine extends BasicIO{
 	}
 
 	@Override
-	public void showHand(ArrayList<Card> hand) {
-		System.out.println("Your hand contains");
+	public void showHand(Player player, ArrayList<Card> hand) {
+		System.out.println(player.name + ", your hand contains");
 		for(int i = 0; i < hand.size(); i++) {
 			System.out.println(i + " : " + hand.get(i));
 		}

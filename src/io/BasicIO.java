@@ -13,7 +13,7 @@ public abstract class BasicIO {
 	 */
 	public abstract String[] getPlayers();
 	public abstract void startSeason(int s);
-	public abstract void showHand(ArrayList<Card> hand);
+	public abstract void showHand(Player player, ArrayList<Card> hand);
 	public abstract int getHandIndex(int maxVal);
 	public abstract void end();
 	public abstract int getBid(Player player);

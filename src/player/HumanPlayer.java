@@ -16,7 +16,7 @@ public class HumanPlayer extends Player{
 	@Override
 	public Card chooseCard() {
 		
-		io.showHand(hand);
+		io.showHand(this, hand);
 		int index = io.getHandIndex(hand.size());
 		return hand.remove(index);
 	}
