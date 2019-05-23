@@ -76,7 +76,11 @@ public class GameState {
 	 */
 	public Artist[] sell(Artist artist) {
 		//the code for this is really weird and could probably be improved quite a bit
-		seasonValues.put(artist, seasonValues.get(artist)+1);
+		try {
+			seasonValues.put(artist, seasonValues.get(artist)+1);
+		} catch(NullPointerException e) {
+			seasonValues.put(artist, 1);
+		}
 		
 		if(seasonValues.get(artist) == 5) {
 			//update the highest artist
