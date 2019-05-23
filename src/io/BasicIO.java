@@ -15,4 +15,5 @@ public abstract class BasicIO {
 	public abstract void showHand(ArrayList<Card> hand);
 	public abstract int getHandIndex(int maxVal);
 	public abstract void end();
+	public abstract int getBid();
 }

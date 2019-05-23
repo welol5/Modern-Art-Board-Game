@@ -51,12 +51,15 @@ public class CommandLine extends BasicIO{
 
 	@Override
 	public int getHandIndex(int maxVal) {
-		System.out.println("Choose and index of the painting you want to bid on.");
+		System.out.print("Choose and index of the painting you want to bid on : ");
 		int index = -1;
 		try {
 			while(index < 0 || index > maxVal) {
-				System.out.print("Please enter a valid number: ");
-				index = Integer.parseInt(input.readLine());
+				try {
+					index = Integer.parseInt(input.readLine());
+				} catch (NumberFormatException ex) {
+					System.out.print("Please enter a valid number: ");
+				}
 			}
 		} catch (IOException e) {
 			System.out.println("IO exception occured. The program will now shut down.");
@@ -74,5 +77,26 @@ public class CommandLine extends BasicIO{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public int getBid() {
+		System.out.print("How much would you like to bid? (-1 to abstain) : ");
+		int bid = -1;
+		try {
+			while(true) {
+				try {
+				bid = Integer.parseInt(input.readLine());
+				break;
+				} catch (NumberFormatException e) {
+					System.out.print("Please enter a valid number: ");
+				}
+			}
+		} catch (IOException e) {
+			System.out.println("IO exception occured. The program will now shut down.");
+			e.printStackTrace();
+			System.exit(1);
+		}
+		return bid;
 	}
 }
