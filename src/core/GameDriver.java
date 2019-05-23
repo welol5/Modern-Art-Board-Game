@@ -56,6 +56,8 @@ public class GameDriver implements Runnable{
 					Bid winningBid;
 					if(card.getAuctionType() == AuctionType.ONCE_AROUND) {
 						winningBid = onceAround(turn,card);
+					} else if(card.getAuctionType() == AuctionType.FIXED_PRICE){
+						winningBid = fixedPrice(turn,card,players[turn].getFixedPrice(card));
 					} else {
 						winningBid = standardBidding(turn, card);
 					}
@@ -160,6 +162,14 @@ public class GameDriver implements Runnable{
 		}
 
 		return new Bid(highestBidder,highestBid);
+	}
+	
+	private Bid fixedPrice(int turn, Card card, int price) {
+		for(int i = 0; i < players.length; i++) {
+			int biddingTurn = (turn+i+1)%players.length;
+			
+		}
+		return new Bid(0,0);
 	}
 
 	private class Bid{

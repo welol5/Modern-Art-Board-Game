@@ -26,4 +26,9 @@ public class HumanPlayer extends Player{
 		return io.getBid(this);
 	}
 
+	@Override
+	public int getFixedPrice(Card card) {
+		return io.getFixedPrice(card);
+	}
+
 }

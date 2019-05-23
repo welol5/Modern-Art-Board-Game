@@ -75,7 +75,6 @@ public class CommandLine extends BasicIO{
 		try {
 			input.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -99,5 +98,26 @@ public class CommandLine extends BasicIO{
 			System.exit(1);
 		}
 		return bid;
+	}
+
+	@Override
+	public int getFixedPrice(Card card) {
+		System.out.print("How much would you like to sell this card for? : ");
+		int price = -1;
+		try {
+			while(price < 0) {
+				try {
+				price = Integer.parseInt(input.readLine());
+				break;
+				} catch (NumberFormatException e) {
+					System.out.print("Please enter a valid positive number: ");
+				}
+			}
+		} catch (IOException e) {
+			System.out.println("IO exception occured. The program will now shut down.");
+			e.printStackTrace();
+			System.exit(1);
+		}
+		return price;
 	}
 }

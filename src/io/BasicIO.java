@@ -17,4 +17,5 @@ public abstract class BasicIO {
 	public abstract int getHandIndex(int maxVal);
 	public abstract void end();
 	public abstract int getBid(Player player);
+	public abstract int getFixedPrice(Card card);
 }

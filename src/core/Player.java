@@ -74,4 +74,10 @@ public abstract class Player {
 	 * @return the price the player is willing to pay
 	 */
 	public abstract int getBid(Card card);
+	
+	/**
+	 * Gets the price that will be used to sell the card
+	 * @return the price
+	 */
+	public abstract int getFixedPrice(Card card);
 }
