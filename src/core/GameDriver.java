@@ -35,9 +35,6 @@ public class GameDriver implements Runnable{
 		players = state.getPlayers();
 		int turn = 0;//keeps track of whose turn it is
 
-		////////////////////////////////////////////////////////////////////
-		//everything past this point is incomplete
-
 		//the game is now ready for the first season
 		for(int i = 1; i <= 4; i++) {
 			io.startSeason(i);
