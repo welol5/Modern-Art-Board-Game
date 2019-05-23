@@ -1,5 +1,4 @@
 package player;
-import java.util.Scanner;
 
 import core.Card;
 import core.Player;
