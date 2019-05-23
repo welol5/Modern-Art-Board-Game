@@ -53,7 +53,12 @@ public class GameDriver implements Runnable{
 				top3 = state.sell(card.getArtist());
 				if(top3 == null) {//this checks if the season is over by asking GameState
 					//the bidding can now begin
-					Bid winningBid = standardBidding(turn, card);
+					Bid winningBid;
+					if(card.getAuctionType() == AuctionType.ONCE_AROUND) {
+						winningBid = onceAround(turn,card);
+					} else {
+						winningBid = standardBidding(turn, card);
+					}
 
 					//execute the bid
 					if(winningBid.index == turn) {
@@ -108,7 +113,7 @@ public class GameDriver implements Runnable{
 				if(!bidding[(turn+biddingTurn+1)%players.length]) {
 					continue;
 				}
-				
+
 				//get the price a player is willing to pay
 				int bid = players[(turn+biddingTurn+1)%players.length].getBid(card);
 				if(bid==-1 || bid <= highestBid) {
@@ -117,7 +122,7 @@ public class GameDriver implements Runnable{
 					highestBid = bid;
 					highestBidder = (turn+biddingTurn+1)%players.length;
 				}
-				
+
 				//checks for winner
 				stillBidding = 0;
 				for(int b = 0; b < bidding.length; b++) {
@@ -133,6 +138,27 @@ public class GameDriver implements Runnable{
 			}
 
 		} while(stillBidding > 1);
+		return new Bid(highestBidder,highestBid);
+	}
+
+	/**
+	 * Goes to each player once and asks them for a bid, the highest wins
+	 * @param turn the player index who played the card
+	 * @param card the card being played
+	 * @return the best bid
+	 */
+	private Bid onceAround(int turn, Card card) {
+		int highestBid = 0;
+		int highestBidder = turn;
+		for(int i = 0; i < players.length; i++) {
+			int biddingTurn = (turn+i+1)%players.length;
+			int bid = players[biddingTurn].getBid(card);
+			if(bid > highestBid) {
+				highestBid = bid;
+				highestBidder = biddingTurn;
+			}
+		}
+
 		return new Bid(highestBidder,highestBid);
 	}
 
