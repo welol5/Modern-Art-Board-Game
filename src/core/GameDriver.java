@@ -40,6 +40,14 @@ public class GameDriver implements Runnable{
 		//the game is now ready for the first season
 		for(int i = 1; i <= 4; i++) {
 			io.startSeason(i);
+			
+			//deal out cards
+			for(int d = 0; d < state.dealAmounts[i]; d++) {
+				for(Player player : players) {
+					player.deal(state.drawCard());
+				}
+			}
+			
 			//TODO check if the season is over
 			for(;true;turn = (turn+1)%players.length) {
 				Card card = players[turn].chooseCard();
