@@ -120,6 +120,15 @@ public class GameState {
 	}
 	
 	/**
+	 * Get the price of a specific artists paintings
+	 * @param artist
+	 * @return the value of a painting by the artist
+	 */
+	public int getArtistValue(Artist artist) {
+		return artistValues.get(artist);
+	}
+	
+	/**
 	 * Get the player at an index
 	 * @param index
 	 * @return the player
