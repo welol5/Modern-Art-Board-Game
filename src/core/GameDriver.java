@@ -40,10 +40,19 @@ public class GameDriver implements Runnable{
 		//the game is now ready for the first season
 		for(int i = 1; i <= 4; i++) {
 			io.startSeason(i);
+			//TODO check if the season is over
 			for(;true;turn = (turn+1)%players.length) {
 				Card card = players[turn].chooseCard();
 				//the bidding can now begin
-				standardBidding(turn, card);
+				Bid winningBid = standardBidding(turn, card);
+				
+				//execute the bid
+				if(winningBid.index == turn) {
+					players[winningBid.index].pay(winningBid.price);
+				} else {
+					players[winningBid.index].pay(winningBid.price);
+					players[turn].recive(winningBid.price);
+				}
 			}
 		}
 		
@@ -55,7 +64,7 @@ public class GameDriver implements Runnable{
 	 * @param card the card being bid on
 	 * @return the index of the winner
 	 */
-	private int standardBidding(int turn, Card card) {
+	private Bid standardBidding(int turn, Card card) {
 		boolean[] bidding = new boolean[players.length];//used to tell how many players are still bidding
 		for(int i = 0; i < bidding.length; i++) {//all players are bidding
 			bidding[i] = true;
@@ -85,7 +94,14 @@ public class GameDriver implements Runnable{
 				highestBidder = (turn+biddingTurn)%players.length;
 			}
 		}
-		return highestBidder;
+		return new Bid(highestBidder,highestBid);
 	}
 	
+	private class Bid{
+		public final int index,price;
+		public Bid(int index, int price) {
+			this.index = index;
+			this.price = price;
+		}
+	}
 }
