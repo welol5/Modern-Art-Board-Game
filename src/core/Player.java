@@ -15,6 +15,14 @@ public abstract class Player {
 	}
 	
 	/**
+	 * Give the player the painting they won in the auction
+	 * @param card
+	 */
+	public void givePainting(Card card) {
+		winnings.add(card);
+	}
+	
+	/**
 	 * 
 	 * @return the list of paintings won by the player
 	 */
