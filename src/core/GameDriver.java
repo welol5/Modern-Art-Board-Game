@@ -13,6 +13,7 @@ public class GameDriver implements Runnable{
 	
 	//GameState var
 	GameState state;
+	Player[] players;
 	
 	/**
 	 * Setup the program by giving it a IO type.
@@ -27,38 +28,64 @@ public class GameDriver implements Runnable{
 
 	@Override
 	public void run() {
-		//need to know how many players
-		String[] players = io.getPlayers();
 		//setup the game state
-		state = new GameState(players);
+		state = new GameState(io.getPlayers());
+		//get the players list to use later
+		players = state.getPlayers();
+		int turn = 0;//keeps track of whose turn it is
 		
 		////////////////////////////////////////////////////////////////////
 		//everything past this point is incomplete
 		
 		//the game is now ready for the first season
-//		System.out.println("Season 1 Starting");
-//		boolean seasonEnd = false;
-//		int turn = 0;//keeps track of the turn
-//		int biddingTurn;
-//		Player currentPlayer;
-//		Card biddingCard;
-//		while(!seasonEnd) {
-//			currentPlayer = state.getPlayer(turn);
-//			biddingCard = currentPlayer.chooseCard();
-//			
-//			//now the bidding begins
-//			biddingTurn = (turn+1)%players.length;
-//			HashMap<Player, Integer> bids = new HashMap<Player, Integer>();
-//			//All of the players make a bid of 0
-//			for(int i = 0; i < players.length; i++) {
-//				bids.put(state.getPlayer((biddingTurn+i)%players.length), 0);
-//			}
-//			while(bids.size() > 1) {
-//				for(int i = 0; i < bids.size(); i++) {
-//					
-//				}
-//			}
-//		}
+		for(int i = 1; i <= 4; i++) {
+			io.startSeason(i);
+			for(;true;turn = (turn+1)%players.length) {
+				Card card = players[turn].chooseCard();
+				//the bidding can now begin
+				standardBidding(turn, card);
+			}
+		}
+		
+	}
+	
+	/**
+	 * Runs the standard bidding option
+	 * @param turn the index of the player who played the card
+	 * @param card the card being bid on
+	 * @return the index of the winner
+	 */
+	private int standardBidding(int turn, Card card) {
+		boolean[] bidding = new boolean[players.length];//used to tell how many players are still bidding
+		for(int i = 0; i < bidding.length; i++) {//all players are bidding
+			bidding[i] = true;
+		}
+		
+		int highestBid = 0;
+		int highestBidder = turn;
+		//while there is more than 1 player bidding
+		while(true) {
+			//checks for winner
+			boolean hasWinner = false;
+			for(int b = 0; b < bidding.length; b++) {
+				hasWinner = hasWinner^bidding[b];
+			}
+			//break out if there is a winner
+			if(hasWinner) {
+				break;
+			}
+			
+			//hasWinner will only be true if only one player has not backed out of bidding
+			for(int biddingTurn = 0; biddingTurn < players.length; biddingTurn++) {
+				int bid = players[(turn+biddingTurn)%players.length].getBid(card);
+				if(bid==-1 || bid < highestBid) {
+					bidding[(turn+biddingTurn)%players.length] = false;
+				}
+				highestBid = bid;
+				highestBidder = (turn+biddingTurn)%players.length;
+			}
+		}
+		return highestBidder;
 	}
 	
 }
