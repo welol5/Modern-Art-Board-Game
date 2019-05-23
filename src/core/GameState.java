@@ -14,6 +14,12 @@ import player.HumanPlayer;
  *
  */
 public class GameState {
+	
+	private static final int[] DEAL_3_PLAYERS = {10,6,6,0};
+	private static final int[] DEAL_4_PLAYERS = {9,4,4,0};
+	private static final int[] DEAL_5_PLAYERS = {8,3,3,0};
+	public final int[] dealAmounts;
+	
 	private Player[] players;//The players
 	private ArrayList<Card> deck = new ArrayList<Card>();//the deck of cards that no palyer can see
 	
@@ -40,6 +46,15 @@ public class GameState {
 		artistValues = new HashMap<Artist, Integer>();
 		for(Artist artist: Artist.values()) {
 			artistValues.put(artist, 0);
+		}
+		
+		//set the deal amounts
+		if(players.length == 3) {
+			dealAmounts = DEAL_3_PLAYERS;
+		} else if(players.length == 4) {
+			dealAmounts = DEAL_4_PLAYERS;
+		} else {
+			dealAmounts = DEAL_5_PLAYERS;
 		}
 	}
 	
