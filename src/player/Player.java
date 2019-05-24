@@ -13,7 +13,7 @@ public abstract class Player {
 	
 	public Player(String name) {
 		this.name = name;
-		money = 50;
+		money = 100;
 		hand = new ArrayList<Card>();
 		winnings = new ArrayList<Card>();
 	}
