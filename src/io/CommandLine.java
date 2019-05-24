@@ -170,4 +170,9 @@ public class CommandLine extends BasicIO{
 		}
 		return index;
 	}
+
+	@Override
+	public void auctionWinner(Player player) {
+		System.out.println();
+	}
 }

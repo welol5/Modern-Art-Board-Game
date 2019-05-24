@@ -22,4 +22,5 @@ public abstract class BasicIO {
 	public abstract int getBid(Player player);
 	public abstract int getFixedPrice(Card card);
 	public abstract boolean askPlayertoBuy(Card card, int price);
+	public abstract void auctionWinner(Player player);
 }
