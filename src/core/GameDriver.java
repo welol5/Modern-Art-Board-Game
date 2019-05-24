@@ -208,6 +208,19 @@ public class GameDriver implements Runnable{
 		}
 		return new Bid(turn,price);
 	}
+	
+	private Bid sealed(Card card) {
+		int highestBidder = -1;
+		int highestPrice = -1;
+		for(int i = 0; i < players.length; i++) {
+			int bid = players[i].getBid(card, -1);
+			if(bid > highestPrice) {
+				highestPrice = bid;
+				highestBidder = i;
+			}
+		}
+		return new Bid(highestBidder,highestPrice);
+	}
 
 	private class Bid{
 		public final int index,price;
