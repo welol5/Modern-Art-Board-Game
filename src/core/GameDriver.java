@@ -79,6 +79,7 @@ public class GameDriver implements Runnable{
 				top3 = state.sell(card.getArtist());
 				if(top3 == null) {//this checks if the season is over by asking GameState
 					//the bidding can now begin
+					io.announceCard(card);//TODO deal with doubleAuctions better
 					Bid winningBid;
 					if(card.getAuctionType() == AuctionType.ONCE_AROUND) {
 						System.out.println("Once Around");//debug
@@ -177,9 +178,9 @@ public class GameDriver implements Runnable{
 					if(bidding[b]) {
 						stillBidding++;
 					}
-					System.out.print(bidding[b] + " ");
+					//System.out.print(bidding[b] + " ");//debug
 				}
-				System.out.println(" " + stillBidding);
+				//System.out.println(" " + stillBidding);//
 				if(stillBidding < 2) {
 					break;
 				}

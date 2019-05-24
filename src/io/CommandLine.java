@@ -193,4 +193,9 @@ public class CommandLine extends BasicIO{
 			System.out.println("Standard");
 		}
 	}
+
+	@Override
+	public void announceCard(Card card) {
+		System.out.println(card);
+	}
 }
