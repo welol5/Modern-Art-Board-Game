@@ -150,7 +150,7 @@ public class CommandLine extends BasicIO{
 
 	@Override
 	public int getHandIndex(ArrayList<Card> hand, Artist artist) {
-		System.out.print("Choose and index of the painting you want to bid on : ");
+		System.out.print("Choose and index of the painting you want to bid on (-1 for nothing): ");
 		int index = -1;
 		try {
 			do{
