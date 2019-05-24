@@ -50,6 +50,10 @@ public class RandomPlayer extends Player {
 		} else if(highestSoFar > money){
 			return -1;
 		} else {
+			//randomly decides not to bid half the time
+			if(random.nextDouble() < 0.5) {
+				return -1;
+			}
 			return random.nextInt(money-highestSoFar)+money;
 		}
 	}
