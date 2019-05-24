@@ -38,6 +38,7 @@ public class HumanPlayer extends Player{
 
 	@Override
 	public Card chooseSecondCard(Artist artist) {
+		io.showHand(this, hand, artist);
 		int index = io.getHandIndex(hand, artist);
 		if(index == -1) {
 			return null;
