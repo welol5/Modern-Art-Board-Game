@@ -75,12 +75,13 @@ public class GameDriver implements Runnable{
 					//the bidding can now begin
 					Bid winningBid;
 					if(card.getAuctionType() == AuctionType.ONCE_AROUND) {
-						System.out.println("Once Around");
+						System.out.println("Once Around");//debug
 						winningBid = onceAround(turn,card);
 					} else if(card.getAuctionType() == AuctionType.FIXED_PRICE){
-						System.out.println("Fixed");
+						System.out.println("Fixed");//debug
 						winningBid = fixedPrice(turn,card,players[turn].getFixedPrice(card));
 					} else if(card.getAuctionType() == AuctionType.SEALED){
+						System.out.println("Sealed");//debug
 						winningBid = sealed(card);
 					} else {
 						winningBid = standardBidding(turn, card);
@@ -203,6 +204,13 @@ public class GameDriver implements Runnable{
 		return new Bid(highestBidder,highestBid);
 	}
 
+	/**
+	 * Asks each player in turn if they would like to buy the card
+	 * @param turn the index of the player selling the card
+	 * @param card the card being sold
+	 * @param price the price the card is being sold at
+	 * @return the winning bidder index and price it was sold for
+	 */
 	private Bid fixedPrice(int turn, Card card, int price) {
 		for(int i = 0; i < players.length; i++) {
 			int biddingTurn = (turn+i+1)%players.length;
@@ -213,6 +221,11 @@ public class GameDriver implements Runnable{
 		return new Bid(turn,price);
 	}
 	
+	/**
+	 * Has each player in turn say how much they are willing to pay and keeps track of the highest value
+	 * @param card
+	 * @return the winning bid
+	 */
 	private Bid sealed(Card card) {
 		int highestBidder = -1;
 		int highestPrice = -1;
@@ -226,6 +239,11 @@ public class GameDriver implements Runnable{
 		return new Bid(highestBidder,highestPrice);
 	}
 
+	/**
+	 * This is just here to help pass around information
+	 * @author William Elliman
+	 *
+	 */
 	private class Bid{
 		public final int index,price;
 		public Bid(int index, int price) {
