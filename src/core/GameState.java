@@ -45,6 +45,7 @@ public class GameState {
 		makeDeck();
 		shuffleDeck();
 		printDeck();//debug
+		System.out.println("Deck sixe : " + deck.size());
 		
 		seasonValues = new HashMap<Artist, Integer>();
 		artistValues = new HashMap<Artist, Integer>();
@@ -183,83 +184,83 @@ public class GameState {
 		deck.clear();
 		
 		//add the Lite Metal paintings
-		deck.add(new Card(Artist.LITE_METAL,AuctionType.SEALED));
-		deck.add(new Card(Artist.LITE_METAL,AuctionType.SEALED));
-		deck.add(new Card(Artist.LITE_METAL,AuctionType.DOUBLE));
-		deck.add(new Card(Artist.LITE_METAL,AuctionType.DOUBLE));
-		deck.add(new Card(Artist.LITE_METAL,AuctionType.ONCE_AROUND));
-		deck.add(new Card(Artist.LITE_METAL,AuctionType.ONCE_AROUND));
-		deck.add(new Card(Artist.LITE_METAL,AuctionType.ONCE_AROUND));
-		deck.add(new Card(Artist.LITE_METAL,AuctionType.FIXED_PRICE));
-		deck.add(new Card(Artist.LITE_METAL,AuctionType.FIXED_PRICE));
-		deck.add(new Card(Artist.LITE_METAL,AuctionType.STANDARD));
-		deck.add(new Card(Artist.LITE_METAL,AuctionType.STANDARD));
-		deck.add(new Card(Artist.LITE_METAL,AuctionType.STANDARD));
+		deck.add(new Card(Artist.LITE_METAL,AuctionType.SEALED));//
+		deck.add(new Card(Artist.LITE_METAL,AuctionType.SEALED));//
+		deck.add(new Card(Artist.LITE_METAL,AuctionType.DOUBLE));//
+		deck.add(new Card(Artist.LITE_METAL,AuctionType.DOUBLE));//
+		deck.add(new Card(Artist.LITE_METAL,AuctionType.ONCE_AROUND));//
+		deck.add(new Card(Artist.LITE_METAL,AuctionType.ONCE_AROUND));//
+		deck.add(new Card(Artist.LITE_METAL,AuctionType.ONCE_AROUND));//
+		deck.add(new Card(Artist.LITE_METAL,AuctionType.FIXED_PRICE));//
+		deck.add(new Card(Artist.LITE_METAL,AuctionType.FIXED_PRICE));//
+		deck.add(new Card(Artist.LITE_METAL,AuctionType.STANDARD));//
+		deck.add(new Card(Artist.LITE_METAL,AuctionType.STANDARD));//
+		deck.add(new Card(Artist.LITE_METAL,AuctionType.STANDARD));//
 		
 		//add the Yoko paintings
-		deck.add(new Card(Artist.YOKO,AuctionType.SEALED));
-		deck.add(new Card(Artist.YOKO,AuctionType.SEALED));
-		deck.add(new Card(Artist.YOKO,AuctionType.SEALED));
-		deck.add(new Card(Artist.YOKO,AuctionType.DOUBLE));
-		deck.add(new Card(Artist.YOKO,AuctionType.DOUBLE));
-		deck.add(new Card(Artist.YOKO,AuctionType.ONCE_AROUND));
-		deck.add(new Card(Artist.YOKO,AuctionType.ONCE_AROUND));
-		deck.add(new Card(Artist.YOKO,AuctionType.FIXED_PRICE));
-		deck.add(new Card(Artist.YOKO,AuctionType.FIXED_PRICE));
-		deck.add(new Card(Artist.YOKO,AuctionType.FIXED_PRICE));
-		deck.add(new Card(Artist.YOKO,AuctionType.STANDARD));
-		deck.add(new Card(Artist.YOKO,AuctionType.STANDARD));
-		deck.add(new Card(Artist.YOKO,AuctionType.STANDARD));
+		deck.add(new Card(Artist.YOKO,AuctionType.SEALED));//
+		deck.add(new Card(Artist.YOKO,AuctionType.SEALED));//
+		deck.add(new Card(Artist.YOKO,AuctionType.SEALED));//
+		deck.add(new Card(Artist.YOKO,AuctionType.DOUBLE));//
+		deck.add(new Card(Artist.YOKO,AuctionType.DOUBLE));//
+		deck.add(new Card(Artist.YOKO,AuctionType.ONCE_AROUND));//
+		deck.add(new Card(Artist.YOKO,AuctionType.ONCE_AROUND));//
+		deck.add(new Card(Artist.YOKO,AuctionType.FIXED_PRICE));//
+		deck.add(new Card(Artist.YOKO,AuctionType.FIXED_PRICE));//
+		deck.add(new Card(Artist.YOKO,AuctionType.FIXED_PRICE));//
+		deck.add(new Card(Artist.YOKO,AuctionType.STANDARD));//
+		deck.add(new Card(Artist.YOKO,AuctionType.STANDARD));//
+		deck.add(new Card(Artist.YOKO,AuctionType.STANDARD));//
 		
 		//add the Karl Gitter paintings
-		deck.add(new Card(Artist.KARL_GITTER,AuctionType.SEALED));
-		deck.add(new Card(Artist.KARL_GITTER,AuctionType.SEALED));
-		deck.add(new Card(Artist.KARL_GITTER,AuctionType.SEALED));
-		deck.add(new Card(Artist.KARL_GITTER,AuctionType.DOUBLE));
-		deck.add(new Card(Artist.KARL_GITTER,AuctionType.DOUBLE));
-		deck.add(new Card(Artist.KARL_GITTER,AuctionType.DOUBLE));
-		deck.add(new Card(Artist.KARL_GITTER,AuctionType.ONCE_AROUND));
-		deck.add(new Card(Artist.KARL_GITTER,AuctionType.ONCE_AROUND));
-		deck.add(new Card(Artist.KARL_GITTER,AuctionType.ONCE_AROUND));
-		deck.add(new Card(Artist.KARL_GITTER,AuctionType.FIXED_PRICE));
-		deck.add(new Card(Artist.KARL_GITTER,AuctionType.FIXED_PRICE));
-		deck.add(new Card(Artist.KARL_GITTER,AuctionType.FIXED_PRICE));
-		deck.add(new Card(Artist.KARL_GITTER,AuctionType.STANDARD));
-		deck.add(new Card(Artist.KARL_GITTER,AuctionType.STANDARD));
-		deck.add(new Card(Artist.KARL_GITTER,AuctionType.STANDARD));
+		deck.add(new Card(Artist.KARL_GITTER,AuctionType.SEALED));//
+		deck.add(new Card(Artist.KARL_GITTER,AuctionType.SEALED));//
+		deck.add(new Card(Artist.KARL_GITTER,AuctionType.SEALED));//
+		deck.add(new Card(Artist.KARL_GITTER,AuctionType.DOUBLE));//
+		deck.add(new Card(Artist.KARL_GITTER,AuctionType.DOUBLE));//
+		deck.add(new Card(Artist.KARL_GITTER,AuctionType.DOUBLE));//
+		deck.add(new Card(Artist.KARL_GITTER,AuctionType.ONCE_AROUND));//
+		deck.add(new Card(Artist.KARL_GITTER,AuctionType.ONCE_AROUND));//
+		deck.add(new Card(Artist.KARL_GITTER,AuctionType.ONCE_AROUND));//
+		deck.add(new Card(Artist.KARL_GITTER,AuctionType.FIXED_PRICE));//
+		deck.add(new Card(Artist.KARL_GITTER,AuctionType.FIXED_PRICE));//
+		deck.add(new Card(Artist.KARL_GITTER,AuctionType.FIXED_PRICE));//
+		deck.add(new Card(Artist.KARL_GITTER,AuctionType.STANDARD));//
+		deck.add(new Card(Artist.KARL_GITTER,AuctionType.STANDARD));//
+		deck.add(new Card(Artist.KARL_GITTER,AuctionType.STANDARD));//
 		
 		//add the Krypto paintings
-		deck.add(new Card(Artist.KRYPTO,AuctionType.SEALED));
-		deck.add(new Card(Artist.KRYPTO,AuctionType.SEALED));
-		deck.add(new Card(Artist.KRYPTO,AuctionType.SEALED));
-		deck.add(new Card(Artist.KRYPTO,AuctionType.DOUBLE));
-		deck.add(new Card(Artist.KRYPTO,AuctionType.DOUBLE));
-		deck.add(new Card(Artist.KRYPTO,AuctionType.DOUBLE));
-		deck.add(new Card(Artist.KRYPTO,AuctionType.ONCE_AROUND));
-		deck.add(new Card(Artist.KRYPTO,AuctionType.ONCE_AROUND));
-		deck.add(new Card(Artist.KRYPTO,AuctionType.ONCE_AROUND));
-		deck.add(new Card(Artist.KRYPTO,AuctionType.FIXED_PRICE));
-		deck.add(new Card(Artist.KRYPTO,AuctionType.FIXED_PRICE));
-		deck.add(new Card(Artist.KRYPTO,AuctionType.FIXED_PRICE));
-		deck.add(new Card(Artist.KRYPTO,AuctionType.STANDARD));
-		deck.add(new Card(Artist.KRYPTO,AuctionType.STANDARD));
-		deck.add(new Card(Artist.KRYPTO,AuctionType.STANDARD));
-		deck.add(new Card(Artist.KRYPTO,AuctionType.STANDARD));
+		deck.add(new Card(Artist.KRYPTO,AuctionType.SEALED));//
+		deck.add(new Card(Artist.KRYPTO,AuctionType.SEALED));//
+		deck.add(new Card(Artist.KRYPTO,AuctionType.SEALED));//
+		deck.add(new Card(Artist.KRYPTO,AuctionType.DOUBLE));//
+		deck.add(new Card(Artist.KRYPTO,AuctionType.DOUBLE));//
+		deck.add(new Card(Artist.KRYPTO,AuctionType.DOUBLE));//
+		deck.add(new Card(Artist.KRYPTO,AuctionType.ONCE_AROUND));//
+		deck.add(new Card(Artist.KRYPTO,AuctionType.ONCE_AROUND));//
+		deck.add(new Card(Artist.KRYPTO,AuctionType.ONCE_AROUND));//
+		deck.add(new Card(Artist.KRYPTO,AuctionType.FIXED_PRICE));//
+		deck.add(new Card(Artist.KRYPTO,AuctionType.FIXED_PRICE));//
+		deck.add(new Card(Artist.KRYPTO,AuctionType.FIXED_PRICE));//
+		deck.add(new Card(Artist.KRYPTO,AuctionType.STANDARD));//
+		deck.add(new Card(Artist.KRYPTO,AuctionType.STANDARD));//
+		deck.add(new Card(Artist.KRYPTO,AuctionType.STANDARD));//
+		deck.add(new Card(Artist.KRYPTO,AuctionType.STANDARD));//
 		
 		//add the Christin P. paintings
-		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.SEALED));
-		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.SEALED));
-		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.SEALED));
-		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.DOUBLE));
-		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.DOUBLE));
-		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.ONCE_AROUND));
-		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.ONCE_AROUND));
-		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.ONCE_AROUND));
-		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.FIXED_PRICE));
-		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.FIXED_PRICE));
-		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.FIXED_PRICE));
-		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.STANDARD));
-		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.STANDARD));
-		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.STANDARD));
+		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.SEALED));//
+		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.SEALED));//
+		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.SEALED));//
+		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.DOUBLE));//
+		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.DOUBLE));//
+		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.ONCE_AROUND));//
+		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.ONCE_AROUND));//
+		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.ONCE_AROUND));//
+		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.FIXED_PRICE));//
+		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.FIXED_PRICE));//
+		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.FIXED_PRICE));//
+		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.STANDARD));//
+		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.STANDARD));//
+		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.STANDARD));//
 	}
 }
