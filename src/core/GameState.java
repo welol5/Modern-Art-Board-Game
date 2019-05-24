@@ -6,6 +6,7 @@ import java.util.Random;
 
 import io.BasicIO;
 import player.HumanPlayer;
+import player.Player;
 
 /**
  * 
