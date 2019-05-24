@@ -1,7 +1,7 @@
 package player;
 
+import core.Artist;
 import core.Card;
-import core.Player;
 import io.BasicIO;
 
 public class HumanPlayer extends Player{
@@ -34,6 +34,16 @@ public class HumanPlayer extends Player{
 	@Override
 	public boolean buy(Card card, int price) {
 		return io.askPlayertoBuy(card, price);
+	}
+
+	@Override
+	public Card chooseSecondCard(Artist artist) {
+		int index = io.getHandIndex(hand, artist);
+		if(index == -1) {
+			return null;
+		} else {
+			return hand.get(index);
+		}
 	}
 
 }

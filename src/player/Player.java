@@ -1,6 +1,9 @@
-package core;
+package player;
 
 import java.util.ArrayList;
+
+import core.Artist;
+import core.Card;
 
 public abstract class Player {
 	public final String name;
@@ -67,6 +70,12 @@ public abstract class Player {
 	 * @return the card to bid on
 	 */
 	public abstract Card chooseCard();
+	
+	/**
+	 * When the first card chosen is double auction, a second is needed by the same artist
+	 * @return the second card
+	 */
+	public abstract Card chooseSecondCard(Artist artist);
 	
 	/**
 	 * Used to get the price the player would like to bid

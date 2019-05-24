@@ -2,8 +2,9 @@ package io;
 
 import java.util.ArrayList;
 
+import core.Artist;
 import core.Card;
-import core.Player;
+import player.Player;
 
 public abstract class BasicIO {
 	/**
@@ -14,7 +15,9 @@ public abstract class BasicIO {
 	public abstract String[] getPlayers();
 	public abstract void startSeason(int s);
 	public abstract void showHand(Player player, ArrayList<Card> hand);
+	public abstract void showHand(Player player, ArrayList<Card> hand, Artist artist);
 	public abstract int getHandIndex(int maxVal);
+	public abstract int getHandIndex(ArrayList<Card> hand, Artist artist);
 	public abstract void end();
 	public abstract int getBid(Player player);
 	public abstract int getFixedPrice(Card card);

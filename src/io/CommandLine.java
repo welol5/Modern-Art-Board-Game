@@ -6,8 +6,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import core.Artist;
 import core.Card;
-import core.Player;
+import player.Player;
 
 public class CommandLine extends BasicIO{
 
@@ -86,8 +87,8 @@ public class CommandLine extends BasicIO{
 		try {
 			while(true) {
 				try {
-				bid = Integer.parseInt(input.readLine());
-				break;
+					bid = Integer.parseInt(input.readLine());
+					break;
 				} catch (NumberFormatException e) {
 					System.out.print("Please enter a valid number: ");
 				}
@@ -107,8 +108,8 @@ public class CommandLine extends BasicIO{
 		try {
 			while(price < 0) {
 				try {
-				price = Integer.parseInt(input.readLine());
-				break;
+					price = Integer.parseInt(input.readLine());
+					break;
 				} catch (NumberFormatException e) {
 					System.out.print("Please enter a valid positive number: ");
 				}
@@ -135,5 +136,38 @@ public class CommandLine extends BasicIO{
 			System.exit(1);
 		}
 		return false;
+	}
+
+	@Override
+	public void showHand(Player player, ArrayList<Card> hand, Artist artist) {
+		System.out.println(player.name + ", your hand contains the following paintings allowed in the double auction");
+		for(int i = 0; i < hand.size(); i++) {
+			if(hand.get(i).getArtist() == artist) {
+				System.out.println(i + " : " + hand.get(i));
+			}
+		}
+	}
+
+	@Override
+	public int getHandIndex(ArrayList<Card> hand, Artist artist) {
+		System.out.print("Choose and index of the painting you want to bid on : ");
+		int index = -1;
+		try {
+			do{
+				try {
+					index = Integer.parseInt(input.readLine());
+					if(index == -1) {
+						return index;
+					}
+				} catch (NumberFormatException ex) {
+					System.out.print("Please enter a valid number: ");
+				}
+			} while((index < 0 || index > hand.size()) || hand.get(index).getArtist() != artist);
+		} catch (IOException e) {
+			System.out.println("IO exception occured. The program will now shut down.");
+			e.printStackTrace();
+			System.exit(1);
+		}
+		return index;
 	}
 }
