@@ -83,7 +83,9 @@ public class CommandLine extends BasicIO{
 
 	@Override
 	public int getBid(Player player, int highestSoFar) {
-		System.out.println("The highest bid so far is : " + highestSoFar);
+		if(highestSoFar != -1) {
+			System.out.println("The highest bid so far is : " + highestSoFar);
+		}
 		System.out.print(player.name + ", how much would you like to bid? (-1 to abstain) : ");
 		int bid = -1;
 		try {
