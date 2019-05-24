@@ -75,9 +75,13 @@ public class GameDriver implements Runnable{
 					//the bidding can now begin
 					Bid winningBid;
 					if(card.getAuctionType() == AuctionType.ONCE_AROUND) {
+						System.out.println("Once Around");
 						winningBid = onceAround(turn,card);
 					} else if(card.getAuctionType() == AuctionType.FIXED_PRICE){
+						System.out.println("Fixed");
 						winningBid = fixedPrice(turn,card,players[turn].getFixedPrice(card));
+					} else if(card.getAuctionType() == AuctionType.SEALED){
+						winningBid = sealed(card);
 					} else {
 						winningBid = standardBidding(turn, card);
 					}
