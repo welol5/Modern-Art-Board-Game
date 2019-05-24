@@ -47,14 +47,14 @@ public class RandomPlayer extends Player {
 	public int getBid(Card card, int highestSoFar) {
 		if(highestSoFar == -1) {
 			return random.nextInt(money);
-		} else if(highestSoFar > money){
+		} else if(highestSoFar >= money){
 			return -1;
 		} else {
 			//randomly decides not to bid half the time
 			if(random.nextDouble() < 0.5) {
 				return -1;
 			}
-			return random.nextInt(money-highestSoFar)+money;
+			return random.nextInt(money-highestSoFar)+highestSoFar;
 		}
 	}
 
