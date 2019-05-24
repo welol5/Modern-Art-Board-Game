@@ -152,7 +152,7 @@ public class GameDriver implements Runnable{
 				}
 
 				//get the price a player is willing to pay
-				int bid = players[(turn+biddingTurn+1)%players.length].getBid(card);
+				int bid = players[(turn+biddingTurn+1)%players.length].getBid(card, highestBid);
 				if(bid==-1 || bid <= highestBid) {
 					bidding[(turn+biddingTurn+1)%players.length] = false;
 				} else {
@@ -189,7 +189,7 @@ public class GameDriver implements Runnable{
 		int highestBidder = turn;
 		for(int i = 0; i < players.length; i++) {
 			int biddingTurn = (turn+i+1)%players.length;
-			int bid = players[biddingTurn].getBid(card);
+			int bid = players[biddingTurn].getBid(card, highestBid);
 			if(bid > highestBid) {
 				highestBid = bid;
 				highestBidder = biddingTurn;
@@ -202,9 +202,11 @@ public class GameDriver implements Runnable{
 	private Bid fixedPrice(int turn, Card card, int price) {
 		for(int i = 0; i < players.length; i++) {
 			int biddingTurn = (turn+i+1)%players.length;
-
+			if(players[biddingTurn].buy(card, price)) {
+				return new Bid(biddingTurn, price);
+			}
 		}
-		return new Bid(0,0);
+		return new Bid(turn,price);
 	}
 
 	private class Bid{
