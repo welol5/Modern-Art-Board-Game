@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import core.Artist;
+import core.AuctionType;
 import core.Card;
 import player.Player;
 
@@ -174,5 +175,19 @@ public class CommandLine extends BasicIO{
 	@Override
 	public void auctionWinner(Player player) {
 		System.out.println();
+	}
+
+	@Override
+	public void announceAuctionType(AuctionType type) {
+		System.out.print("Auction Type : ");
+		if(type == AuctionType.ONCE_AROUND) {
+			System.out.println("Once Around");
+		} else if(type == AuctionType.FIXED_PRICE) {
+			System.out.println("Fixed Price");
+		} else if(type == AuctionType.SEALED) {
+			System.out.println("Sealed");
+		} else {
+			System.out.println("Standard");
+		}
 	}
 }

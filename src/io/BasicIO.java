@@ -3,6 +3,7 @@ package io;
 import java.util.ArrayList;
 
 import core.Artist;
+import core.AuctionType;
 import core.Card;
 import player.Player;
 
@@ -23,4 +24,5 @@ public abstract class BasicIO {
 	public abstract int getFixedPrice(Card card);
 	public abstract boolean askPlayertoBuy(Card card, int price);
 	public abstract void auctionWinner(Player player);
+	public abstract void announceAuctionType(AuctionType type);
 }
