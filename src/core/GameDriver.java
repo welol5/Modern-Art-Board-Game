@@ -8,6 +8,12 @@ import io.CommandLine;
 import io.IOType;
 import player.Player;
 
+/**
+ * The GameDriver class is the main functional class of this program. It deals with keeping track of the rules and executing them when needed.
+ * It also holds onto a GameState object that holds the data of the state of the game.
+ * @author William Elliman
+ *
+ */
 public class GameDriver implements Runnable{
 
 	//IO var
