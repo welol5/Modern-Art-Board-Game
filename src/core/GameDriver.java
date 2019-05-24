@@ -6,6 +6,7 @@ import java.util.HashMap;
 import io.BasicIO;
 import io.CommandLine;
 import io.IOType;
+import player.Player;
 
 public class GameDriver implements Runnable{
 
@@ -49,7 +50,26 @@ public class GameDriver implements Runnable{
 			}
 
 			for(;true;turn = (turn+1)%players.length) {
+				//get the painting that people will bid on
 				Card card = players[turn].chooseCard();
+
+				//check for a double auction
+				Card second = null;
+				if(card.getAuctionType() == AuctionType.DOUBLE) {
+					second = card;
+					card = players[turn].chooseSecondCard(second.getArtist());
+					//if card is null then other players should be asked
+					if(card == null) {
+						card = getSecondCard(turn, second.getArtist());
+					}
+					
+					//if card is still null, no one put in a second and a standard auction should occur
+					if(card == null) {
+						card = second;
+						second = null;//need to remove pointer
+					}
+				}
+
 				top3 = state.sell(card.getArtist());
 				if(top3 == null) {//this checks if the season is over by asking GameState
 					//the bidding can now begin
@@ -66,10 +86,16 @@ public class GameDriver implements Runnable{
 					if(winningBid.index == turn) {
 						players[winningBid.index].pay(winningBid.price);
 						players[winningBid.index].givePainting(card);
+						if(second != null) {
+							players[winningBid.index].givePainting(second);
+						}
 					} else {
 						players[winningBid.index].pay(winningBid.price);
 						players[turn].recive(winningBid.price);
 						players[winningBid.index].givePainting(card);
+						if(second != null) {
+							players[winningBid.index].givePainting(second);
+						}
 					}
 				} else {
 					//break out of the season once it is over
@@ -90,6 +116,15 @@ public class GameDriver implements Runnable{
 			}
 		}
 
+	}
+
+	private Card getSecondCard(int turn, Artist artist) {
+		Card card = null;
+		for(int i = 0; i < players.length; i++) {
+			int playerTurn = (turn + i + 1)%players.length;
+			card = players[playerTurn].chooseSecondCard(artist);
+		}
+		return null;
 	}
 
 	/**
@@ -163,11 +198,11 @@ public class GameDriver implements Runnable{
 
 		return new Bid(highestBidder,highestBid);
 	}
-	
+
 	private Bid fixedPrice(int turn, Card card, int price) {
 		for(int i = 0; i < players.length; i++) {
 			int biddingTurn = (turn+i+1)%players.length;
-			
+
 		}
 		return new Bid(0,0);
 	}
