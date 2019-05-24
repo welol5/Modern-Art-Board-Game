@@ -7,6 +7,7 @@ import java.util.Random;
 import io.BasicIO;
 import player.HumanPlayer;
 import player.Player;
+import player.RandomPlayer;
 
 /**
  * 
@@ -35,14 +36,15 @@ public class GameState {
 	public GameState(String[] players, BasicIO io) {
 		//first all the new players need to be created
 		this.players = new Player[players.length];
-		for(int i = 0; i < players.length; i++) {
-			this.players[i] = new HumanPlayer(players[i], io);
+		this.players[0] = new HumanPlayer(players[0], io);
+		for(int i = 1; i < players.length; i++) {
+			this.players[i] = new RandomPlayer(players[i]);
 		}
 		
 		//now the deck needs to be created and shuffled
 		makeDeck();
 		shuffleDeck();
-		//printDeck();
+		printDeck();//debug
 		
 		seasonValues = new HashMap<Artist, Integer>();
 		artistValues = new HashMap<Artist, Integer>();
