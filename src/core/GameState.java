@@ -81,9 +81,9 @@ public class GameState {
 	public Artist[] sell(Artist artist, boolean doubleAuction) {
 
 		//debug
-		for(Artist artistDebug : Artist.values()) {
-			System.out.println(artistDebug + " : " + seasonValues.get(artistDebug));
-		}
+//		for(Artist artistDebug : Artist.values()) {
+//			System.out.println(artistDebug + " : " + seasonValues.get(artistDebug));
+//		}
 
 		//the code for this is really weird and could probably be improved quite a bit
 		try {
