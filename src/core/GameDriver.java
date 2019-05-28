@@ -62,9 +62,9 @@ public class GameDriver implements Runnable{
 
 				//debug
 				//show players money //this sometimes causes issues with io but its a debug thing anyway
-				for(Player player : players) {
-					System.err.println(player.name + " : " + player.getMoney());
-				}
+//				for(Player player : players) {
+//					System.err.println(player.name + " : " + player.getMoney());
+//				}
 
 				//get the painting that people will bid on
 				Card card = players[turn].chooseCard();
