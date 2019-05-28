@@ -128,7 +128,7 @@ public class CommandLine extends BasicIO{
 
 	@Override
 	public boolean askPlayertoBuy(Card card, int price) {
-		System.out.print("Would you like to buy the painting by " + card.getArtist() + " (y/n): ");
+		System.out.print("Would you like to buy the painting by " + card.getArtist() + " for " + price + "? (y/n): ");
 		try {
 			String answer = input.readLine();
 			if(answer.matches("[yY]")) {
