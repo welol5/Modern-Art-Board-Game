@@ -96,7 +96,7 @@ public class GameState {
 			seasonValues.put(artist, seasonValues.get(artist)+1);
 		}
 
-		if(seasonValues.get(artist) <= 5) {
+		if(seasonValues.get(artist) >= 5) {
 			//update the highest artist
 			artistValues.put(artist, artistValues.get(artist)+30);
 			//update the second highest

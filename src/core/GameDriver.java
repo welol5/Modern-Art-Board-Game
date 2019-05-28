@@ -60,6 +60,7 @@ public class GameDriver implements Runnable{
 			}
 
 			for(;true;turn = (turn+1)%players.length) {
+				System.out.println("turn");
 
 				//debug
 				//show players money //this sometimes causes issues with io but its a debug thing anyway
@@ -69,6 +70,10 @@ public class GameDriver implements Runnable{
 
 				//get the painting that people will bid on
 				Card card = players[turn].chooseCard();
+				//if null is returned, the player had no cards
+				if(card == null) {
+					continue;
+				}
 
 				//check for a double auction
 				Card second = null;

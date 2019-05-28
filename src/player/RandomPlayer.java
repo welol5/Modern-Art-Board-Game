@@ -19,6 +19,9 @@ public class RandomPlayer extends Player {
 
 	@Override
 	public Card chooseCard() {
+		if(hand.size() == 0) {
+			return null;
+		}
 		return hand.remove(random.nextInt(hand.size()));
 	}
 
