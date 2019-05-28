@@ -109,7 +109,7 @@ public class GameDriver implements Runnable{
 							players[winningBid.index].givePainting(second);
 						}
 					}
-					io.auctionWinner(players[winningBid.index]);
+					io.auctionWinner(players[winningBid.index], winningBid.price);
 				} else {
 					//break out of the season once it is over
 					break;
@@ -220,7 +220,7 @@ public class GameDriver implements Runnable{
 	 * @return the winning bidder index and price it was sold for
 	 */
 	private Bid fixedPrice(int turn, Card card, int price) {
-		for(int i = 0; i < players.length; i++) {
+		for(int i = 0; i < players.length-1; i++) {
 			int biddingTurn = (turn+i+1)%players.length;
 			if(players[biddingTurn].buy(card, price)) {
 				return new Bid(biddingTurn, price);
