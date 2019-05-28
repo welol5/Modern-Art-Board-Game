@@ -49,7 +49,7 @@ public class GameDriver implements Runnable{
 			Artist[] top3;
 
 			//deal out cards
-			for(int d = 0; d < state.dealAmounts[i]; d++) {
+			for(int d = 0; d < state.dealAmounts[i-1]; d++) {
 				for(Player player : players) {
 					player.deal(state.drawCard());
 				}
