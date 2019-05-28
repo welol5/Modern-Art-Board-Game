@@ -59,13 +59,13 @@ public class GameDriver implements Runnable{
 			}
 
 			for(;true;turn = (turn+1)%players.length) {
-				
+
 				//debug
-				//show players money
+				//show players money //this sometimes causes issues with io but its a debug thing anyway
 				for(Player player : players) {
 					System.err.println(player.name + " : " + player.getMoney());
 				}
-				
+
 				//get the painting that people will bid on
 				Card card = players[turn].chooseCard();
 
@@ -78,7 +78,7 @@ public class GameDriver implements Runnable{
 					if(card == null) {
 						card = getSecondCard(turn, second.getArtist());
 					}
-					
+
 					//if card is still null, no one put in a second and a standard auction should occur
 					if(card == null) {
 						card = second;
@@ -86,7 +86,11 @@ public class GameDriver implements Runnable{
 					}
 				}
 
-				top3 = state.sell(card.getArtist());
+				if(second == null) {
+					top3 = state.sell(card.getArtist(), false);
+				} else {
+					top3 = state.sell(card.getArtist(), true);
+				}
 				if(top3 == null) {//this checks if the season is over by asking GameState
 					//the bidding can now begin
 					io.announceCard(card);//TODO deal with doubleAuctions better
@@ -238,7 +242,7 @@ public class GameDriver implements Runnable{
 		}
 		return new Bid(turn,price);
 	}
-	
+
 	/**
 	 * Has each player in turn say how much they are willing to pay and keeps track of the highest value
 	 * @param card
