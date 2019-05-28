@@ -23,7 +23,7 @@ public abstract class BasicIO {
 	public abstract int getBid(String player, int money, int highestSoFar);
 	public abstract int getFixedPrice(Card card);
 	public abstract boolean askPlayertoBuy(Card card, int price);
-	public abstract void auctionWinner(Player player);
+	public abstract void auctionWinner(Player player, int price);
 	public abstract void announceAuctionType(AuctionType type);
 	public abstract void announceCard(Card card);
 }

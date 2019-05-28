@@ -39,13 +39,20 @@ public class HumanPlayer extends Player{
 
 	@Override
 	public Card chooseSecondCard(Artist artist) {
-		io.showHand(this, hand, artist);
-		int index = io.getHandIndex(hand, artist);
-		if(index == -1) {
-			return null;
-		} else {
-			return hand.get(index);
+		
+		//skip asking for a second card if a player does not have one
+		boolean contains = false;
+		for(Card card : hand) {
+			if(card.getArtist() == artist) {
+				contains = true;
+			}
 		}
+		if(!contains) {
+			return null;
+		}
+		
+		io.showHand(this, hand, artist);
+		return hand.get(io.getHandIndex(hand, artist));
 	}
 
 }
