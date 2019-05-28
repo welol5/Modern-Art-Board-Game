@@ -98,4 +98,11 @@ public abstract class Player {
 	 */
 	public abstract boolean buy(Card card, int price);
 	
+	/**
+	 * This is here for debugging
+	 * @return
+	 */
+	public int getMoney() {
+		return money;
+	}
 }

@@ -56,6 +56,13 @@ public class GameDriver implements Runnable{
 			}
 
 			for(;true;turn = (turn+1)%players.length) {
+				
+				//debug
+				//show players money
+				for(Player player : players) {
+					System.err.println(player.name + " : " + player.getMoney());
+				}
+				
 				//get the painting that people will bid on
 				Card card = players[turn].chooseCard();
 
