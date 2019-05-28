@@ -56,7 +56,7 @@ public class HumanPlayer extends Player{
 		}
 		
 		io.showHand(this, hand, artist);
-		return hand.get(io.getHandIndex(hand, artist));
+		return hand.remove(io.getHandIndex(hand, artist));
 	}
 
 }
