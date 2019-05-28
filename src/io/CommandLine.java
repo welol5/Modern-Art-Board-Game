@@ -82,11 +82,11 @@ public class CommandLine extends BasicIO{
 	}
 
 	@Override
-	public int getBid(Player player, int highestSoFar) {
+	public int getBid(String player, int money, int highestSoFar) {
 		if(highestSoFar != -1) {
 			System.out.println("The highest bid so far is : " + highestSoFar);
 		}
-		System.out.print(player.name + ", how much would you like to bid? (-1 to abstain) : ");
+		System.out.print(player + ", how much would you like to bid? (you have " + money + ") (-1 to abstain) : ");
 		int bid = -1;
 		try {
 			while(true) {
@@ -128,7 +128,7 @@ public class CommandLine extends BasicIO{
 
 	@Override
 	public boolean askPlayertoBuy(Card card, int price) {
-		System.out.println("Would you like to buy the painting? (y/n)" + card.getArtist());
+		System.out.print("Would you like to buy the painting by " + card.getArtist() + " (y/n): ");
 		try {
 			String answer = input.readLine();
 			if(answer.matches("[yY]")) {
@@ -177,7 +177,7 @@ public class CommandLine extends BasicIO{
 
 	@Override
 	public void auctionWinner(Player player) {
-		System.out.println();
+		System.out.println(player.name + " has won this auction.");
 	}
 
 	@Override

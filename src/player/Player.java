@@ -97,4 +97,5 @@ public abstract class Player {
 	 * @return the players answer
 	 */
 	public abstract boolean buy(Card card, int price);
+	
 }

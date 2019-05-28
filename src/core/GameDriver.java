@@ -82,13 +82,13 @@ public class GameDriver implements Runnable{
 					io.announceCard(card);//TODO deal with doubleAuctions better
 					Bid winningBid;
 					if(card.getAuctionType() == AuctionType.ONCE_AROUND) {
-						System.out.println("Once Around");//debug
+						//System.out.println("Once Around");//debug
 						winningBid = onceAround(turn,card);
 					} else if(card.getAuctionType() == AuctionType.FIXED_PRICE){
-						System.out.println("Fixed");//debug
+						//System.out.println("Fixed");//debug
 						winningBid = fixedPrice(turn,card,players[turn].getFixedPrice(card));
 					} else if(card.getAuctionType() == AuctionType.SEALED){
-						System.out.println("Sealed");//debug
+						//System.out.println("Sealed");//debug
 						winningBid = sealed(card);
 					} else {
 						winningBid = standardBidding(turn, card);
@@ -109,6 +109,7 @@ public class GameDriver implements Runnable{
 							players[winningBid.index].givePainting(second);
 						}
 					}
+					io.auctionWinner(players[winningBid.index]);
 				} else {
 					//break out of the season once it is over
 					break;

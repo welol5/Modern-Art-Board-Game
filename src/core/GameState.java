@@ -38,14 +38,14 @@ public class GameState {
 		this.players = new Player[players.length];
 		this.players[0] = new HumanPlayer(players[0], io);
 		for(int i = 1; i < players.length; i++) {
-			this.players[i] = new RandomPlayer(players[i]);
+			this.players[i] = new RandomPlayer(players[i], io);
 		}
 		
 		//now the deck needs to be created and shuffled
 		makeDeck();
 		shuffleDeck();
-		printDeck();//debug
-		System.out.println("Deck sixe : " + deck.size());
+		//printDeck();//debug
+		//System.out.println("Deck sixe : " + deck.size());
 		
 		seasonValues = new HashMap<Artist, Integer>();
 		artistValues = new HashMap<Artist, Integer>();

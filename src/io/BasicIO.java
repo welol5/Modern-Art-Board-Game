@@ -20,7 +20,7 @@ public abstract class BasicIO {
 	public abstract int getHandIndex(int maxVal);
 	public abstract int getHandIndex(ArrayList<Card> hand, Artist artist);
 	public abstract void end();
-	public abstract int getBid(Player player, int highestSoFar);
+	public abstract int getBid(String player, int money, int highestSoFar);
 	public abstract int getFixedPrice(Card card);
 	public abstract boolean askPlayertoBuy(Card card, int price);
 	public abstract void auctionWinner(Player player);

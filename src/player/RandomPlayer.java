@@ -4,13 +4,16 @@ import java.util.Random;
 
 import core.Artist;
 import core.Card;
+import io.BasicIO;
 
 public class RandomPlayer extends Player {
 	
 	Random random = new Random();
+	BasicIO io;
 
-	public RandomPlayer(String name) {
+	public RandomPlayer(String name, BasicIO io) {
 		super(name);
+		this.io = io;
 	}
 
 	@Override
