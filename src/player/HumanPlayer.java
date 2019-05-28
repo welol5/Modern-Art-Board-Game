@@ -34,6 +34,10 @@ public class HumanPlayer extends Player{
 
 	@Override
 	public boolean buy(Card card, int price) {
+		//does not allow player to go into debt
+		if(price > money) {
+			return false;
+		}
 		return io.askPlayertoBuy(card, price);
 	}
 
