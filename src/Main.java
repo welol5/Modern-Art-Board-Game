@@ -11,7 +11,14 @@ import io.IOType;
 public class Main {
 
 	public static void main(String[] args) {
-		GameDriver driver = new GameDriver(IOType.COMMAND_LINE);
+		
+		GameDriver driver;
+		if(args.length > 0 && args[0].equalsIgnoreCase("-ai")) {
+			driver = new GameDriver(IOType.COMMAND_LINE, true);
+		} else {
+			driver = new GameDriver(IOType.COMMAND_LINE, false);
+		}
+		
 		Thread driverThread = new Thread(driver);
 		driverThread.start();
 	}

@@ -31,7 +31,7 @@ public class GameDriver implements Runnable{
 	 * IO types are public constant ints in the GameDriver class.
 	 * @param gameType
 	 */
-	public GameDriver(IOType type){
+	public GameDriver(IOType type, boolean aiTraining){
 		if(type == IOType.COMMAND_LINE) {
 			io = new CommandLine();
 		}
@@ -60,7 +60,6 @@ public class GameDriver implements Runnable{
 			}
 
 			for(;true;turn = (turn+1)%players.length) {
-				System.out.println("turn");
 
 				//debug
 				//show players money //this sometimes causes issues with io but its a debug thing anyway
@@ -158,7 +157,7 @@ public class GameDriver implements Runnable{
 				winner = player;
 			}
 			//debug
-			//System.out.println(player.name + " : " + player.getMoney());
+			System.out.println(player.name + " : " + player.getMoney());
 		}
 		io.announceWinner(winner);
 	}
