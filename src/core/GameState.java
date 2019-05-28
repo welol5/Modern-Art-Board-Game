@@ -36,8 +36,8 @@ public class GameState {
 	public GameState(String[] players, BasicIO io) {
 		//first all the new players need to be created
 		this.players = new Player[players.length];
-		this.players[0] = new HumanPlayer(players[0], io);
-		for(int i = 1; i < players.length; i++) {
+		//this.players[0] = new HumanPlayer(players[0], io);
+		for(int i = 0; i < players.length; i++) {
 			this.players[i] = new RandomPlayer(players[i], io);
 		}
 
@@ -105,7 +105,9 @@ public class GameState {
 				//the line below checks if the artist is not the highest amount sold
 				//if there is an artist in second place
 				//if the artist in second (currently) should not be there
-				if(artistTemp != artist && (artist2 == null || seasonValues.get(artistTemp) > seasonValues.get(artist2))) {
+				
+				//artist2 was null
+				if(artistTemp != artist && (artist2 == null || (artist != null && seasonValues.get(artistTemp) > seasonValues.get(artist2)))) {
 					artist2 = artistTemp;
 				}
 			}
