@@ -17,18 +17,18 @@ import player.RandomPlayer;
  *
  */
 public class GameState {
-	
+
 	private static final int[] DEAL_3_PLAYERS = {10,6,6,0};
 	private static final int[] DEAL_4_PLAYERS = {9,4,4,0};
 	private static final int[] DEAL_5_PLAYERS = {8,3,3,0};
 	public final int[] dealAmounts;
-	
+
 	private Player[] players;//The players
 	private ArrayList<Card> deck = new ArrayList<Card>();//the deck of cards that no palyer can see
-	
+
 	private HashMap<Artist, Integer> seasonValues;//contains counts of how many times an artists paintings have been sold for the season
 	private HashMap<Artist, Integer> artistValues;//contains the values for each artists paintings
-	
+
 	/**
 	 * This is used to setup a new game. It resets and shuffles the deck, resets players and painting values.
 	 * @param players
@@ -40,19 +40,19 @@ public class GameState {
 		for(int i = 1; i < players.length; i++) {
 			this.players[i] = new RandomPlayer(players[i], io);
 		}
-		
+
 		//now the deck needs to be created and shuffled
 		makeDeck();
 		shuffleDeck();
 		//printDeck();//debug
 		//System.out.println("Deck sixe : " + deck.size());
-		
+
 		seasonValues = new HashMap<Artist, Integer>();
 		artistValues = new HashMap<Artist, Integer>();
 		for(Artist artist: Artist.values()) {
 			artistValues.put(artist, 0);
 		}
-		
+
 		//set the deal amounts
 		if(players.length == 3) {
 			dealAmounts = DEAL_3_PLAYERS;
@@ -62,7 +62,7 @@ public class GameState {
 			dealAmounts = DEAL_5_PLAYERS;
 		}
 	}
-	
+
 	/**
 	 * Resets the counts of the paintings sold
 	 */
@@ -71,22 +71,32 @@ public class GameState {
 			seasonValues.put(artist, 0);
 		}
 	}
-	
+
 	/**
 	 * Call this on a painting being sold to keep track of how many are sold from that artist.
 	 * Also if the season has ended it will update the values of the paintings.
 	 * @param artist
 	 * @return an array of the top 3 artists if the season has ended
 	 */
-	public Artist[] sell(Artist artist) {
+	public Artist[] sell(Artist artist, boolean doubleAuction) {
+
+		//debug
+		for(Artist artistDebug : Artist.values()) {
+			System.out.println(artistDebug + " : " + seasonValues.get(artistDebug));
+		}
+
 		//the code for this is really weird and could probably be improved quite a bit
 		try {
 			seasonValues.put(artist, seasonValues.get(artist)+1);
 		} catch(NullPointerException e) {
 			seasonValues.put(artist, 1);
 		}
-		
-		if(seasonValues.get(artist) == 5) {
+		//if it was a double auction add 1 more
+		if(doubleAuction) {
+			seasonValues.put(artist, seasonValues.get(artist)+1);
+		}
+
+		if(seasonValues.get(artist) <= 5) {
 			//update the highest artist
 			artistValues.put(artist, artistValues.get(artist)+30);
 			//update the second highest
@@ -118,8 +128,8 @@ public class GameState {
 			return null;
 		}
 	}
-	
-	
+
+
 	/**
 	 * This method gets the count of how many times an artists painting has been sold during the current season.
 	 * @return a HashMap of the values
@@ -127,7 +137,7 @@ public class GameState {
 	public HashMap<Artist, Integer> getSeasonValues(){
 		return seasonValues;
 	}
-	
+
 	/**
 	 * Get the price of a specific artists paintings
 	 * @param artist
@@ -136,7 +146,7 @@ public class GameState {
 	public int getArtistValue(Artist artist) {
 		return artistValues.get(artist);
 	}
-	
+
 	/**
 	 * Get the player at an index
 	 * @param index
@@ -145,7 +155,7 @@ public class GameState {
 	public Player[] getPlayers() {
 		return players;
 	}
-	
+
 	/**
 	 * Prints the current state of the deck
 	 */
@@ -155,7 +165,7 @@ public class GameState {
 			System.out.println(card);
 		}
 	}
-	
+
 	/**
 	 * Draw a card from the deck
 	 * @return
@@ -163,7 +173,7 @@ public class GameState {
 	public Card drawCard() {
 		return deck.remove(0);
 	}
-	
+
 	/**
 	 * Shuffles the deck of cards
 	 */
@@ -176,13 +186,13 @@ public class GameState {
 			deck.add(temp);
 		}
 	}
-	
+
 	/**
 	 * This clears and adds all of the default cards to the deck
 	 */
 	private void makeDeck() {
 		deck.clear();
-		
+
 		//add the Lite Metal paintings
 		deck.add(new Card(Artist.LITE_METAL,AuctionType.SEALED));//
 		deck.add(new Card(Artist.LITE_METAL,AuctionType.SEALED));//
@@ -196,7 +206,7 @@ public class GameState {
 		deck.add(new Card(Artist.LITE_METAL,AuctionType.STANDARD));//
 		deck.add(new Card(Artist.LITE_METAL,AuctionType.STANDARD));//
 		deck.add(new Card(Artist.LITE_METAL,AuctionType.STANDARD));//
-		
+
 		//add the Yoko paintings
 		deck.add(new Card(Artist.YOKO,AuctionType.SEALED));//
 		deck.add(new Card(Artist.YOKO,AuctionType.SEALED));//
@@ -211,7 +221,7 @@ public class GameState {
 		deck.add(new Card(Artist.YOKO,AuctionType.STANDARD));//
 		deck.add(new Card(Artist.YOKO,AuctionType.STANDARD));//
 		deck.add(new Card(Artist.YOKO,AuctionType.STANDARD));//
-		
+
 		//add the Karl Gitter paintings
 		deck.add(new Card(Artist.KARL_GITTER,AuctionType.SEALED));//
 		deck.add(new Card(Artist.KARL_GITTER,AuctionType.SEALED));//
@@ -228,7 +238,7 @@ public class GameState {
 		deck.add(new Card(Artist.KARL_GITTER,AuctionType.STANDARD));//
 		deck.add(new Card(Artist.KARL_GITTER,AuctionType.STANDARD));//
 		deck.add(new Card(Artist.KARL_GITTER,AuctionType.STANDARD));//
-		
+
 		//add the Krypto paintings
 		deck.add(new Card(Artist.KRYPTO,AuctionType.SEALED));//
 		deck.add(new Card(Artist.KRYPTO,AuctionType.SEALED));//
@@ -246,7 +256,7 @@ public class GameState {
 		deck.add(new Card(Artist.KRYPTO,AuctionType.STANDARD));//
 		deck.add(new Card(Artist.KRYPTO,AuctionType.STANDARD));//
 		deck.add(new Card(Artist.KRYPTO,AuctionType.STANDARD));//
-		
+
 		//add the Christin P. paintings
 		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.SEALED));//
 		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.SEALED));//
