@@ -3,6 +3,7 @@ package player;
 import java.util.Random;
 
 import core.Artist;
+import core.AuctionType;
 import core.Card;
 import io.BasicIO;
 
@@ -26,7 +27,7 @@ public class RandomPlayer extends Player {
 		//check if the hand contains the artist
 		boolean contains = false;
 		for(Card c : hand) {
-			if(c.getArtist() == artist) {
+			if(c.getArtist() == artist && c.getAuctionType() != AuctionType.DOUBLE) {
 				contains = true;
 				break;
 			}
@@ -38,7 +39,7 @@ public class RandomPlayer extends Player {
 		//the player has a card that will work, choose one randomly
 		Card card = null;
 		int index = 0;
-		while(card == null || card.getArtist() != artist) {
+		while(card == null || (card.getArtist() != artist && card.getAuctionType() != AuctionType.DOUBLE)) {
 			index = random.nextInt(hand.size());
 			card = hand.get(index);
 		}
