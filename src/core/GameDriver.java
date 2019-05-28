@@ -25,6 +25,7 @@ public class GameDriver implements Runnable{
 	//GameState var
 	GameState state;
 	Player[] players;
+	String[] names;
 
 	/**
 	 * Setup the program by giving it a IO type.
@@ -36,11 +37,23 @@ public class GameDriver implements Runnable{
 			io = new CommandLine();
 		}
 	}
+	
+	public GameDriver(IOType type, boolean aiTraining, String[] names) {
+		if(type == IOType.COMMAND_LINE) {
+			io = new CommandLine();
+		}
+		
+		this.names = names;
+	}
 
 	@Override
 	public void run() {
 		//setup the game state
-		state = new GameState(io.getPlayers(), io);
+		if(names == null) {
+			state = new GameState(io.getPlayers(), io);
+		} else {
+			state = new GameState(names,io);
+		}
 		//get the players list to use later
 		players = state.getPlayers();
 		int turn = 0;//keeps track of whose turn it is
