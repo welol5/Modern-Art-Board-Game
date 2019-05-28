@@ -100,7 +100,7 @@ public class GameState {
 			//update the highest artist
 			artistValues.put(artist, artistValues.get(artist)+30);
 			//update the second highest
-			Artist artist2 = null;;
+			Artist artist2 = null;
 			for(Artist artistTemp : Artist.values()) {
 				//the line below checks if the artist is not the highest amount sold
 				//if there is an artist in second place
@@ -128,6 +128,53 @@ public class GameState {
 			return retVal;
 		} else {
 			return null;
+		}
+	}
+	
+	/**
+	 * Gets the top 3 artists of the season
+	 * @return the top 3 artist in an array
+	 */
+	public Artist[] getTopThree() {
+		Artist[] top3 = new Artist[3];
+		
+		for(Artist artist : Artist.values()) {
+			if(top3[0] == null || seasonValues.get(top3[0]) < seasonValues.get(artist)) {
+				top3[0] = artist;
+			}
+		}
+		
+		//find the second and third best
+		for(Artist artistTemp : Artist.values()) {
+			//the line below checks if the artist is not the highest amount sold
+			//if there is an artist in second place
+			//if the artist in second (currently) should not be there
+			
+			//artist2 was null
+			if(artistTemp != top3[0] && (top3[1] == null || (top3[0] != null && seasonValues.get(artistTemp) > seasonValues.get(top3[1])))) {
+				top3[1] = artistTemp;
+			}
+		}
+		//update the third highest
+		for(Artist artistTemp : Artist.values()) {
+			//the line below checks if the artist is not the highest amount sold
+			//the artist should not be the second highest
+			//if there is an artist in second place
+			//if the artist in second (currently) should not be there
+			if(artistTemp != top3[0] && artistTemp != top3[1] && (top3[2] == null || seasonValues.get(artistTemp) > seasonValues.get(top3[2]))) {
+				top3[2] = artistTemp;
+			}
+		}
+		
+		
+		return top3;
+	}
+	
+	public void updateTopThree(Artist[] top3) {
+		int increase = 30;
+		for(Artist artist : top3) {
+			artistValues.put(artist, artistValues.get(artist)+increase);
+			increase-=10;
 		}
 	}
 

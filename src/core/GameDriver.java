@@ -72,6 +72,7 @@ public class GameDriver implements Runnable{
 				}
 			}
 
+			boolean[] emptyHands = new boolean[players.length];
 			for(;true;turn = (turn+1)%players.length) {
 
 				//debug
@@ -84,6 +85,19 @@ public class GameDriver implements Runnable{
 				Card card = players[turn].chooseCard();
 				//if null is returned, the player had no cards
 				if(card == null) {
+					emptyHands[turn] = true;
+					
+					//if all the players had no cards the season should end
+					boolean allEmpty = true;
+					for(int h = 0; h < emptyHands.length && allEmpty; h++) {
+						allEmpty = allEmpty && emptyHands[h];
+					}
+					if(allEmpty) {
+						top3 = state.getTopThree();
+						state.updateTopThree(top3);
+						break;
+					}
+					
 					continue;
 				}
 
