@@ -48,6 +48,7 @@ public class GameDriver implements Runnable{
 		//the game is now ready for the first season
 		for(int i = 1; i <= 4; i++) {
 			io.startSeason(i);
+			state.resetSeason();
 			//this is setup for the end of the season
 			Artist[] top3;
 
@@ -142,7 +143,19 @@ public class GameDriver implements Runnable{
 				player.clearWinnings();
 			}
 		}
-
+		
+		//the game is over, time to see who won
+		Player winner = null;
+		for(Player player : players) {
+			if(winner == null) {
+				winner = player;
+			} else if(winner.getMoney() < player.getMoney()) {
+				winner = player;
+			}
+			//debug
+			//System.out.println(player.name + " : " + player.getMoney());
+		}
+		io.announceWinner(winner);
 	}
 
 	private Card getSecondCard(int turn, Artist artist) {

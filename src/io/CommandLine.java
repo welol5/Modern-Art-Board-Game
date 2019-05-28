@@ -198,4 +198,9 @@ public class CommandLine extends BasicIO{
 	public void announceCard(Card card) {
 		System.out.println(card);
 	}
+
+	@Override
+	public void announceWinner(Player player) {
+		System.out.println("The winner is " + player.name);
+	}
 }

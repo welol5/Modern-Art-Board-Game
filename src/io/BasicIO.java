@@ -26,4 +26,5 @@ public abstract class BasicIO {
 	public abstract void auctionWinner(Player player, int price);
 	public abstract void announceAuctionType(AuctionType type);
 	public abstract void announceCard(Card card);
+	public abstract void announceWinner(Player player);
 }
