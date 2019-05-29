@@ -130,6 +130,12 @@ public class GameDriver implements Runnable{
 				} else {
 					seasonEnd = state.sell(card.getArtist(), true);
 				}
+				
+				//announce the played card to the players
+				for(Player player : players) {
+					player.announceCard(card, !(second == null));
+				}
+				
 				if(!seasonEnd) {//this checks if the season is over by asking GameState
 					//the bidding can now begin
 					io.announceCard(card);//TODO deal with doubleAuctions better

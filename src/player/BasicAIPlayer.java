@@ -1,5 +1,7 @@
 package player;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import core.Artist;
@@ -16,10 +18,24 @@ public class BasicAIPlayer extends Player{
 
 	private Random random = new Random();
 	private BasicIO io;
+	
+	//memory
+	//hand keeps track of the cards in the players hand
+	private ArrayList<SeasonValue> playedCards = new ArrayList<SeasonValue>();//this could probably be an array
+	private HashMap<Artist,Integer> artistValues = new HashMap<Artist,Integer>();
 
 	public BasicAIPlayer(String name, BasicIO io) {
 		super(name);
 		this.io = io;
+		
+		//init artist values to 0 at the beginning of the game
+		for(Artist artist : Artist.values()) {
+			artistValues.put(artist, 0);
+		}
+		//init playedCards to 0s
+		for(Artist artist : Artist.values()) {
+			playedCards.add(new SeasonValue(artist));
+		}
 	}
 
 	@Override
@@ -81,6 +97,76 @@ public class BasicAIPlayer extends Player{
 			return random.nextBoolean();
 		} else {
 			return false;
+		}
+	}
+	
+	//below here are nested classes used for storing data
+	
+	/**
+	 *  Holds the count of how many of each artist painting has been sold during the current season.
+	 *  This is here so the AI has memory
+	 * @author William Elliman
+	 *
+	 */
+	private class SeasonValue implements Comparable<SeasonValue>{
+		
+		private final Artist artist;
+		private int count = 0;
+		
+		public SeasonValue(Artist artist) {
+			this.artist = artist;
+		}
+		
+		public void auction(boolean isDouble) {
+			count++;
+			if(isDouble) {
+				count++;
+			}
+		}
+		
+		public int getCount() {
+			return count;
+		}
+		
+		public Artist getArtist() {
+			return artist;
+		}
+		
+		/**
+		 * Resets the count for a new season
+		 */
+		public void reset() {
+			count = 0;
+		}
+		
+		public String toString() {
+			return artist + " : " + count;
+		}
+
+		@Override
+		public int compareTo(SeasonValue o) {
+			int diff = count-o.getCount();
+			if(diff != 0) {
+				return -diff;
+			} else {
+				for(Artist artist : Artist.values()) {
+					if(artist == this.artist) {
+						return -1;
+					} else if(artist == o.getArtist()){
+						return 1;
+					}
+				}
+			}
+			return 0;
+		}
+	}
+
+	@Override
+	public void announceCard(Card card, boolean isDouble) {
+		for(int i = 0; i < playedCards.size(); i++) {
+			if(playedCards.get(i).getArtist() == card.getArtist()) {
+				playedCards.get(i).auction(isDouble);
+			}
 		}
 	}
 }
