@@ -109,9 +109,6 @@ public class GameState {
 			}
 		}
 		seasonCounts.sort(valuesComparitor);
-		for(SeasonValue value : seasonCounts) {
-			System.out.println(value);
-		}
 		
 		if(seasonCounts.get(0).getCount() == 5) {
 			updateTopThree(getTopThree());
