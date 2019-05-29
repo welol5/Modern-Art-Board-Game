@@ -14,8 +14,8 @@ import io.BasicIO;
  */
 public class BasicAIPlayer extends Player{
 
-	Random random = new Random();
-	BasicIO io;
+	private Random random = new Random();
+	private BasicIO io;
 
 	public BasicAIPlayer(String name, BasicIO io) {
 		super(name);
@@ -82,32 +82,5 @@ public class BasicAIPlayer extends Player{
 		} else {
 			return false;
 		}
-	}
-
-	private Artist getFavoredArtist() {
-		int yoko = 0;
-		int krypto = 0;
-		int christin = 0;
-		int lite = 0;
-		int karl = 0;
-		
-		for(Card card : winnings) {
-			if(card.getArtist() == Artist.YOKO) {
-				yoko++;
-			} else if(card.getArtist() == Artist.KRYPTO) {
-				krypto++;
-			} else if(card.getArtist() == Artist.CHRISTIN_P) {
-				christin++;
-			} else if(card.getArtist() == Artist.LITE_METAL) {
-				lite++;
-			} else {
-				karl++;
-			}
-		}
-		
-		if(yoko > krypto && yoko > christin && yoko > lite && yoko > karl) {
-			return Artist.YOKO;
-		} //else if(krypto > )
-		return null;
 	}
 }
