@@ -7,6 +7,11 @@ import core.AuctionType;
 import core.Card;
 import io.BasicIO;
 
+/**
+ * This is a player that makes all of its decisions randomly
+ * @author William Elliman
+ *
+ */
 public class RandomPlayer extends Player {
 	
 	Random random = new Random();
