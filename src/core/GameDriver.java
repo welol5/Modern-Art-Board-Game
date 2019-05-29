@@ -28,9 +28,9 @@ public class GameDriver implements Runnable{
 	String[] names;
 
 	/**
-	 * Setup the program by giving it a IO type.
-	 * IO types are public constant ints in the GameDriver class.
-	 * @param gameType
+	 * Setup the program by giving it a IO type and tell it if it will be training genetic AI.
+	 * @param type the type of IO that the game will use
+	 * @param aiTraining
 	 */
 	public GameDriver(IOType type, boolean aiTraining){
 		if(type == IOType.COMMAND_LINE) {
@@ -38,6 +38,12 @@ public class GameDriver implements Runnable{
 		}
 	}
 	
+	/**
+	 * Setup the program by giving it a IO type and tell it if it will be training genetic AI.
+	 * @param type the type of IO that the game will use
+	 * @param aiTraining
+	 * @param names that will be used for the players
+	 */
 	public GameDriver(IOType type, boolean aiTraining, String[] names) {
 		if(type == IOType.COMMAND_LINE) {
 			io = new CommandLine();
