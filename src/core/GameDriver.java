@@ -118,12 +118,13 @@ public class GameDriver implements Runnable{
 					}
 				}
 
+				boolean seasonEnd = false;
 				if(second == null) {
-					top3 = state.sell(card.getArtist(), false);
+					seasonEnd = state.sell(card.getArtist(), false);
 				} else {
-					top3 = state.sell(card.getArtist(), true);
+					seasonEnd = state.sell(card.getArtist(), true);
 				}
-				if(top3 == null) {//this checks if the season is over by asking GameState
+				if(!seasonEnd) {//this checks if the season is over by asking GameState
 					//the bidding can now begin
 					io.announceCard(card);//TODO deal with doubleAuctions better
 					Bid winningBid;
@@ -163,6 +164,7 @@ public class GameDriver implements Runnable{
 			}
 
 			//the season is over by this point
+			top3 = state.getTopThree();
 			for(Player player: players) {
 				ArrayList<Card> paintings = player.getWinnings();
 				for(Card card : paintings) {
