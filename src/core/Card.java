@@ -1,22 +1,38 @@
 package core;
 
+/**
+ * The card object is used for holding the different properties of a card in the deck
+ * @author William Elliman
+ *
+ */
 public class Card {
 	private Artist artist;//artist of the painting
 	private AuctionType auctionType;//the type of auction
 	
+	/**
+	 * Creates a card
+	 * @param a the artist of the painting
+	 * @param t the auction type that will occure when this painting is sold
+	 */
 	public Card(Artist a, AuctionType t) {
 		artist = a;
 		auctionType = t;
 	}
 	
+	/**
+	 * @return the name of the artist
+	 */
 	public Artist getArtist() {
 		return artist;
 	}
 	
+	/**
+	 * @return the type of auction
+	 */
 	public AuctionType getAuctionType() {
 		return auctionType;
 	}
-	
+
 	public String toString() {
 		String string = "";
 		
