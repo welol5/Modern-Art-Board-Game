@@ -87,7 +87,7 @@ public abstract class Player {
 	 * @param card being bid on
 	 * @return the price the player is willing to pay
 	 */
-	public abstract int getBid(Card card, int highestSoFar);
+	public abstract int getBid(Card card, int highestSoFar, boolean isDouble);
 	
 	/**
 	 * Gets the price that will be used to sell the card

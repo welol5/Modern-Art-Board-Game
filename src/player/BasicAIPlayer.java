@@ -56,7 +56,7 @@ public class BasicAIPlayer extends Player{
 	}
 
 	@Override
-	public int getBid(Card card, int highestSoFar) {
+	public int getBid(Card card, int highestSoFar, boolean isDouble) {
 		if(highestSoFar == -1) {
 			return random.nextInt(money);
 		} else if(highestSoFar >= money){

@@ -27,7 +27,7 @@ public class HumanPlayer extends Player{
 	}
 
 	@Override
-	public int getBid(Card card, int highestSoFar) {
+	public int getBid(Card card, int highestSoFar, boolean idDouble) {
 		
 		return io.getBid(name, money, highestSoFar);
 	}

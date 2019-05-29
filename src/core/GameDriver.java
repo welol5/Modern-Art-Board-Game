@@ -136,15 +136,15 @@ public class GameDriver implements Runnable{
 					Bid winningBid;
 					if(card.getAuctionType() == AuctionType.ONCE_AROUND) {
 						//System.out.println("Once Around");//debug
-						winningBid = onceAround(turn,card);
+						winningBid = onceAround(turn,card,!(second == null));
 					} else if(card.getAuctionType() == AuctionType.FIXED_PRICE){
 						//System.out.println("Fixed");//debug
-						winningBid = fixedPrice(turn,card,players[turn].getFixedPrice(card));
+						winningBid = fixedPrice(turn,card,players[turn].getFixedPrice(card),!(second == null));
 					} else if(card.getAuctionType() == AuctionType.SEALED){
 						//System.out.println("Sealed");//debug
-						winningBid = sealed(card);
+						winningBid = sealed(card,!(second == null));
 					} else {
-						winningBid = standardBidding(turn, card);
+						winningBid = standardBidding(turn, card, !(second == null));
 					}
 
 					//execute the bid
@@ -218,7 +218,7 @@ public class GameDriver implements Runnable{
 	 * @param card the card being bid on
 	 * @return the index of the winner
 	 */
-	private Bid standardBidding(int turn, Card card) {
+	private Bid standardBidding(int turn, Card card, boolean isDouble) {
 		boolean[] bidding = new boolean[players.length];//used to tell how many players are still bidding
 		for(int i = 0; i < bidding.length; i++) {//all players are bidding
 			bidding[i] = true;
@@ -237,7 +237,7 @@ public class GameDriver implements Runnable{
 				}
 
 				//get the price a player is willing to pay
-				int bid = players[(turn+biddingTurn+1)%players.length].getBid(card, highestBid);
+				int bid = players[(turn+biddingTurn+1)%players.length].getBid(card, highestBid, isDouble);
 				if(bid==-1 || bid <= highestBid) {
 					bidding[(turn+biddingTurn+1)%players.length] = false;
 				} else {
@@ -269,12 +269,12 @@ public class GameDriver implements Runnable{
 	 * @param card the card being played
 	 * @return the best bid
 	 */
-	private Bid onceAround(int turn, Card card) {
+	private Bid onceAround(int turn, Card card, boolean isDouble) {
 		int highestBid = 0;
 		int highestBidder = turn;
 		for(int i = 0; i < players.length; i++) {
 			int biddingTurn = (turn+i+1)%players.length;
-			int bid = players[biddingTurn].getBid(card, highestBid);
+			int bid = players[biddingTurn].getBid(card, highestBid, isDouble);
 			if(bid > highestBid) {
 				highestBid = bid;
 				highestBidder = biddingTurn;
@@ -291,7 +291,7 @@ public class GameDriver implements Runnable{
 	 * @param price the price the card is being sold at
 	 * @return the winning bidder index and price it was sold for
 	 */
-	private Bid fixedPrice(int turn, Card card, int price) {
+	private Bid fixedPrice(int turn, Card card, int price, boolean isDouble) {
 		for(int i = 0; i < players.length-1; i++) {
 			int biddingTurn = (turn+i+1)%players.length;
 			if(players[biddingTurn].buy(card, price)) {
@@ -306,11 +306,11 @@ public class GameDriver implements Runnable{
 	 * @param card
 	 * @return the winning bid
 	 */
-	private Bid sealed(Card card) {
+	private Bid sealed(Card card, boolean isDouble) {
 		int highestBidder = -1;
 		int highestPrice = -1;
 		for(int i = 0; i < players.length; i++) {
-			int bid = players[i].getBid(card, -1);
+			int bid = players[i].getBid(card, -1, isDouble);
 			if(bid > highestPrice) {
 				highestPrice = bid;
 				highestBidder = i;
