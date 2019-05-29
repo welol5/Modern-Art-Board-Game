@@ -4,6 +4,11 @@ import core.Artist;
 import core.Card;
 import io.BasicIO;
 
+/**
+ * The class that allows human players to play by asking an IO object for all the humans decisions
+ * @author William Elliman
+ *
+ */
 public class HumanPlayer extends Player{
 	
 	BasicIO io;
