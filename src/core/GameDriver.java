@@ -12,7 +12,7 @@ import player.Player;
  * The GameDriver class is the main functional class of this program. It deals with keeping track of the rules and executing them when needed.
  * It also holds onto a GameState object that holds the data of the state of the game.
  * 
- * This thing is pretty ugly right now and could use a lot of cleanup
+ * It also on its on thread so in the future players could have time limits (may be needed for some AI)
  * 
  * @author William Elliman
  *
@@ -197,6 +197,12 @@ public class GameDriver implements Runnable{
 		io.announceWinner(winner);
 	}
 
+	/**
+	 * Gets a second card from a player if the first was a double
+	 * @param turn the index of the player
+	 * @param artist the type of artist that is required
+	 * @return the card the palyer decides to use
+	 */
 	private Card getSecondCard(int turn, Artist artist) {
 		Card card = null;
 		for(int i = 0; i < players.length; i++) {
