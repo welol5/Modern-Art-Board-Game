@@ -1,7 +1,9 @@
 package core;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.PriorityQueue;
 import java.util.Random;
 
 import io.BasicIO;
@@ -28,6 +30,8 @@ public class GameState {
 
 	private HashMap<Artist, Integer> seasonValues;//contains counts of how many times an artists paintings have been sold for the season
 	private HashMap<Artist, Integer> artistValues;//contains the values for each artists paintings
+	
+	private PriorityQueue<SeasonValue> seasonCounts;//new implementation of seasonValues
 
 	/**
 	 * This is used to setup a new game. It resets and shuffles the deck, resets players and painting values.
@@ -51,6 +55,32 @@ public class GameState {
 		artistValues = new HashMap<Artist, Integer>();
 		for(Artist artist: Artist.values()) {
 			artistValues.put(artist, 0);
+		}
+		
+		//init seasonCounts with a way to compare values
+		seasonCounts = new PriorityQueue<SeasonValue>(new Comparator<SeasonValue>() {
+
+			@Override
+			public int compare(SeasonValue arg0, SeasonValue arg1) {
+				int diff = arg0.getCount()-arg1.getCount();
+				if(diff != 0) {
+					return diff;
+				} else {
+					for(Artist artist : Artist.values()) {
+						if(arg0.getArtist() == artist) {
+							return 1;
+						} else if(arg0.getArtist() == artist) {
+							return -1;
+						}
+					}
+				}
+				//if this gets here, something went really wrong
+				return 0;
+			}
+			
+		});
+		for(Artist artist : Artist.values()) {
+			seasonCounts.add(new SeasonValue(artist));
 		}
 
 		//set the deal amounts
@@ -321,5 +351,30 @@ public class GameState {
 		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.STANDARD));//
 		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.STANDARD));//
 		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.STANDARD));//
+	}
+	
+	private class SeasonValue{
+		
+		Artist artist;
+		int count = 0;
+		
+		public SeasonValue(Artist artist) {
+			this.artist = artist;
+		}
+		
+		public void auction(boolean isDouble) {
+			count++;
+			if(isDouble) {
+				count++;
+			}
+		}
+		
+		public int getCount() {
+			return count;
+		}
+		
+		public Artist getArtist() {
+			return artist;
+		}
 	}
 }
