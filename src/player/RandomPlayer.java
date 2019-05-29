@@ -84,4 +84,10 @@ public class RandomPlayer extends Player {
 		}
 	}
 
+	@Override
+	public void announceCard(Card card) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -110,4 +110,10 @@ public abstract class Player {
 	public int getMoney() {
 		return money;
 	}
+	
+	/**
+	 * Allows the driver to tell all the players what card will be auctioned off without asking for a bid
+	 * @param card
+	 */
+	public abstract void announceCard(Card card);
 }

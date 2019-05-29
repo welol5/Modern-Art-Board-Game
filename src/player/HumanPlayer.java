@@ -64,4 +64,10 @@ public class HumanPlayer extends Player{
 		return hand.remove(io.getHandIndex(hand, artist));
 	}
 
+	@Override
+	public void announceCard(Card card) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
