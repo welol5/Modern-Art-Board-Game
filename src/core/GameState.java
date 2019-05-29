@@ -96,7 +96,6 @@ public class GameState {
 
 	/**
 	 * Call this on a painting being sold to keep track of how many are sold from that artist.
-	 * Also if the season has ended it will update the values of the paintings.
 	 * @param artist
 	 * @return an array of the top 3 artists if the season has ended
 	 */
@@ -113,6 +112,7 @@ public class GameState {
 		}
 		
 		if(seasonCounts.get(0).getCount() == 5) {
+			updateTopThree(getTopThree());
 			return true;
 		} else {
 			return false;
@@ -289,6 +289,12 @@ public class GameState {
 		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.STANDARD));//
 	}
 	
+	/**
+	 *  Holds the count of how many of each artist painting has been sold during the current season.
+	 *  This exists to make getting the top 3 artist easier
+	 * @author William Elliman
+	 *
+	 */
 	private class SeasonValue implements Comparable<SeasonValue>{
 		
 		private final Artist artist;
@@ -313,6 +319,9 @@ public class GameState {
 			return artist;
 		}
 		
+		/**
+		 * Resets the count for a new season
+		 */
 		public void reset() {
 			count = 0;
 		}
