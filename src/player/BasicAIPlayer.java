@@ -7,6 +7,11 @@ import core.AuctionType;
 import core.Card;
 import io.BasicIO;
 
+/**
+ * WIP
+ * @author William Elliman
+ *
+ */
 public class BasicAIPlayer extends Player{
 
 	Random random = new Random();
