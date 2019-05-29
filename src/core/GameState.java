@@ -10,6 +10,7 @@ import java.util.PriorityQueue;
 import java.util.Random;
 
 import io.BasicIO;
+import player.BasicAIPlayer;
 import player.HumanPlayer;
 import player.Player;
 import player.RandomPlayer;
@@ -50,9 +51,10 @@ public class GameState {
 		//first all the new players need to be created
 		this.players = new Player[players.length];
 		//this.players[0] = new HumanPlayer(players[0], io);
-		for(int i = 0; i < players.length; i++) {
+		for(int i = 0; i < players.length-1; i++) {
 			this.players[i] = new RandomPlayer(players[i], io);
 		}
+		this.players[players.length-1] = new BasicAIPlayer(players[players.length-1],io);
 
 		//now the deck needs to be created and shuffled
 		makeDeck();
