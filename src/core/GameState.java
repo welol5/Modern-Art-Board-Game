@@ -74,7 +74,7 @@ public class GameState {
 			seasonCounts.add(new SeasonValue(artist));
 		}
 		seasonCounts.sort(valuesComparitor);
-		System.out.println(seasonCounts.get(0));
+		//System.out.println(seasonCounts.get(0));
 
 		//set the deal amounts
 		if(players.length == 3) {
