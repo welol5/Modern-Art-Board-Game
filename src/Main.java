@@ -10,7 +10,7 @@ import io.IOType;
  */
 public class Main {
 	
-	private static String[] names = {"Player1","Player2","Player3"};
+	private static String[] names = {"Random1","Random2","AIPlayer"};
 
 	public static void main(String[] args) {
 		
