@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import core.Artist;
 import core.Card;
 
+/**
+ * Abstract class that has all methods snd properties that apply to all players
+ * @author William Elliman
+ *
+ */
 public abstract class Player {
 	public final String name;
 	protected int money;
