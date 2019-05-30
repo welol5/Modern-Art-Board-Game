@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import core.Artist;
 import core.Card;
+import core.ObservableGameState;
 
 /**
  * Abstract class that has all methods snd properties that apply to all players
@@ -72,28 +73,29 @@ public abstract class Player {
 	
 	/**
 	 * Have the player choose a card they would like to bid on.
+	 * @param state of the game
 	 * @return the card to bid on
 	 */
-	public abstract Card chooseCard();
+	public abstract Card chooseCard(ObservableGameState state);
 	
 	/**
 	 * When the first card chosen is double auction, a second is needed by the same artist
 	 * @return the second card
 	 */
-	public abstract Card chooseSecondCard(Artist artist);
+	public abstract Card chooseSecondCard(Artist artist, ObservableGameState state);
 	
 	/**
 	 * Used to get the price the player would like to bid
 	 * @param card being bid on
 	 * @return the price the player is willing to pay
 	 */
-	public abstract int getBid(Card card, int highestSoFar, boolean isDouble);
+	public abstract int getBid(ObservableGameState state, boolean isDouble);
 	
 	/**
 	 * Gets the price that will be used to sell the card
 	 * @return the price
 	 */
-	public abstract int getFixedPrice(Card card);
+	public abstract int getFixedPrice(ObservableGameState state);
 	
 	/**
 	 * Asks the player if they will buy the card
@@ -101,7 +103,7 @@ public abstract class Player {
 	 * @param price the player would buy the card at
 	 * @return the players answer
 	 */
-	public abstract boolean buy(Card card, int price);
+	public abstract boolean buy(ObservableGameState state);
 	
 	/**
 	 * This is here for debugging

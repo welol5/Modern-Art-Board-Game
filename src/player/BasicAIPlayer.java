@@ -7,6 +7,7 @@ import java.util.Random;
 import core.Artist;
 import core.AuctionType;
 import core.Card;
+import core.ObservableGameState;
 import core.ArtistCount;
 import io.BasicIO;
 
@@ -40,7 +41,7 @@ public class BasicAIPlayer extends Player{
 	}
 
 	@Override
-	public Card chooseCard() {
+	public Card chooseCard(ObservableGameState state) {
 		if(hand.size() == 0) {
 			return null;
 		}
@@ -48,7 +49,7 @@ public class BasicAIPlayer extends Player{
 	}
 
 	@Override
-	public Card chooseSecondCard(Artist artist) {
+	public Card chooseSecondCard(Artist artist, ObservableGameState state) {
 		//check if the hand contains the artist
 		boolean contains = false;
 		for(Card c : hand) {
@@ -73,28 +74,28 @@ public class BasicAIPlayer extends Player{
 	}
 
 	@Override
-	public int getBid(Card card, int highestSoFar, boolean isDouble) {
-		if(highestSoFar == -1) {
+	public int getBid(ObservableGameState state, boolean isDouble) {
+		if(state.highestBid == -1) {
 			return random.nextInt(money);
-		} else if(highestSoFar >= money){
+		} else if(state.highestBid >= money){
 			return -1;
 		} else {
 			//randomly decides not to bid half the time
 			if(random.nextDouble() < 0.5) {
 				return -1;
 			}
-			return random.nextInt(money-highestSoFar)+highestSoFar;
+			return random.nextInt(money-state.highestBid)+state.highestBid;
 		}
 	}
 
 	@Override
-	public int getFixedPrice(Card card) {
+	public int getFixedPrice(ObservableGameState state) {
 		return random.nextInt(money);
 	}
 
 	@Override
-	public boolean buy(Card card, int price) {
-		if(price < money) {
+	public boolean buy(ObservableGameState state) {
+		if(state.highestBid < money) {
 			return random.nextBoolean();
 		} else {
 			return false;
