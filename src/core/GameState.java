@@ -29,7 +29,6 @@ public class GameState {
 	private static final int[] DEAL_5_PLAYERS = {8,3,3,0};
 	public final int[] dealAmounts;
 
-	private Player[] players;//The players
 	private ArrayList<Card> deck = new ArrayList<Card>();//the deck of cards that no palyer can see
 
 	private HashMap<Artist, Integer> artistValues;//contains the values for each artists paintings
@@ -47,14 +46,7 @@ public class GameState {
 	 * This is used to setup a new game. It resets and shuffles the deck, resets players and painting values.
 	 * @param players
 	 */
-	public GameState(String[] players, BasicIO io) {
-		//first all the new players need to be created
-		this.players = new Player[players.length];
-		//this.players[0] = new HumanPlayer(players[0], io);
-		for(int i = 0; i < players.length-1; i++) {
-			this.players[i] = new RandomPlayer(players[i], io);
-		}
-		this.players[players.length-1] = new BasicAIPlayer(players[players.length-1],io);
+	public GameState(int playerCount) {
 
 		//now the deck needs to be created and shuffled
 		makeDeck();
@@ -77,9 +69,9 @@ public class GameState {
 		//System.out.println(seasonCounts.get(0));
 
 		//set the deal amounts
-		if(players.length == 3) {
+		if(playerCount == 3) {
 			dealAmounts = DEAL_3_PLAYERS;
-		} else if(players.length == 4) {
+		} else if(playerCount == 4) {
 			dealAmounts = DEAL_4_PLAYERS;
 		} else {
 			dealAmounts = DEAL_5_PLAYERS;
@@ -159,15 +151,6 @@ public class GameState {
 	 */
 	public int getArtistValue(Artist artist) {
 		return artistValues.get(artist);
-	}
-
-	/**
-	 * Get the player at an index
-	 * @param index
-	 * @return the player
-	 */
-	public Player[] getPlayers() {
-		return players;
 	}
 
 	/**

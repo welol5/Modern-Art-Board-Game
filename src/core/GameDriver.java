@@ -6,7 +6,11 @@ import java.util.HashMap;
 import io.BasicIO;
 import io.CommandLine;
 import io.IOType;
+import player.BasicAIPlayer;
+import player.HumanPlayer;
 import player.Player;
+import player.PlayerType;
+import player.RandomPlayer;
 
 /**
  * The GameDriver class is the main functional class of this program. It deals with keeping track of the rules and executing them when needed.
@@ -18,6 +22,10 @@ import player.Player;
  *
  */
 public class GameDriver implements Runnable{
+	
+	//Defaults to make testing easier
+	private static final String[] defaultNames = {"Player1","Player2","Player3"};
+	private static final PlayerType[] defaultTypes = {PlayerType.Random,PlayerType.Random,PlayerType.BasicAI};
 
 	//IO var
 	private BasicIO io;
@@ -37,7 +45,7 @@ public class GameDriver implements Runnable{
 			io = new CommandLine();
 		}
 	}
-	
+
 	/**
 	 * Setup the program by giving it a IO type and tell it if it will be training genetic AI.
 	 * @param type the type of IO that the game will use
@@ -48,20 +56,16 @@ public class GameDriver implements Runnable{
 		if(type == IOType.COMMAND_LINE) {
 			io = new CommandLine();
 		}
-		
+
 		this.names = names;
 	}
 
 	@Override
 	public void run() {
 		//setup the game state
-		if(names == null) {
-			state = new GameState(io.getPlayers(), io);
-		} else {
-			state = new GameState(names,io);
-		}
-		//get the players list to use later
-		players = state.getPlayers();
+		state = new GameState(defaultNames.length);
+		//Make the list of players
+		players = makePlayers(defaultNames, io, defaultTypes);
 		int turn = 0;//keeps track of whose turn it is
 
 		//the game is now ready for the first season
@@ -83,16 +87,16 @@ public class GameDriver implements Runnable{
 
 				//debug
 				//show players money //this sometimes causes issues with io but its a debug thing anyway
-//				for(Player player : players) {
-//					System.err.println(player.name + " : " + player.getMoney());
-//				}
+				//				for(Player player : players) {
+				//					System.err.println(player.name + " : " + player.getMoney());
+				//				}
 
 				//get the painting that people will bid on
 				Card card = players[turn].chooseCard();
 				//if null is returned, the player had no cards
 				if(card == null) {
 					emptyHands[turn] = true;
-					
+
 					//if all the players had no cards the season should end
 					boolean allEmpty = true;
 					for(int h = 0; h < emptyHands.length && allEmpty; h++) {
@@ -103,7 +107,7 @@ public class GameDriver implements Runnable{
 						state.updateTopThree(top3);
 						break;
 					}
-					
+
 					continue;
 				}
 
@@ -130,12 +134,12 @@ public class GameDriver implements Runnable{
 				} else {
 					seasonEnd = state.sell(card.getArtist(), true);
 				}
-				
+
 				//announce the played card to the players
 				for(Player player : players) {
 					player.announceCard(card, !(second == null));
 				}
-				
+
 				if(!seasonEnd) {//this checks if the season is over by asking GameState
 					//the bidding can now begin
 					io.announceCard(card);//TODO deal with doubleAuctions better
@@ -188,7 +192,7 @@ public class GameDriver implements Runnable{
 				player.clearWinnings();
 			}
 		}
-		
+
 		//the game is over, time to see who won
 		Player winner = null;
 		for(Player player : players) {
@@ -201,6 +205,35 @@ public class GameDriver implements Runnable{
 			System.out.println(player.name + " : " + player.getMoney());
 		}
 		io.announceWinner(winner);
+	}
+
+	/**
+	 * This is used to take in a list of player names, types, and an io object to make the actual list of players.
+	 * @param names of the players
+	 * @param io for io
+	 * @param types of the players
+	 * @return the list of players
+	 */
+	private Player[] makePlayers(String[] names, BasicIO io, PlayerType[] types) {
+		Player[] players = new Player[names.length];
+		for(int i = 0; i < players.length; i++) {
+			if(types[i] == PlayerType.Human) {
+				players[i] = new HumanPlayer(names[i], io);
+			} else if(types[i] == PlayerType.BasicAI) {
+				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
+					players[i] = new BasicAIPlayer("AIPlayer" + i, io);
+				} else {
+					players[i] = new BasicAIPlayer(names[i], io);
+				}
+			} else {
+				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
+					players[i] = new RandomPlayer("RandomPlayer" + i, io);
+				} else {
+					players[i] = new RandomPlayer(names[i], io);
+				}
+			}
+		}
+		return players;
 	}
 
 	/**
