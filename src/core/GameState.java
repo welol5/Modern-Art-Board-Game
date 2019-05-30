@@ -28,6 +28,8 @@ public class GameState {
 	private static final int[] DEAL_4_PLAYERS = {9,4,4,0};
 	private static final int[] DEAL_5_PLAYERS = {8,3,3,0};
 	public final int[] dealAmounts;
+	
+	public final int playerCount;
 
 	private ArrayList<Card> deck = new ArrayList<Card>();//the deck of cards that no palyer can see
 
@@ -47,6 +49,7 @@ public class GameState {
 	 * @param players
 	 */
 	public GameState(int playerCount) {
+		this.playerCount = playerCount;
 
 		//now the deck needs to be created and shuffled
 		makeDeck();
