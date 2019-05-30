@@ -20,7 +20,7 @@ public class BasicAIPlayer extends Player{
 
 	private Random random = new Random();
 	private BasicIO io;
-	
+
 	//memory
 	//hand keeps track of the cards in the players hand
 	private ArrayList<ArtistCount> playedCards = new ArrayList<ArtistCount>();//this could probably be an array
@@ -28,7 +28,7 @@ public class BasicAIPlayer extends Player{
 	public BasicAIPlayer(String name, BasicIO io) {
 		super(name);
 		this.io = io;
-		
+
 		//init playedCards to 0s
 		for(Artist artist : Artist.values()) {
 			playedCards.add(new ArtistCount(artist));
@@ -37,8 +37,37 @@ public class BasicAIPlayer extends Player{
 
 	@Override
 	public Card chooseCard(ObservableGameState state) {
-		
-		
+		//go through the artists in terms of most to least favored
+		for(int f = 0; f < Artist.values().length; f++) {
+			Artist favored = chooseFavordArtist(state, f);
+			Card bestCard = null;
+			
+			//if a card that is a double auction of the favored artist can be found, play it
+			//requires a second card to be present
+			for(Card card : hand) {
+				if(card.getArtist() == favored && card.getAuctionType() == AuctionType.DOUBLE) {
+					bestCard = card;
+				}
+			}
+			//bestCard will be null if there are no double or if none exist
+			if(bestCard != null) {
+				hand.remove(hand.indexOf(bestCard));
+				for(Card card : hand) {
+					if(card.getArtist() == bestCard.getArtist()) {
+						return bestCard;
+					}
+				}
+				//no other cards had a matching artist
+			} else {
+				//no doubles exist so return the first one if any exist
+				for(Card card : hand) {
+					if(card.getArtist() == favored) {
+						return card;
+					}
+				}
+			}
+		}
+
 		//this will be left here until the full method is implemented
 		if(hand.size() == 0) {
 			return null;
@@ -73,7 +102,7 @@ public class BasicAIPlayer extends Player{
 
 	@Override
 	public int getBid(ObservableGameState state, boolean isDouble) {
-		
+
 		//first thing to do is to find the max the ai is willing to pay
 		//starting with it always being half its est. value 
 		int value = 0;
@@ -85,19 +114,19 @@ public class BasicAIPlayer extends Player{
 				index = i;
 			}
 		}
-		
+
 		if(inTop3) {
 			value = state.getArtistValue(state.card.getArtist()) + (30-(10*index));
 		} else {
 			value = 0;
 		}
-		
+
 		if(isDouble) {
 			value *=2;
 		}
-		
+
 		int maxValue = value/2;
-		
+
 		if(state.highestBid < maxValue) {
 			return state.highestBid+1;
 		} else {
@@ -118,7 +147,7 @@ public class BasicAIPlayer extends Player{
 			return false;
 		}
 	}
-	
+
 	@Override
 	public void announceCard(Card card, boolean isDouble) {
 		for(int i = 0; i < playedCards.size(); i++) {
@@ -127,7 +156,7 @@ public class BasicAIPlayer extends Player{
 			}
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param state state of the game
@@ -135,13 +164,13 @@ public class BasicAIPlayer extends Player{
 	 * @return the favored artist
 	 */
 	private Artist chooseFavordArtist(ObservableGameState state, int favor) {
-		
+
 		//the favored artist will be the one with the fewest cards needed to complete the set
 		//this also requires the cards needed to be in hand
 		//if no set can be completed with this it will choose the one with the closest to completing a complete set
-		
+
 		ArtistCount[] artistCounts = state.getSeasonValues();
-		
+
 		int highestCount = -1;//used for picking if no set can be made
 		Artist highestArtist = null;//used for picking if no set can be made
 		for(int i = favor; i < artistCounts.length; i++) {
@@ -161,11 +190,11 @@ public class BasicAIPlayer extends Player{
 					highestArtist = artistCounts[i].getArtist();
 				}
 			}
-			
+
 		}
-		
+
 		return highestArtist;
 	}
-	
+
 	//below here are nested classes used for storing data
 }
