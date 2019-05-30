@@ -148,7 +148,8 @@ public class GameState {
 	 * @return returns the list of the artists and their counts ordered by value
 	 */
 	public ArtistCount[] getSeasonValues() {
-		return (ArtistCount[]) seasonCounts.toArray();
+		ArtistCount[] counts = new ArtistCount[seasonCounts.size()];
+		return seasonCounts.toArray(counts);
 	}
 
 	/**
