@@ -187,6 +187,11 @@ public class BasicAIPlayer extends Player{
 		return highestArtist;
 	}
 
+	/**
+	 * Gets the value of the card/artist in a specific state
+	 * @param state that contains the card being bid on
+	 * @return the value of the artist of the card
+	 */
 	private int getValue(ObservableGameState state) {
 		int value = 0;
 		boolean inTop3 = false;
