@@ -34,7 +34,7 @@ public class GameDriver implements Runnable{
 
 	//GameState var
 	GameState state;
-	ObservableGameState OGS;
+	//ObservableGameState OGS;
 	Player[] players;
 	String[] names;
 
