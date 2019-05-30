@@ -41,7 +41,7 @@ public class BasicAIPlayer extends Player{
 		for(int f = 0; f < Artist.values().length; f++) {
 			Artist favored = chooseFavordArtist(state, f);
 			Card bestCard = null;
-			
+
 			//if a card that is a double auction of the favored artist can be found, play it
 			//requires a second card to be present
 			for(Card card : hand) {
@@ -62,6 +62,7 @@ public class BasicAIPlayer extends Player{
 				//no doubles exist so return the first one if any exist
 				for(Card card : hand) {
 					if(card.getArtist() == favored) {
+						hand.remove(hand.indexOf(card));
 						return card;
 					}
 				}
@@ -105,29 +106,14 @@ public class BasicAIPlayer extends Player{
 
 		//first thing to do is to find the max the ai is willing to pay
 		//starting with it always being half its est. value 
-		int value = 0;
-		boolean inTop3 = false;
-		int index = -1;
-		for(int i = 0; i < state.getTopSeasonValues().length; i++) {
-			if(state.getTopSeasonValues()[i] == state.card.getArtist()) {
-				inTop3 = true;
-				index = i;
-			}
-		}
-
-		if(inTop3) {
-			value = state.getArtistValue(state.card.getArtist()) + (30-(10*index));
-		} else {
-			value = 0;
-		}
-
+		int value  = getValue(state);
 		if(isDouble) {
 			value *=2;
 		}
 
 		int maxValue = value/2;
 
-		if(state.highestBid < maxValue) {
+		if(state.highestBid < maxValue && money > maxValue+1) {
 			return state.highestBid+1;
 		} else {
 			return -1;
@@ -136,13 +122,21 @@ public class BasicAIPlayer extends Player{
 
 	@Override
 	public int getFixedPrice(ObservableGameState state) {
-		return random.nextInt(money);
+		int maxValue = getValue(state)/2;
+		if(maxValue < money) {
+			return maxValue;
+		} else {
+			return money;
+		}
 	}
 
 	@Override
 	public boolean buy(ObservableGameState state) {
-		if(state.highestBid < money) {
-			return random.nextBoolean();
+
+		int value = getValue(state);
+
+		if(state.highestBid < value/2 && money > state.highestBid) {
+			return true;
 		} else {
 			return false;
 		}
@@ -196,5 +190,22 @@ public class BasicAIPlayer extends Player{
 		return highestArtist;
 	}
 
-	//below here are nested classes used for storing data
+	private int getValue(ObservableGameState state) {
+		int value = 0;
+		boolean inTop3 = false;
+		int index = -1;
+		for(int i = 0; i < state.getTopSeasonValues().length; i++) {
+			if(state.getTopSeasonValues()[i] == state.card.getArtist()) {
+				inTop3 = true;
+				index = i;
+			}
+		}
+
+		if(inTop3) {
+			value = state.getArtistValue(state.card.getArtist()) + (30-(10*index));
+		} else {
+			value = 0;
+		}
+		return value;
+	}
 }

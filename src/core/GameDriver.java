@@ -22,7 +22,7 @@ import player.RandomPlayer;
  *
  */
 public class GameDriver implements Runnable{
-	
+
 	//Defaults to make testing easier
 	private static final String[] defaultNames = {"RandomPlayer1","RandomPlayer2","AIPlayer"};
 	private static final PlayerType[] defaultTypes = {PlayerType.Random,PlayerType.Random,PlayerType.BasicAI};
@@ -66,7 +66,7 @@ public class GameDriver implements Runnable{
 		//setup the game state
 		state = new GameState(defaultNames.length);
 		//make the observableState
-		
+
 		//Make the list of players
 		players = makePlayers(defaultNames, io, defaultTypes);
 		int turn = 0;//keeps track of whose turn it is
@@ -90,9 +90,9 @@ public class GameDriver implements Runnable{
 
 				//debug
 				//show players money //this sometimes causes issues with io but its a debug thing anyway
-				//				for(Player player : players) {
-				//					System.err.println(player.name + " : " + player.getMoney());
-				//				}
+//				for(Player player : players) {
+//					System.out.println(player.name + " : " + player.getMoney());
+//				}
 
 				//get the painting that people will bid on
 				Card card = players[turn].chooseCard(new ObservableGameState(players.length, null, -1, state));
