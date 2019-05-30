@@ -128,7 +128,13 @@ public class BasicAIPlayer extends Player{
 		}
 	}
 	
-	private Artist chooseFavordArtist(ObservableGameState state) {
+	/**
+	 * 
+	 * @param state state of the game
+	 * @param favor if this is 0 it will return the most favored, 1 is second most favored and so on
+	 * @return the favored artist
+	 */
+	private Artist chooseFavordArtist(ObservableGameState state, int favor) {
 		
 		//the favored artist will be the one with the fewest cards needed to complete the set
 		//this also requires the cards needed to be in hand
@@ -138,7 +144,7 @@ public class BasicAIPlayer extends Player{
 		
 		int highestCount = -1;//used for picking if no set can be made
 		Artist highestArtist = null;//used for picking if no set can be made
-		for(int i = 0; i < artistCounts.length; i++) {
+		for(int i = favor; i < artistCounts.length; i++) {
 			int count = artistCounts[i].getCount();
 			//include the card if one is being played
 			if(state.card != null && state.card.getArtist() == artistCounts[i].getArtist()) {
