@@ -24,7 +24,7 @@ import player.RandomPlayer;
 public class GameDriver implements Runnable{
 	
 	//Defaults to make testing easier
-	private static final String[] defaultNames = {"Player1","Player2","Player3"};
+	private static final String[] defaultNames = {"RandomPlayer1","RandomPlayer2","AIPlayer"};
 	private static final PlayerType[] defaultTypes = {PlayerType.Random,PlayerType.Random,PlayerType.BasicAI};
 
 	//IO var
