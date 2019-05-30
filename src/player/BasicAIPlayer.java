@@ -7,6 +7,7 @@ import java.util.Random;
 import core.Artist;
 import core.AuctionType;
 import core.Card;
+import core.SeasonValue;
 import io.BasicIO;
 
 /**
@@ -100,67 +101,6 @@ public class BasicAIPlayer extends Player{
 		}
 	}
 	
-	//below here are nested classes used for storing data
-	
-	/**
-	 *  Holds the count of how many of each artist painting has been sold during the current season.
-	 *  This is here so the AI has memory
-	 * @author William Elliman
-	 *
-	 */
-	private class SeasonValue implements Comparable<SeasonValue>{
-		
-		private final Artist artist;
-		private int count = 0;
-		
-		public SeasonValue(Artist artist) {
-			this.artist = artist;
-		}
-		
-		public void auction(boolean isDouble) {
-			count++;
-			if(isDouble) {
-				count++;
-			}
-		}
-		
-		public int getCount() {
-			return count;
-		}
-		
-		public Artist getArtist() {
-			return artist;
-		}
-		
-		/**
-		 * Resets the count for a new season
-		 */
-		public void reset() {
-			count = 0;
-		}
-		
-		public String toString() {
-			return artist + " : " + count;
-		}
-
-		@Override
-		public int compareTo(SeasonValue o) {
-			int diff = count-o.getCount();
-			if(diff != 0) {
-				return -diff;
-			} else {
-				for(Artist artist : Artist.values()) {
-					if(artist == this.artist) {
-						return -1;
-					} else if(artist == o.getArtist()){
-						return 1;
-					}
-				}
-			}
-			return 0;
-		}
-	}
-
 	@Override
 	public void announceCard(Card card, boolean isDouble) {
 		for(int i = 0; i < playedCards.size(); i++) {
@@ -169,4 +109,11 @@ public class BasicAIPlayer extends Player{
 			}
 		}
 	}
+	
+	private Artist chooseFavordArtist() {
+		//need to know cards in hand and the season values
+		return null;
+	}
+	
+	//below here are nested classes used for storing data
 }
