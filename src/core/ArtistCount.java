@@ -1,11 +1,11 @@
 package core;
 
 
-public class SeasonValue implements Comparable<SeasonValue> {
+public class ArtistCount implements Comparable<ArtistCount> {
 	private final Artist artist;
 	private int count = 0;
 	
-	public SeasonValue(Artist artist) {
+	public ArtistCount(Artist artist) {
 		this.artist = artist;
 	}
 	
@@ -36,7 +36,7 @@ public class SeasonValue implements Comparable<SeasonValue> {
 	}
 
 	@Override
-	public int compareTo(SeasonValue o) {
+	public int compareTo(ArtistCount o) {
 		int diff = count-o.getCount();
 		if(diff != 0) {
 			return -diff;

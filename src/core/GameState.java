@@ -33,10 +33,10 @@ public class GameState {
 
 	private HashMap<Artist, Integer> artistValues;//contains the values for each artists paintings
 	
-	private ArrayList<SeasonValue> seasonCounts;//keeps track of how many of each painting has been sold and is sorted
-	private static Comparator<SeasonValue> valuesComparitor = new Comparator<SeasonValue>() {
+	private ArrayList<ArtistCount> seasonCounts;//keeps track of how many of each painting has been sold and is sorted
+	private static Comparator<ArtistCount> valuesComparitor = new Comparator<ArtistCount>() {
 		@Override
-		public int compare(SeasonValue o1, SeasonValue o2) {
+		public int compare(ArtistCount o1, ArtistCount o2) {
 			return o1.compareTo(o2);
 		}
 		
@@ -61,9 +61,9 @@ public class GameState {
 		
 		//init seasonCounts with a way to compare values
 		//this is a special arraylist that sorts the list after a new item is added
-		seasonCounts = new ArrayList<SeasonValue>();
+		seasonCounts = new ArrayList<ArtistCount>();
 		for(Artist artist : Artist.values()) {
-			seasonCounts.add(new SeasonValue(artist));
+			seasonCounts.add(new ArtistCount(artist));
 		}
 		seasonCounts.sort(valuesComparitor);
 		//System.out.println(seasonCounts.get(0));
@@ -82,7 +82,7 @@ public class GameState {
 	 * Resets the counts of the paintings sold
 	 */
 	public void resetSeason() {
-		for(SeasonValue value : seasonCounts) {
+		for(ArtistCount value : seasonCounts) {
 			value.reset();
 		}
 		seasonCounts.sort(valuesComparitor);
@@ -95,7 +95,7 @@ public class GameState {
 	 */
 	public boolean sell(Artist artist, boolean doubleAuction) {
 		
-		for(SeasonValue value : seasonCounts) {
+		for(ArtistCount value : seasonCounts) {
 			if(value.getArtist() == artist) {
 				value.auction(doubleAuction);
 			}
