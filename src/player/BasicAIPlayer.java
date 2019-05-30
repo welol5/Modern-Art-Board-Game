@@ -1,7 +1,6 @@
 package player;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
 import core.Artist;
@@ -19,7 +18,6 @@ import io.BasicIO;
 public class BasicAIPlayer extends Player{
 
 	private Random random = new Random();
-	private BasicIO io;
 
 	//memory
 	//hand keeps track of the cards in the players hand
@@ -27,7 +25,6 @@ public class BasicAIPlayer extends Player{
 
 	public BasicAIPlayer(String name, BasicIO io) {
 		super(name);
-		this.io = io;
 
 		//init playedCards to 0s
 		for(Artist artist : Artist.values()) {
