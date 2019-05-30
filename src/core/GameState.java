@@ -143,6 +143,13 @@ public class GameState {
 		}
 		return -1;
 	}
+	
+	/**
+	 * @return returns the list of the artists and their counts ordered by value
+	 */
+	public ArtistCount[] getSeasonValues() {
+		return (ArtistCount[]) seasonCounts.toArray();
+	}
 
 	/**
 	 * Get the price of a specific artists paintings
