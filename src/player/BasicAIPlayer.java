@@ -42,6 +42,9 @@ public class BasicAIPlayer extends Player{
 
 	@Override
 	public Card chooseCard(ObservableGameState state) {
+		
+		
+		//this will be left here until the full method is implemented
 		if(hand.size() == 0) {
 			return null;
 		}
@@ -111,9 +114,33 @@ public class BasicAIPlayer extends Player{
 		}
 	}
 	
-	private Artist chooseFavordArtist() {
-		//need to know cards in hand and the season values
-		return null;
+	private Artist chooseFavordArtist(ObservableGameState state) {
+		
+		//the favored artist will be the one with the fewest cards needed to complete the set
+		//this also requires the cards needed to be in hand
+		//if no set can be completed with this it will choose the one with the closest to completing a complete set
+		
+		ArtistCount[] artistCounts = state.getSeasonValues();
+		
+		int highestCount = -1;//used for picking if no set can be made
+		Artist highestArtist = null;//used for picking if no set can be made
+		for(int i = 0; i < artistCounts.length; i++) {
+			int count = artistCounts[i].getCount();
+			for(Card card : hand) {
+				if(card.getArtist() == artistCounts[i].getArtist()) {
+					count++;
+				}
+				if(count >= 5) {
+					return artistCounts[i].getArtist();
+				} else if(count > highestCount){
+					highestCount = count;
+					highestArtist = artistCounts[i].getArtist();
+				}
+			}
+			
+		}
+		
+		return highestArtist;
 	}
 	
 	//below here are nested classes used for storing data
