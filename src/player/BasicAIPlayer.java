@@ -24,16 +24,11 @@ public class BasicAIPlayer extends Player{
 	//memory
 	//hand keeps track of the cards in the players hand
 	private ArrayList<ArtistCount> playedCards = new ArrayList<ArtistCount>();//this could probably be an array
-	private HashMap<Artist,Integer> artistValues = new HashMap<Artist,Integer>();
 
 	public BasicAIPlayer(String name, BasicIO io) {
 		super(name);
 		this.io = io;
 		
-		//init artist values to 0 at the beginning of the game
-		for(Artist artist : Artist.values()) {
-			artistValues.put(artist, 0);
-		}
 		//init playedCards to 0s
 		for(Artist artist : Artist.values()) {
 			playedCards.add(new ArtistCount(artist));
