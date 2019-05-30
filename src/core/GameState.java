@@ -112,6 +112,10 @@ public class GameState {
 		return top3;
 	}
 	
+	/**
+	 * Goes to the top 3 artists and updates their prices
+	 * @param top3 a list of the top 3 artists
+	 */
 	public void updateTopThree(Artist[] top3) {
 		int increase = 30;
 		for(Artist artist : top3) {

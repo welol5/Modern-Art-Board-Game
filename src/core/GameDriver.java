@@ -23,11 +23,11 @@ import player.RandomPlayer;
 public class GameDriver implements Runnable{
 	
 	//multiple games vars
-	int iterations = 100;
+	private int iterations = 1;
 
 	//Defaults to make testing easier
 	private static final String[] defaultNames = {"Will","RandomPlayer2","AIPlayer"};
-	private static final PlayerType[] defaultTypes = {PlayerType.Random,PlayerType.Random,PlayerType.BasicAI};
+	private static final PlayerType[] defaultTypes = {PlayerType.Human,PlayerType.Random,PlayerType.BasicAI};
 
 	//IO var
 	private BasicIO io;
