@@ -78,16 +78,35 @@ public class BasicAIPlayer extends Player{
 
 	@Override
 	public int getBid(ObservableGameState state, boolean isDouble) {
-		if(state.highestBid == -1) {
-			return random.nextInt(money);
-		} else if(state.highestBid >= money){
-			return -1;
-		} else {
-			//randomly decides not to bid half the time
-			if(random.nextDouble() < 0.5) {
-				return -1;
+		
+		//first thing to do is to find the max the ai is willing to pay
+		//starting with it always being half its est. value 
+		int value = 0;
+		boolean inTop3 = false;
+		int index = -1;
+		for(int i = 0; i < state.getTopSeasonValues().length; i++) {
+			if(state.getTopSeasonValues()[i] == state.card.getArtist()) {
+				inTop3 = true;
+				index = i;
 			}
-			return random.nextInt(money-state.highestBid)+state.highestBid;
+		}
+		
+		if(inTop3) {
+			value = state.getArtistValue(state.card.getArtist()) + (30-(10*index));
+		} else {
+			value = 0;
+		}
+		
+		if(isDouble) {
+			value *=2;
+		}
+		
+		int maxValue = value/2;
+		
+		if(state.highestBid < maxValue) {
+			return state.highestBid+1;
+		} else {
+			return -1;
 		}
 	}
 
@@ -126,6 +145,10 @@ public class BasicAIPlayer extends Player{
 		Artist highestArtist = null;//used for picking if no set can be made
 		for(int i = 0; i < artistCounts.length; i++) {
 			int count = artistCounts[i].getCount();
+			//include the card if one is being played
+			if(state.card != null && state.card.getArtist() == artistCounts[i].getArtist()) {
+				count++;
+			}
 			for(Card card : hand) {
 				if(card.getArtist() == artistCounts[i].getArtist()) {
 					count++;
