@@ -4,4 +4,5 @@ To run the game, simply run the Main class after the code is compiled.
 
 ---
 
-## Works in progress
+## Other notes
+Files in the bin folder should always have the newest version
