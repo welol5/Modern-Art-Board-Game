@@ -271,14 +271,23 @@ public class MemoryAIPlayer extends Player{
 	
 	@Override
 	public void announceSeasonEnd(int season, ObservableGameState state) {
-		
+		Artist[] top3 = state.getTopSeasonValues();
+		for(int i = 0; i < players.length; i++) {
+			for(Player player : players) {
+				for(Card c : player.getWinnings()) {
+					if(top3[0] == c.getArtist() || top3[1] == c.getArtist() || top3[2] == c.getArtist()) {
+						player.recive(state.getArtistValue(c.getArtist()));
+					}
+				}
+			}
+		}
 	}
 	
 	@Override
 	public void announceAuctionWinner(int turn, String name, int price) {
-		
-		
-		
+		players[turn].pay(price);
+		players[turn].givePainting(biddingCard);
+		biddingCard = null;
 	}
 
 	private class ArtistPlayChance{
