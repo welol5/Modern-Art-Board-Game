@@ -23,8 +23,16 @@ public class MemoryAIPlayer extends Player{
 	//hand keeps track of the cards in the players hand
 	private ArrayList<ArtistCount> playedCards = new ArrayList<ArtistCount>();//this could probably be an array
 	private ArtistPlayChance[] chances = new ArtistPlayChance[Artist.values().length];
-
-	public MemoryAIPlayer(String name, BasicIO io) {
+	
+	//keep track of other players
+	private Player[] players;
+	private final int turnIndex;//keep track of where itself is in the list of turns
+	
+	//memory during bidding
+	private Card biddingCard;
+	private boolean isDouble;
+	
+	public MemoryAIPlayer(String name, BasicIO io, int playerCount, int turnIndex) {
 		super(name);
 
 		//init playedCards to 0s
@@ -36,6 +44,14 @@ public class MemoryAIPlayer extends Player{
 		for(int i = 0; i < Artist.values().length; i++) {
 			chances[i] = new ArtistPlayChance(Artist.values()[i]);
 		}
+		
+		//init player array
+		players = new Player[playerCount];
+		for(int i = 0; i < players.length; i++) {
+			players[i] = new RandomPlayer(null,null);
+		}
+		
+		this.turnIndex = turnIndex;
 	}
 
 	@Override
@@ -105,7 +121,7 @@ public class MemoryAIPlayer extends Player{
 	}
 
 	@Override
-	public int getBid(ObservableGameState state, boolean isDouble) {
+	public int getBid(ObservableGameState state) {
 
 		//first thing to do is to find the max the ai is willing to pay
 		//starting with it always being half its est. value 
@@ -180,6 +196,10 @@ public class MemoryAIPlayer extends Player{
 			//update
 			chances[i].updateChance(artistPlayedCards, total);
 		}
+		
+		//prep for bidding
+		biddingCard = card;
+		this.isDouble = isDouble;
 	}
 
 	/**
@@ -243,6 +263,18 @@ public class MemoryAIPlayer extends Player{
 			value = 0;
 		}
 		return value;
+	}
+	
+	@Override
+	public void announceSeasonEnd(int season, ObservableGameState state) {
+		
+	}
+	
+	@Override
+	public void announceAuctionWinner(int turn, String name, int price) {
+		
+		
+		
 	}
 
 	private class ArtistPlayChance{

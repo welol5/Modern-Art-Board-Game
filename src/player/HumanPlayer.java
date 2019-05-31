@@ -28,7 +28,7 @@ public class HumanPlayer extends Player{
 	}
 
 	@Override
-	public int getBid(ObservableGameState state, boolean idDouble) {
+	public int getBid(ObservableGameState state) {
 		
 		return io.getBid(name, money, state.highestBid);
 	}

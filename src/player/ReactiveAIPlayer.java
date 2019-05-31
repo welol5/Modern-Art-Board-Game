@@ -99,12 +99,12 @@ public class ReactiveAIPlayer extends Player{
 	}
 
 	@Override
-	public int getBid(ObservableGameState state, boolean isDouble) {
+	public int getBid(ObservableGameState state) {
 
 		//first thing to do is to find the max the ai is willing to pay
 		//starting with it always being half its est. value 
 		int value  = getValue(state);
-		if(isDouble) {
+		if(state.isDouble) {
 			value *=2;
 		}
 

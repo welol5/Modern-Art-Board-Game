@@ -89,7 +89,7 @@ public abstract class Player {
 	 * @param card being bid on
 	 * @return the price the player is willing to pay
 	 */
-	public abstract int getBid(ObservableGameState state, boolean isDouble);
+	public abstract int getBid(ObservableGameState state);
 	
 	/**
 	 * Gets the price that will be used to sell the card
@@ -118,4 +118,22 @@ public abstract class Player {
 	 * @param card
 	 */
 	public abstract void announceCard(Card card, boolean isDouble);
+	
+	/**
+	 * Announces to the player that a season is ending
+	 * @param season
+	 */
+	public void announceSeasonEnd(int season, ObservableGameState state) {
+		
+	}
+	
+	/**
+	 * Announces to the player that another layer has won the auction
+	 * @param turn of the winner
+	 * @param name of the winner
+	 * @param price that the winner paid
+	 */
+	public void announceAuctionWinner(int turn, String name, int price) {
+		
+	}
 }

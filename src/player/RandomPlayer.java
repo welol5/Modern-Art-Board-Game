@@ -57,7 +57,7 @@ public class RandomPlayer extends Player {
 	}
 
 	@Override
-	public int getBid(ObservableGameState state, boolean isDouble) {
+	public int getBid(ObservableGameState state) {
 		if(state.highestBid == -1) {
 			return random.nextInt(money);
 		} else if(state.highestBid >= money){

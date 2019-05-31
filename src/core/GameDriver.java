@@ -101,7 +101,7 @@ public class GameDriver implements Runnable{
 					//				}
 
 					//get the painting that people will bid on
-					Card card = players[turn].chooseCard(new ObservableGameState(players.length, null, -1, state));
+					Card card = players[turn].chooseCard(new ObservableGameState(players.length, null, -1,-1, state, false));
 					//if null is returned, the player had no cards
 					if(card == null) {
 						emptyHands[turn] = true;
@@ -124,7 +124,7 @@ public class GameDriver implements Runnable{
 					Card second = null;
 					if(card.getAuctionType() == AuctionType.DOUBLE) {
 						second = card;
-						card = players[turn].chooseSecondCard(second.getArtist(), new ObservableGameState(players.length, second, -1, state));
+						card = players[turn].chooseSecondCard(second.getArtist(), new ObservableGameState(players.length, second, -1,-1, state, false));
 						//if card is null then other players should be asked
 						if(card == null) {
 							card = getSecondCard(second,turn, second.getArtist());
@@ -138,10 +138,13 @@ public class GameDriver implements Runnable{
 					}
 
 					boolean seasonEnd = false;
+					boolean isDouble;
 					if(second == null) {
 						seasonEnd = state.sell(card.getArtist(), false);
+						isDouble = false;
 					} else {
 						seasonEnd = state.sell(card.getArtist(), true);
+						isDouble = true;
 					}
 
 					//announce the played card to the players
@@ -158,7 +161,7 @@ public class GameDriver implements Runnable{
 							winningBid = onceAround(turn,card,!(second == null));
 						} else if(card.getAuctionType() == AuctionType.FIXED_PRICE){
 							//System.out.println("Fixed");//debug
-							winningBid = fixedPrice(turn,card,players[turn].getFixedPrice(new ObservableGameState(players.length, card, -1, state)),!(second == null));
+							winningBid = fixedPrice(turn,card,players[turn].getFixedPrice(new ObservableGameState(players.length, card, -1,-1, state, isDouble)),!(second == null));
 						} else if(card.getAuctionType() == AuctionType.SEALED){
 							//System.out.println("Sealed");//debug
 							winningBid = sealed(card,!(second == null));
@@ -243,9 +246,9 @@ public class GameDriver implements Runnable{
 				}
 			} else if(types[i] == PlayerType.MEMORY_AI){
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
-					players[i] = new MemoryAIPlayer("MemoryAIPlayer" + i, io);
+					players[i] = new MemoryAIPlayer("MemoryAIPlayer" + i, io, players.length, i);
 				} else {
-					players[i] = new MemoryAIPlayer(names[i], io);
+					players[i] = new MemoryAIPlayer(names[i], io, players.length, i);
 				}
 			} else {
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
@@ -268,7 +271,7 @@ public class GameDriver implements Runnable{
 		Card card = null;
 		for(int i = 0; i < players.length; i++) {
 			int playerTurn = (turn + i + 1)%players.length;
-			card = players[playerTurn].chooseSecondCard(artist, new ObservableGameState(players.length, firstCard, -1, state));
+			card = players[playerTurn].chooseSecondCard(artist, new ObservableGameState(players.length, firstCard, -1,-1, state, false));
 		}
 		return card;
 	}
@@ -298,7 +301,7 @@ public class GameDriver implements Runnable{
 				}
 
 				//get the price a player is willing to pay
-				int bid = players[(turn+biddingTurn+1)%players.length].getBid(new ObservableGameState(players.length, card, highestBid, state), isDouble);
+				int bid = players[(turn+biddingTurn+1)%players.length].getBid(new ObservableGameState(players.length, card, highestBid,(turn+biddingTurn+1)%players.length, state, isDouble));
 				if(bid==-1 || bid <= highestBid) {
 					bidding[(turn+biddingTurn+1)%players.length] = false;
 				} else {
@@ -335,7 +338,7 @@ public class GameDriver implements Runnable{
 		int highestBidder = turn;
 		for(int i = 0; i < players.length; i++) {
 			int biddingTurn = (turn+i+1)%players.length;
-			int bid = players[biddingTurn].getBid(new ObservableGameState(players.length, card, highestBid, state), isDouble);
+			int bid = players[biddingTurn].getBid(new ObservableGameState(players.length, card, highestBid,biddingTurn, state, isDouble));
 			if(bid > highestBid) {
 				highestBid = bid;
 				highestBidder = biddingTurn;
@@ -355,7 +358,7 @@ public class GameDriver implements Runnable{
 	private Bid fixedPrice(int turn, Card card, int price, boolean isDouble) {
 		for(int i = 0; i < players.length-1; i++) {
 			int biddingTurn = (turn+i+1)%players.length;
-			if(players[biddingTurn].buy(new ObservableGameState(players.length, card, price, state))) {
+			if(players[biddingTurn].buy(new ObservableGameState(players.length, card, price,-1, state, isDouble))) {
 				return new Bid(biddingTurn, price);
 			}
 		}
@@ -371,7 +374,7 @@ public class GameDriver implements Runnable{
 		int highestBidder = -1;
 		int highestPrice = -1;
 		for(int i = 0; i < players.length; i++) {
-			int bid = players[i].getBid(new ObservableGameState(players.length, card, -1, state), isDouble);
+			int bid = players[i].getBid(new ObservableGameState(players.length, card, -1,-1, state, isDouble));
 			if(bid > highestPrice) {
 				highestPrice = bid;
 				highestBidder = i;
