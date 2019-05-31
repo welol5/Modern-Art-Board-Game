@@ -122,6 +122,10 @@ public class MemoryAIPlayer extends Player{
 
 	@Override
 	public int getBid(ObservableGameState state) {
+		
+		
+		
+		//everything  below this point is old and will be removed when it is dead
 
 		//first thing to do is to find the max the ai is willing to pay
 		//starting with it always being half its est. value 

@@ -91,4 +91,16 @@ public class RandomPlayer extends Player {
 		
 	}
 
+	@Override
+	public void announceSeasonEnd(int season, ObservableGameState state) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void announceAuctionWinner(int turn, String name, int price) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -123,9 +123,7 @@ public abstract class Player {
 	 * Announces to the player that a season is ending
 	 * @param season
 	 */
-	public void announceSeasonEnd(int season, ObservableGameState state) {
-		
-	}
+	public abstract void announceSeasonEnd(int season, ObservableGameState state);
 	
 	/**
 	 * Announces to the player that another layer has won the auction
@@ -133,7 +131,5 @@ public abstract class Player {
 	 * @param name of the winner
 	 * @param price that the winner paid
 	 */
-	public void announceAuctionWinner(int turn, String name, int price) {
-		
-	}
+	public abstract void announceAuctionWinner(int turn, String name, int price);
 }
