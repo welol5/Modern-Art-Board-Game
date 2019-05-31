@@ -15,7 +15,7 @@ import io.BasicIO;
  * @author William Elliman
  *
  */
-public class BasicAIPlayer extends Player{
+public class ReactiveAIPlayer extends Player{
 
 	private Random random = new Random();
 
@@ -23,7 +23,7 @@ public class BasicAIPlayer extends Player{
 	//hand keeps track of the cards in the players hand
 	//private ArrayList<ArtistCount> playedCards = new ArrayList<ArtistCount>();//this could probably be an array
 
-	public BasicAIPlayer(String name, BasicIO io) {
+	public ReactiveAIPlayer(String name, BasicIO io) {
 		super(name);
 
 		//init playedCards to 0s
