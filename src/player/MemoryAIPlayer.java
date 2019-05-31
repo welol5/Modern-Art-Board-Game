@@ -27,6 +27,7 @@ public class MemoryAIPlayer extends Player{
 	//keep track of other players
 	private Player[] players;
 	private final int turnIndex;//keep track of where itself is in the list of turns
+	private int turn = 0;
 	
 	//memory during bidding
 	private Card biddingCard;
@@ -288,6 +289,7 @@ public class MemoryAIPlayer extends Player{
 		players[turn].pay(price);
 		players[turn].givePainting(biddingCard);
 		biddingCard = null;
+		turn++;
 	}
 
 	private class ArtistPlayChance{
