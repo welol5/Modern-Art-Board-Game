@@ -1,7 +1,8 @@
 package player;
 
 public enum PlayerType {
-	Human,
-	Random,
-	BasicAI
+	HUMAN,
+	RANDOM,
+	REACTIVE_AI,
+	MEMORY_AI
 }

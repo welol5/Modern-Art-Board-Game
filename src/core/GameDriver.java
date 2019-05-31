@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import io.BasicIO;
 import io.CommandLine;
 import io.IOType;
-import player.BasicAIPlayer;
+import player.ReactiveAIPlayer;
 import player.HumanPlayer;
 import player.Player;
 import player.PlayerType;
@@ -23,11 +23,11 @@ import player.RandomPlayer;
 public class GameDriver implements Runnable{
 	
 	//multiple games vars
-	private int iterations = 1;
+	private int iterations = 100000;
 
 	//Defaults to make testing easier
-	private static final String[] defaultNames = {"Will","RandomPlayer2","AIPlayer"};
-	private static final PlayerType[] defaultTypes = {PlayerType.Human,PlayerType.Random,PlayerType.BasicAI};
+	private static final String[] defaultNames = {"RandomPlayer1","RandomPlayer2","AIPlayer"};
+	private static final PlayerType[] defaultTypes = {PlayerType.RANDOM,PlayerType.RANDOM,PlayerType.REACTIVE_AI};
 
 	//IO var
 	private BasicIO io;
@@ -232,13 +232,13 @@ public class GameDriver implements Runnable{
 	private Player[] makePlayers(String[] names, BasicIO io, PlayerType[] types) {
 		Player[] players = new Player[names.length];
 		for(int i = 0; i < players.length; i++) {
-			if(types[i] == PlayerType.Human) {
+			if(types[i] == PlayerType.HUMAN) {
 				players[i] = new HumanPlayer(names[i], io);
-			} else if(types[i] == PlayerType.BasicAI) {
+			} else if(types[i] == PlayerType.REACTIVE_AI) {
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
-					players[i] = new BasicAIPlayer("AIPlayer" + i, io);
+					players[i] = new ReactiveAIPlayer("AIPlayer" + i, io);
 				} else {
-					players[i] = new BasicAIPlayer(names[i], io);
+					players[i] = new ReactiveAIPlayer(names[i], io);
 				}
 			} else {
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
