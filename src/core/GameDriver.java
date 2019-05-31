@@ -27,7 +27,7 @@ public class GameDriver implements Runnable{
 	private int iterations = 100000;
 
 	//Defaults to make testing easier
-	private static final String[] defaultNames = {"RandomPlayer1","RandomPlayer2","AIPlayer"};
+	private static final String[] defaultNames = {"RandomPlayer1","ReactiveAIPlayer","MemoryAIPlayer"};
 	private static final PlayerType[] defaultTypes = {PlayerType.RANDOM,PlayerType.REACTIVE_AI,PlayerType.MEMORY_AI};
 
 	//IO var
@@ -217,7 +217,7 @@ public class GameDriver implements Runnable{
 				System.out.println(player.name + " : " + player.getMoney());
 			}
 			io.announceWinner(winner);
-			if(winner.name.equalsIgnoreCase("AIplayer")) {
+			if(winner.name.equalsIgnoreCase("MemoryAIplayer")) {
 				AIWins++;
 			}
 		}
