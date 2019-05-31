@@ -22,13 +22,19 @@ public class MemoryAIPlayer extends Player{
 	//memory
 	//hand keeps track of the cards in the players hand
 	private ArrayList<ArtistCount> playedCards = new ArrayList<ArtistCount>();//this could probably be an array
-
+	private ArtistPlayChance[] chances = new ArtistPlayChance[Artist.values().length];
+	
 	public MemoryAIPlayer(String name, BasicIO io) {
 		super(name);
 
 		//init playedCards to 0s
 		for(Artist artist : Artist.values()) {
 			playedCards.add(new ArtistCount(artist));
+		}
+		
+		//init ArtistPlayChances
+		for(int i = 0; i < Artist.values().length; i++) {
+			chances[i] = new ArtistPlayChance(Artist.values()[i]);
 		}
 	}
 
@@ -146,6 +152,7 @@ public class MemoryAIPlayer extends Player{
 				playedCards.get(i).auction(isDouble);
 			}
 		}
+		
 	}
 
 	/**
@@ -209,5 +216,31 @@ public class MemoryAIPlayer extends Player{
 			value = 0;
 		}
 		return value;
+	}
+	
+	private class ArtistPlayChance{
+		private double chance = 0;
+		public final Artist artist;
+		public final double cardCount;
+		
+		public ArtistPlayChance(Artist artist) {
+			this.artist = artist;
+			
+			int cardCount = 16;
+			for(int i = 0; i < 5; i++) {
+				if(artist == Artist.values()[i]) {
+					cardCount = 12+i;
+				}
+			}
+			this.cardCount = cardCount;
+		}
+		
+		public void updateChance(int playedCards) {
+			chance = (cardCount-playedCards)/70;
+		}
+		
+		public double getChance() {
+			return chance;
+		}
 	}
 }
