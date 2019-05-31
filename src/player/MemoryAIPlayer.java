@@ -23,7 +23,7 @@ public class MemoryAIPlayer extends Player{
 	//hand keeps track of the cards in the players hand
 	private ArrayList<ArtistCount> playedCards = new ArrayList<ArtistCount>();//this could probably be an array
 	private ArtistPlayChance[] chances = new ArtistPlayChance[Artist.values().length];
-	
+
 	public MemoryAIPlayer(String name, BasicIO io) {
 		super(name);
 
@@ -31,7 +31,7 @@ public class MemoryAIPlayer extends Player{
 		for(Artist artist : Artist.values()) {
 			playedCards.add(new ArtistCount(artist));
 		}
-		
+
 		//init ArtistPlayChances
 		for(int i = 0; i < Artist.values().length; i++) {
 			chances[i] = new ArtistPlayChance(Artist.values()[i]);
@@ -153,6 +153,33 @@ public class MemoryAIPlayer extends Player{
 			}
 		}
 		
+		//find the total number of unknown cards
+		int total = 0;
+		for(ArtistCount c : playedCards) {
+			total += c.getCount();
+		}
+		total += hand.size();
+		
+		//update all of the chances
+		for(int i = 0; i < chances.length; i++) {
+			//find how many cards have been played
+			int artistPlayedCards = 0;
+			for(int k = 0; k < playedCards.size(); k++) {
+				if(playedCards.get(k).getArtist() == chances[i].artist) {
+					artistPlayedCards = playedCards.get(k).getCount();
+				}
+			}
+			
+			//add in cards in hand
+			for(Card handCard : hand) {
+				if(handCard.getArtist() == chances[i].artist) {
+					artistPlayedCards++;
+				}
+			}
+			
+			//update
+			chances[i].updateChance(artistPlayedCards, total);
+		}
 	}
 
 	/**
@@ -217,15 +244,15 @@ public class MemoryAIPlayer extends Player{
 		}
 		return value;
 	}
-	
+
 	private class ArtistPlayChance{
 		private double chance = 0;
 		public final Artist artist;
 		public final double cardCount;
-		
+
 		public ArtistPlayChance(Artist artist) {
 			this.artist = artist;
-			
+
 			int cardCount = 16;
 			for(int i = 0; i < 5; i++) {
 				if(artist == Artist.values()[i]) {
@@ -234,11 +261,12 @@ public class MemoryAIPlayer extends Player{
 			}
 			this.cardCount = cardCount;
 		}
-		
-		public void updateChance(int playedCards) {
-			chance = (cardCount-playedCards)/70;
+
+		public void updateChance(int playedCards, int totalPlayedCards) {
+			//this assumes an even distribution
+			chance = (cardCount-playedCards)/(70-totalPlayedCards);
 		}
-		
+
 		public double getChance() {
 			return chance;
 		}
