@@ -28,7 +28,7 @@ public class GameDriver implements Runnable{
 
 	//Defaults to make testing easier
 	private static final String[] defaultNames = {"RandomPlayer1","RandomPlayer2","AIPlayer"};
-	private static final PlayerType[] defaultTypes = {PlayerType.RANDOM,PlayerType.RANDOM,PlayerType.REACTIVE_AI};
+	private static final PlayerType[] defaultTypes = {PlayerType.RANDOM,PlayerType.REACTIVE_AI,PlayerType.MEMORY_AI};
 
 	//IO var
 	private BasicIO io;
@@ -237,13 +237,13 @@ public class GameDriver implements Runnable{
 				players[i] = new HumanPlayer(names[i], io);
 			} else if(types[i] == PlayerType.REACTIVE_AI) {
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
-					players[i] = new ReactiveAIPlayer("AIPlayer" + i, io);
+					players[i] = new ReactiveAIPlayer("ReactiveAIPlayer" + i, io);
 				} else {
 					players[i] = new ReactiveAIPlayer(names[i], io);
 				}
 			} else if(types[i] == PlayerType.MEMORY_AI){
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
-					players[i] = new MemoryAIPlayer("AIPlayer" + i, io);
+					players[i] = new MemoryAIPlayer("MemoryAIPlayer" + i, io);
 				} else {
 					players[i] = new MemoryAIPlayer(names[i], io);
 				}
