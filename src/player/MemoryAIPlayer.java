@@ -123,8 +123,40 @@ public class MemoryAIPlayer extends Player{
 
 	@Override
 	public int getBid(ObservableGameState state) {
+		int bestPlayer = -1;
+		int bestPlayerMoney = -1;
 		
+		//first it to find the player who is doing the best that is not this AI
+		for(int i = 0; i < players.length; i++) {
+			//skip this player
+			if(i == turnIndex) {
+				continue;
+			}
+			
+			//the best player will be found by finding the est values for each player
+			//first calculate the players est value
+			Artist[] top3 = state.getTopSeasonValues();
+			int value = players[i].getMoney();
+			for(Card c : players[i].getWinnings()) {
+				if(c.getArtist() == top3[0]) {
+					value += state.getArtistValue(top3[0]) + 30;
+				} else if(c.getArtist() == top3[1]) {
+					value += state.getArtistValue(top3[0]) + 20;
+				} else if(c.getArtist() == top3[2]) {
+					value += state.getArtistValue(top3[0]) + 10;
+				}
+			}
+			
+			//value now holds the players value
+			if(value > bestPlayerMoney) {
+				bestPlayerMoney = value;
+				bestPlayer = i;
+			}
+		}
 		
+		//now the best other player has been found
+		
+		//TODO
 		
 		//everything  below this point is old and will be removed when it is dead
 
