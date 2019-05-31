@@ -7,6 +7,7 @@ import io.CommandLine;
 import io.IOType;
 import player.ReactiveAIPlayer;
 import player.HumanPlayer;
+import player.MemoryAIPlayer;
 import player.Player;
 import player.PlayerType;
 import player.RandomPlayer;
@@ -239,6 +240,12 @@ public class GameDriver implements Runnable{
 					players[i] = new ReactiveAIPlayer("AIPlayer" + i, io);
 				} else {
 					players[i] = new ReactiveAIPlayer(names[i], io);
+				}
+			} else if(types[i] == PlayerType.MEMORY_AI){
+				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
+					players[i] = new MemoryAIPlayer("AIPlayer" + i, io);
+				} else {
+					players[i] = new MemoryAIPlayer(names[i], io);
 				}
 			} else {
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
