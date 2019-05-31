@@ -21,15 +21,15 @@ public class BasicAIPlayer extends Player{
 
 	//memory
 	//hand keeps track of the cards in the players hand
-	private ArrayList<ArtistCount> playedCards = new ArrayList<ArtistCount>();//this could probably be an array
+	//private ArrayList<ArtistCount> playedCards = new ArrayList<ArtistCount>();//this could probably be an array
 
 	public BasicAIPlayer(String name, BasicIO io) {
 		super(name);
 
 		//init playedCards to 0s
-		for(Artist artist : Artist.values()) {
-			playedCards.add(new ArtistCount(artist));
-		}
+//		for(Artist artist : Artist.values()) {
+//			playedCards.add(new ArtistCount(artist));
+//		}
 	}
 
 	@Override
@@ -141,11 +141,11 @@ public class BasicAIPlayer extends Player{
 
 	@Override
 	public void announceCard(Card card, boolean isDouble) {
-		for(int i = 0; i < playedCards.size(); i++) {
-			if(playedCards.get(i).getArtist() == card.getArtist()) {
-				playedCards.get(i).auction(isDouble);
-			}
-		}
+//		for(int i = 0; i < playedCards.size(); i++) {
+//			if(playedCards.get(i).getArtist() == card.getArtist()) {
+//				playedCards.get(i).auction(isDouble);
+//			}
+//		}
 	}
 
 	/**
