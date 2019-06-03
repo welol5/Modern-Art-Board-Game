@@ -301,7 +301,7 @@ public class GameDriver implements Runnable{
 				}
 
 				//get the price a player is willing to pay
-				int bid = players[(turn+biddingTurn+1)%players.length].getBid(new ObservableGameState(players.length, card, highestBid,(turn+biddingTurn+1)%players.length, state, isDouble));
+				int bid = players[(turn+biddingTurn+1)%players.length].getBid(new ObservableGameState(players.length, card, highestBid,(turn+biddingTurn+1)%players.length, state, isDouble, bidding));
 				if(bid==-1 || bid <= highestBid) {
 					bidding[(turn+biddingTurn+1)%players.length] = false;
 				} else {
