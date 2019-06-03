@@ -108,6 +108,7 @@ public class ReactiveAIPlayer extends Player{
 
 		int maxValue = value/2;
 
+		//bid one more than the highest if the highest is lower than the maxValue
 		if(state.highestBid < maxValue && money > maxValue+1) {
 			return state.highestBid+1;
 		} else {
