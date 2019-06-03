@@ -215,7 +215,7 @@ public class GameDriver implements Runnable{
 					winner = player;
 				}
 				//debug
-				System.out.println(player.name + " : " + player.getMoney());
+				//System.out.println(player.name + " : " + player.getMoney());
 			}
 			io.announceWinner(winner);
 			if(winner.name.equalsIgnoreCase("MemoryAIplayer")) {
