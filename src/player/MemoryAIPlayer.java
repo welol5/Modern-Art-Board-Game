@@ -156,7 +156,35 @@ public class MemoryAIPlayer extends Player{
 		
 		//now the best other player has been found
 		
-		//TODO
+		//find that players value
+		Artist[] top3 = state.getTopSeasonValues();
+		for(Card card : players[bestPlayer].getWinnings()) {
+			if(card.getArtist() == top3[0]) {
+				bestPlayerMoney += state.getArtistValue(card.getArtist()) + 30;
+			} else if(card.getArtist() == top3[1]) {
+				bestPlayerMoney += state.getArtistValue(card.getArtist()) + 20;
+			} else if(card.getArtist() == top3[2]) {
+				bestPlayerMoney += state.getArtistValue(card.getArtist()) + 10;
+			}
+		}
+		//bestPlayerMoney holds the highest value another player has
+		
+		//calculate this players value
+		int AIvalue = money;
+		for(Card card : getWinnings()) {
+			if(card.getArtist() == top3[0]) {
+				AIvalue += state.getArtistValue(card.getArtist()) + 30;
+			} else if(card.getArtist() == top3[1]) {
+				AIvalue += state.getArtistValue(card.getArtist()) + 20;
+			} else if(card.getArtist() == top3[2]) {
+				AIvalue += state.getArtistValue(card.getArtist()) + 10;
+			}
+		}
+		
+		//AIvalue and BestPlayerMoney hold money values
+		//TODO maximize (AIvalue - beastPlayerMoney)
+		
+		//need to know if the player is still bidding
 		
 		//everything  below this point is old and will be removed when it is dead
 
