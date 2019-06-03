@@ -66,7 +66,8 @@ public class GameDriver implements Runnable{
 
 	@Override
 	public void run() {
-		int AIWins = 0;
+		int memoryAIWins = 0;
+		int reactiveAIWins = 0;
 		//double AIWinRatio = 0;//this can be used later
 		for(int game = 0; game < iterations; game++) {
 			//setup the game state
@@ -218,13 +219,16 @@ public class GameDriver implements Runnable{
 			}
 			io.announceWinner(winner);
 			if(winner.name.equalsIgnoreCase("MemoryAIplayer")) {
-				AIWins++;
+				memoryAIWins++;
+			} else if (winner.name.equalsIgnoreCase("ReactiveAIPlayer")) {
+				reactiveAIWins++;
 			}
 			System.out.println("Games played : " + game);
 		}
 		System.out.println("Final results");
 		//System.out.println("AI wins      : " + AIWins);
-		System.out.println("AI win % : " + ((double)AIWins)/((double)iterations)*100);
+		System.out.println("Memory AI win % : " + ((double)memoryAIWins)/((double)iterations)*100);
+		System.out.println("Reactive AI win % : " + ((double)reactiveAIWins)/((double)iterations)*100);
 	}
 
 	/**
