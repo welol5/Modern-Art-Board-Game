@@ -12,6 +12,7 @@ public class ObservableGameState {
 	public final int highestBid;
 	public final int bidder;
 	public final boolean isDouble;
+	public final boolean[] stillBidding;
 	
 	private final GameState state;
 	
@@ -22,6 +23,17 @@ public class ObservableGameState {
 		this.state = state;
 		this.bidder = bidder;
 		this.isDouble = isDouble;
+		stillBidding = null;
+	}
+	
+	public ObservableGameState(int playerCount, Card card, int highestBid, int bidder, GameState state, boolean isDouble, boolean[] stillBidding) {
+		this.playerCount = playerCount;
+		this.card = card;
+		this.highestBid = highestBid;
+		this.state = state;
+		this.bidder = bidder;
+		this.isDouble = isDouble;
+		this.stillBidding = stillBidding;
 	}
 	
 	public int getSeasonValue(Artist artist) {
