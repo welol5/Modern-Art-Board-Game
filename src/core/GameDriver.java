@@ -220,7 +220,7 @@ public class GameDriver implements Runnable{
 			if(winner.name.equalsIgnoreCase("MemoryAIplayer")) {
 				AIWins++;
 			}
-			System.out.println("Games played : " + game+1);
+			System.out.println("Games played : " + game);
 		}
 		System.out.println("Final results");
 		//System.out.println("AI wins      : " + AIWins);
