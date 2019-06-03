@@ -184,21 +184,23 @@ public class MemoryAIPlayer extends Player{
 		//AIvalue and BestPlayerMoney hold money values
 		//TODO maximize (AIvalue - beastPlayerMoney)
 		
+		//set the maxValue to the
+		int maxValue = getValue(state);
 		//need to know if the player is still bidding
-		
-		//everything  below this point is old and will be removed when it is dead
-
-		//first thing to do is to find the max the ai is willing to pay
-		//starting with it always being half its est. value 
-		int value  = getValue(state);
-		if(isDouble) {
-			value *=2;
+		//if the player is still bidding, do not let them win if it will make a profit
+		if(state.stillBidding[bestPlayer]) {
+			//find the cards value
+			//if the card is the bestPlayes, they will profit more from this AI if more than half the value is paid
+			if(turn == bestPlayer) {
+				maxValue /= 2;
+			}
+			//if a profit can be made, don't let them win
+		} else {
+			maxValue /= 2;
 		}
-
-		int maxValue = value/2;
-
-		if(state.highestBid < maxValue && money > maxValue+1) {
-			return state.highestBid+1;
+		
+		if(maxValue < state.highestBid + 1) {
+			return state.highestBid + 1;
 		} else {
 			return -1;
 		}
