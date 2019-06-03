@@ -1,6 +1,7 @@
 package player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import core.Artist;
@@ -27,17 +28,18 @@ public class BasicPredictiveAIPlayer extends Player{
 	//memory
 	//hand keeps track of the cards in the players hand
 	private ArrayList<ArtistCount> playedCards = new ArrayList<ArtistCount>();//this could probably be an array
-	private ArtistPlayChance[] chances = new ArtistPlayChance[Artist.values().length];
-	private ArtistPlayChance[][] handChances;
+	private HashMap<Artist,Integer> unknownCards;
+	private ArtistPlayChance[] chances = new ArtistPlayChance[Artist.values().length];//knows the chances of seeing any card in general
 	
 	//keep track of other players
 	private Player[] players;
+	private int[] playerCardCounts;
 	private final int turnIndex;//keep track of where itself is in the list of turns
 	private int turn = 0;
 	
 	//memory during bidding
 	private Card biddingCard;
-	private boolean isDouble;
+	//private boolean isDouble;
 	
 	public BasicPredictiveAIPlayer(String name, BasicIO io, int playerCount, int turnIndex) {
 		super(name);
@@ -60,8 +62,19 @@ public class BasicPredictiveAIPlayer extends Player{
 		
 		this.turnIndex = turnIndex;
 		
-		//init handChances
-		handChances  = new ArtistPlayChance[playerCount][Artist.values().length];
+		//assume even distribution
+		//init unknownCards
+		unknownCards = new HashMap<Artist,Integer>();
+		for(int i = 0 ; i < Artist.values().length; i++) {
+			unknownCards.put(Artist.values()[i], 15-i);
+		}
+		
+		//init playerCardCounts
+		playerCardCounts = new int[playerCount];
+		//init everything to 0 because cards are all delt at the same time
+		for(int i = 0; i < playerCount; i++) {
+			playerCardCounts[i] = 0;
+		}
 	}
 
 	@Override
@@ -284,9 +297,10 @@ public class BasicPredictiveAIPlayer extends Player{
 			chances[i].updateChance(artistPlayedCards, total);
 		}
 		
+		
 		//prep for bidding
 		biddingCard = card;
-		this.isDouble = isDouble;
+		//this.isDouble = isDouble;
 	}
 
 	/**
@@ -296,6 +310,8 @@ public class BasicPredictiveAIPlayer extends Player{
 	 * @return the favored artist
 	 */
 	private Artist chooseFavordArtist(ObservableGameState state, int favor) {
+		//TODO replace this method with one that takes into consideration what other players have won
+		//this will be done so that a search problem can start to be formulated
 
 		//the favored artist will be the one with the fewest cards needed to complete the set
 		//this also requires the cards needed to be in hand
@@ -372,6 +388,17 @@ public class BasicPredictiveAIPlayer extends Player{
 		players[turn].givePainting(biddingCard);
 		biddingCard = null;
 		turn++;
+	}
+	
+	//Override superclass implemented method
+	@Override
+	public void deal(Card card) {
+		hand.add(card);
+		unknownCards.put(card.getArtist(), unknownCards.get(card.getArtist())-1);
+		//players got delt another card
+		for(int i = 0; i < playerCardCounts.length; i++) {
+			playerCardCounts[i]++;
+		}
 	}
 
 	private class ArtistPlayChance{
