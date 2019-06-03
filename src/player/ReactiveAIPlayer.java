@@ -11,17 +11,15 @@ import core.ArtistCount;
 import io.BasicIO;
 
 /**
- * WIP
+ * This AI is has very solid rules for bidding and it will try to end the season as quickly as possible.
+ * The rule it uses for bidding is to always only bid up to half what the painting is currently worth.
+ * The rule it uses for choosing which card to play is it will try to end the season as fast as possible
  * @author William Elliman
  *
  */
 public class ReactiveAIPlayer extends Player{
 
 	private Random random = new Random();
-
-	//memory
-	//hand keeps track of the cards in the players hand
-	//private ArrayList<ArtistCount> playedCards = new ArrayList<ArtistCount>();//this could probably be an array
 
 	public ReactiveAIPlayer(String name, BasicIO io) {
 		super(name);
