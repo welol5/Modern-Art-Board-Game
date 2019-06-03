@@ -182,13 +182,15 @@ public class MemoryAIPlayer extends Player{
 		}
 		
 		//AIvalue and BestPlayerMoney hold money values
-		//TODO maximize (AIvalue - beastPlayerMoney)
 		
 		//set the maxValue to the
 		int maxValue = getValue(state);
+		if(state.isDouble) {
+			maxValue*=2;
+		}
 		//need to know if the player is still bidding
 		//if the player is still bidding, do not let them win if it will make a profit
-		if(state.stillBidding[bestPlayer]) {
+		if((state.card.getAuctionType() == AuctionType.ONCE_AROUND || state.card.getAuctionType() == AuctionType.SEALED) || state.stillBidding[bestPlayer]) {
 			//find the cards value
 			//if the card is the bestPlayes, they will profit more from this AI if more than half the value is paid
 			if(turn == bestPlayer) {
@@ -199,7 +201,16 @@ public class MemoryAIPlayer extends Player{
 			maxValue /= 2;
 		}
 		
-		if(maxValue < state.highestBid + 1) {
+		//if it a once around return the max value this AI will pay
+		if((state.card.getAuctionType() == AuctionType.ONCE_AROUND || state.card.getAuctionType() == AuctionType.SEALED) && maxValue > state.highestBid) {
+			return maxValue;
+		} else if (state.card.getAuctionType() == AuctionType.ONCE_AROUND || state.card.getAuctionType() == AuctionType.SEALED) {
+			return -1;
+		}
+		
+		//try to buy the painting for the lowest possible price
+		System.out.println(maxValue);
+		if(maxValue > state.highestBid) {
 			return state.highestBid + 1;
 		} else {
 			return -1;
