@@ -209,7 +209,7 @@ public class MemoryAIPlayer extends Player{
 		}
 		
 		//try to buy the painting for the lowest possible price
-		System.out.println(maxValue);
+		//System.out.println(maxValue);
 		if(maxValue > state.highestBid) {
 			return state.highestBid + 1;
 		} else {
