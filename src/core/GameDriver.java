@@ -154,7 +154,7 @@ public class GameDriver implements Runnable{
 
 					if(!seasonEnd) {//this checks if the season is over by asking GameState
 						//the bidding can now begin
-						io.announceCard(card);//TODO deal with doubleAuctions better
+						//io.announceCard(card);//TODO deal with doubleAuctions better
 						Bid winningBid;
 						if(card.getAuctionType() == AuctionType.ONCE_AROUND) {
 							//System.out.println("Once Around");//debug
@@ -184,7 +184,7 @@ public class GameDriver implements Runnable{
 								players[winningBid.index].givePainting(second);
 							}
 						}
-						io.auctionWinner(players[winningBid.index], winningBid.price);
+						//io.auctionWinner(players[winningBid.index], winningBid.price);
 					} else {
 						//break out of the season once it is over
 						break;
@@ -220,6 +220,7 @@ public class GameDriver implements Runnable{
 			if(winner.name.equalsIgnoreCase("MemoryAIplayer")) {
 				AIWins++;
 			}
+			System.out.println("Games played : " + iterations+1);
 		}
 		System.out.println("Final results");
 		//System.out.println("AI wins      : " + AIWins);
