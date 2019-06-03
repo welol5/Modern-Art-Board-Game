@@ -11,7 +11,9 @@ import core.ArtistCount;
 import io.BasicIO;
 
 /**
- * WIP
+ * This player takes advantage of keeping track of the major actions made in the game. It keeps track of who
+ * won what card and how much they bid on it. It then uses that infomation to calculate how much it can bid
+ * so that it will make a profit and the best other player will not.
  * @author William Elliman
  *
  */
