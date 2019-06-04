@@ -1,5 +1,12 @@
 package core;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import io.BasicIO;
@@ -33,7 +40,7 @@ public class GameDriver implements Runnable{
 	private static final String[] defaultNames = {"RandomAIPlayer","GeneticAIPlayer","MemoryAIPlayer","PredictiveAIPlayer"};
 	private static final PlayerType[] defaultTypes = {PlayerType.RANDOM,PlayerType.GENETIC_AI,PlayerType.MEMORY_AI,PlayerType.BASIC_PREDICTIVE_AI};
 
-	private GeneticAIPlayerDB dataBase = new GeneticAIPlayerDB();//only need this with geneticAIPlayers
+	private GeneticAIPlayerDB database = null;//only need this with geneticAIPlayers
 	private int aiTraining = Integer.MIN_VALUE;
 
 	//IO var
@@ -57,6 +64,15 @@ public class GameDriver implements Runnable{
 
 		if(aiTraining) {
 			this.aiTraining = -1;//set to -1 to let the game know an ai will be trained
+			try {
+				FileInputStream f = new FileInputStream(new File("db.txt"));
+				ObjectInputStream o = new ObjectInputStream(f);
+				database = (GeneticAIPlayerDB) o.readObject();
+			} catch (IOException | ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				database = new GeneticAIPlayerDB();
+				//e.printStackTrace();
+			}
 		}
 	}
 
@@ -81,7 +97,8 @@ public class GameDriver implements Runnable{
 		}
 
 		//double AIWinRatio = 0;//this can be used later
-		for(int game = 0; game < iterations; game++) {
+		boolean infinity = true;//set this to true if the program should run forever
+		for(int game = 0; game < iterations || infinity; game++) {
 			//setup the game state
 			state = new GameState(defaultNames.length);
 			//make the observableState
@@ -234,7 +251,7 @@ public class GameDriver implements Runnable{
 				//debug
 				//System.out.println(player.name + " : " + player.getMoney());
 			}
-			io.announceWinner(winner);
+			//io.announceWinner(winner);
 			wins[winnerTurn] += 1;
 			System.out.println("Games played : " + (game+1));
 
@@ -250,6 +267,23 @@ public class GameDriver implements Runnable{
 					}
 				}
 				((GeneticAIPlayer)players[aiTraining]).learn(winnerTurn == aiTraining ? true : false, players[aiTraining].getMoney()-highestMoney);
+			}
+			
+			if(infinity) {
+				System.out.println(players[aiTraining].name + " win % : " + ((double)wins[aiTraining])/((double)iterations)*100);
+			}
+			
+			//save the database every 1000 games
+			if(game % 1000 == 0) {
+				try {
+					FileOutputStream f = new FileOutputStream(new File("db.txt"));
+					ObjectOutputStream o = new ObjectOutputStream(f);
+					o.writeObject(database);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 			}
 		}
 
@@ -293,9 +327,9 @@ public class GameDriver implements Runnable{
 			}else if(types[i] == PlayerType.GENETIC_AI){
 				aiTraining = i;//set the index so that learn can be called on this player
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
-					players[i] = new GeneticAIPlayer("GeneticAIPlayer" + i, io, players.length, i, dataBase,0.05,0.2);
+					players[i] = new GeneticAIPlayer("GeneticAIPlayer" + i, io, players.length, i, database,0.05,0.2);
 				} else {
-					players[i] = new GeneticAIPlayer(names[i], io, players.length, i, dataBase,0.05,0.2);
+					players[i] = new GeneticAIPlayer(names[i], io, players.length, i, database,0.05,0.2);
 				}
 			} else {
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
