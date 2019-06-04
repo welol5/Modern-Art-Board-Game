@@ -3,6 +3,7 @@ package player;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import core.Artist;
 import core.ArtistCount;
 import core.Card;
 
@@ -23,10 +24,29 @@ public class GeneticAIPlayerDB {
 	}
 
 	public class StateData {
-		private ArrayList<Card> hand;
+		private ArtistCount[] hand;
 		private ArtistCount[] seasonValues;
+		
 		public StateData(ArrayList<Card> hand, ArtistCount[] seasonValues) {
-			this.hand = hand;
+			ArrayList<ArtistCount> handValues = new ArrayList<ArtistCount>();
+			for(Artist artist : Artist.values()) {
+				
+				//count the number of cards by a given artist.
+				int count = 0;
+				for(Card card : hand) {
+					if(card.getArtist() == artist) {
+						count++;
+					}
+				}
+				
+				handValues.add(new ArtistCount(artist, count));
+			}
+			//sort the list
+			handValues.sort((a,b) -> {
+				return a.compareTo(b);
+			});
+			
+			this.hand = handValues.toArray(this.hand);
 			this.seasonValues = seasonValues;
 		}
 	}

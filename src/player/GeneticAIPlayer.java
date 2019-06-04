@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.Stack;
 
 import core.Artist;
 import core.AuctionType;
@@ -13,9 +14,9 @@ import core.ArtistCount;
 import io.BasicIO;
 
 /**
- * This player takes advantage of keeping track of the major actions made in the game. It keeps track of who
- * won what card and how much they bid on it. It then uses that infomation to calculate how much it can bid
- * so that it will make a profit and the best other player will not.
+ * This player keeps a record of values for every state of the game. It uses a version of Temporal
+ * difference where it is on policy. This will probably be updated to SARSA learning later on but
+ * this is simpler for now.
  * @author William Elliman
  *
  */
@@ -25,36 +26,51 @@ public class GeneticAIPlayer extends Player{
 
 	//memory
 	private GeneticAIPlayerDB dataBase;
-	
+	private final double exploreChance;
+	private Stack<GeneticAIPlayerDB.StateData> stateHistory;
+	private final double alpha;//rate at which new info replaces old info
+
 	//keep track of other players
 	private Player[] players;
 	private final int turnIndex;//keep track of where itself is in the list of turns
 	private int turn = 0;
-	
+
 	//memory during bidding
 	//private Card biddingCard;
-	
-	public GeneticAIPlayer(String name, BasicIO io, int playerCount, int turnIndex, GeneticAIPlayerDB dataBase) {
+
+	public GeneticAIPlayer(String name, BasicIO io, int playerCount, int turnIndex, GeneticAIPlayerDB dataBase, double exploreChance, double alpha) {
 		super(name);
-		
+
+		this.exploreChance = exploreChance;
+		this.alpha = alpha;
+
 		//init player array
 		players = new Player[playerCount];
 		for(int i = 0; i < players.length; i++) {
 			players[i] = new RandomPlayer(null,null);
 		}
-		
+
 		this.turnIndex = turnIndex;
 	}
 
 	@Override
 	public Card chooseCard(ObservableGameState state) {
-		
+
+		//add this state to the state history
+		stateHistory.push(dataBase.new StateData(hand, state.getSeasonValues()));
+
+		//explore
+		if(random.nextDouble() < exploreChance) {
+			return hand.remove(random.nextInt(hand.size()));
+		}
+
+		//play the card that leads to the best next state
 		int cardToPlay = 0;
 		double bestNextStateValue = Double.NEGATIVE_INFINITY;
 		for(int i = 0; i < hand.size(); i++) {
 			ArrayList<Card> tempHand = (ArrayList<Card>) hand.clone();
 			tempHand.remove(tempHand.size());
-			
+
 			if(i == 0) {
 				bestNextStateValue = dataBase.getValue(dataBase.new StateData(tempHand, state.getSeasonValues()));
 			} else if(dataBase.getValue(dataBase.new StateData(tempHand, state.getSeasonValues())) > bestNextStateValue) {
@@ -62,7 +78,7 @@ public class GeneticAIPlayer extends Player{
 				cardToPlay = i;
 			}
 		}
-		
+
 		return hand.remove(cardToPlay);
 	}
 
@@ -95,14 +111,14 @@ public class GeneticAIPlayer extends Player{
 	public int getBid(ObservableGameState state) {
 		int bestPlayer = -1;
 		int bestPlayerMoney = -1;
-		
+
 		//first it to find the player who is doing the best that is not this AI
 		for(int i = 0; i < players.length; i++) {
 			//skip this player
 			if(i == turnIndex) {
 				continue;
 			}
-			
+
 			//the best player will be found by finding the est values for each player
 			//first calculate the players est value
 			Artist[] top3 = state.getTopSeasonValues();
@@ -116,16 +132,16 @@ public class GeneticAIPlayer extends Player{
 					value += state.getArtistValue(top3[0]) + 10;
 				}
 			}
-			
+
 			//value now holds the players value
 			if(value > bestPlayerMoney) {
 				bestPlayerMoney = value;
 				bestPlayer = i;
 			}
 		}
-		
+
 		//now the best other player has been found
-		
+
 		//find that players value
 		Artist[] top3 = state.getTopSeasonValues();
 		for(Card card : players[bestPlayer].getWinnings()) {
@@ -138,7 +154,7 @@ public class GeneticAIPlayer extends Player{
 			}
 		}
 		//bestPlayerMoney holds the highest value another player has
-		
+
 		//calculate this players value
 		int AIvalue = money;
 		for(Card card : getWinnings()) {
@@ -150,9 +166,9 @@ public class GeneticAIPlayer extends Player{
 				AIvalue += state.getArtistValue(card.getArtist()) + 10;
 			}
 		}
-		
+
 		//AIvalue and BestPlayerMoney hold money values
-		
+
 		//set the maxValue to the
 		int maxValue = getValue(state);
 		if(state.isDouble) {
@@ -170,14 +186,14 @@ public class GeneticAIPlayer extends Player{
 		} else {
 			maxValue /= 2;
 		}
-		
+
 		//if it a once around return the max value this AI will pay
 		if((state.card.getAuctionType() == AuctionType.ONCE_AROUND || state.card.getAuctionType() == AuctionType.SEALED) && maxValue > state.highestBid) {
 			return maxValue;
 		} else if (state.card.getAuctionType() == AuctionType.ONCE_AROUND || state.card.getAuctionType() == AuctionType.SEALED) {
 			return -1;
 		}
-		
+
 		//try to buy the painting for the lowest possible price
 		//System.out.println(maxValue);
 		if(maxValue > state.highestBid) {
@@ -211,7 +227,7 @@ public class GeneticAIPlayer extends Player{
 
 	@Override
 	public void announceCard(Card card, boolean isDouble) {
-		
+
 	}
 
 	/**
@@ -237,7 +253,7 @@ public class GeneticAIPlayer extends Player{
 		}
 		return value;
 	}
-	
+
 	@Override
 	public void announceSeasonEnd(int season, ObservableGameState state) {
 		Artist[] top3 = state.getTopSeasonValues();
@@ -251,9 +267,38 @@ public class GeneticAIPlayer extends Player{
 			}
 		}
 	}
-	
+
 	@Override
 	public void announceAuctionWinner(int turn, String name, int price) {
+
+	}
+
+	/**
+	 * This method uses the stateHistory to update the database so that better moves can be made
+	 * @param win did this player win?
+	 * @param difference in money between this player and the best other player
+	 */
+	public void learn(boolean win, int difference) {
+		GeneticAIPlayerDB.StateData prevState;//the new state is updated based on the previous
 		
+		//give a value to the final state
+		prevState = stateHistory.pop();
+		if(win) {
+			dataBase.putValue(prevState, 1);
+		} else {
+			dataBase.putValue(prevState, -1);
+		}
+
+		//propagate backwards
+		while(!stateHistory.isEmpty()) {
+			GeneticAIPlayerDB.StateData state = stateHistory.pop();
+			double stateValue = dataBase.getValue(state) + alpha*(dataBase.getValue(prevState)-dataBase.getValue(state));
+			dataBase.putValue(state, stateValue);
+			prevState = state;//prep for next iteration
+		}
+	}
+	
+	public GeneticAIPlayerDB getDB() {
+		return dataBase;
 	}
 }
