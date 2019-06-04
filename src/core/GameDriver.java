@@ -6,6 +6,7 @@ import io.BasicIO;
 import io.CommandLine;
 import io.IOType;
 import player.ReactiveAIPlayer;
+import player.BasicPredictiveAIPlayer;
 import player.HumanPlayer;
 import player.MemoryAIPlayer;
 import player.Player;
@@ -27,8 +28,8 @@ public class GameDriver implements Runnable{
 	private int iterations = 1000;
 
 	//Defaults to make testing easier
-	private static final String[] defaultNames = {"RandomPlayer1","ReactiveAIPlayer","MemoryAIPlayer"};
-	private static final PlayerType[] defaultTypes = {PlayerType.RANDOM,PlayerType.REACTIVE_AI,PlayerType.MEMORY_AI};
+	private static final String[] defaultNames = {"ReactiveAIPlayer","MemoryAIPlayer","PredictiveAPPlayer"};
+	private static final PlayerType[] defaultTypes = {PlayerType.REACTIVE_AI,PlayerType.MEMORY_AI,PlayerType.BASIC_PREDICTIVE_AI};
 
 	//IO var
 	private BasicIO io;
@@ -68,6 +69,7 @@ public class GameDriver implements Runnable{
 	public void run() {
 		int memoryAIWins = 0;
 		int reactiveAIWins = 0;
+		int BPAIWins = 0;
 		//double AIWinRatio = 0;//this can be used later
 		for(int game = 0; game < iterations; game++) {
 			//setup the game state
@@ -222,13 +224,16 @@ public class GameDriver implements Runnable{
 				memoryAIWins++;
 			} else if (winner.name.equalsIgnoreCase("ReactiveAIPlayer")) {
 				reactiveAIWins++;
+			} else if (winner.name.equalsIgnoreCase("PredictiveAIPlayer")) {
+				BPAIWins++;
 			}
-			System.out.println("Games played : " + game);
+			System.out.println("Games played : " + (game+1));
 		}
 		System.out.println("Final results");
 		//System.out.println("AI wins      : " + AIWins);
 		System.out.println("Memory AI win % : " + ((double)memoryAIWins)/((double)iterations)*100);
 		System.out.println("Reactive AI win % : " + ((double)reactiveAIWins)/((double)iterations)*100);
+		System.out.println("Predictive AI win % : " + ((double)BPAIWins)/((double)iterations)*100);
 	}
 
 	/**
@@ -255,7 +260,13 @@ public class GameDriver implements Runnable{
 				} else {
 					players[i] = new MemoryAIPlayer(names[i], io, players.length, i);
 				}
-			} else {
+			} else if(types[i] == PlayerType.BASIC_PREDICTIVE_AI){
+				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
+					players[i] = new BasicPredictiveAIPlayer("PredictiveAIPlayer" + i, io, players.length, i);
+				} else {
+					players[i] = new BasicPredictiveAIPlayer(names[i], io, players.length, i);
+				}
+			}else {
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
 					players[i] = new RandomPlayer("RandomPlayer" + i, io);
 				} else {
