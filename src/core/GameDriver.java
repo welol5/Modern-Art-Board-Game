@@ -270,7 +270,7 @@ public class GameDriver implements Runnable{
 			}
 			
 			if(infinity) {
-				System.out.println(players[aiTraining].name + " win % : " + ((double)wins[aiTraining])/((double)iterations)*100);
+				System.out.println(players[aiTraining].name + " win % : " + ((double)wins[aiTraining])/((double)game)*100);
 			}
 			
 			//save the database every 1000 games
@@ -281,7 +281,8 @@ public class GameDriver implements Runnable{
 					o.writeObject(database);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//e.printStackTrace();
+					//while(true);
 				}
 				
 			}
