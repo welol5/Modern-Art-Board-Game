@@ -27,7 +27,7 @@ public class GeneticAIPlayer extends Player{
 	//memory
 	private GeneticAIPlayerDB dataBase;
 	private final double exploreChance;
-	private Stack<GeneticAIPlayerDB.StateData> stateHistory;
+	private Stack<GeneticAIPlayerDB.StateData> stateHistory = new Stack<GeneticAIPlayerDB.StateData>();
 	private final double alpha;//rate at which new info replaces old info
 
 	//keep track of other players
@@ -43,6 +43,7 @@ public class GeneticAIPlayer extends Player{
 
 		this.exploreChance = exploreChance;
 		this.alpha = alpha;
+		this.dataBase = dataBase;
 
 		//init player array
 		players = new Player[playerCount];
@@ -61,7 +62,11 @@ public class GeneticAIPlayer extends Player{
 
 		//explore
 		if(random.nextDouble() < exploreChance) {
-			return hand.remove(random.nextInt(hand.size()));
+			if(hand.size() > 0) {
+				return hand.remove(random.nextInt(hand.size()));
+			} else {
+				return null;//hand is empty
+			}
 		}
 
 		//play the card that leads to the best next state
@@ -69,7 +74,7 @@ public class GeneticAIPlayer extends Player{
 		double bestNextStateValue = Double.NEGATIVE_INFINITY;
 		for(int i = 0; i < hand.size(); i++) {
 			ArrayList<Card> tempHand = (ArrayList<Card>) hand.clone();
-			tempHand.remove(tempHand.size());
+			tempHand.remove(i);
 
 			if(i == 0) {
 				bestNextStateValue = dataBase.getValue(dataBase.new StateData(tempHand, state.getSeasonValues()));
@@ -79,7 +84,11 @@ public class GeneticAIPlayer extends Player{
 			}
 		}
 
-		return hand.remove(cardToPlay);
+		if(hand.size() > 0) {
+			return hand.remove(cardToPlay);
+		} else {
+			return null;//gets here if the hand is empty
+		}
 	}
 
 	@Override
@@ -280,7 +289,7 @@ public class GeneticAIPlayer extends Player{
 	 */
 	public void learn(boolean win, int difference) {
 		GeneticAIPlayerDB.StateData prevState;//the new state is updated based on the previous
-		
+
 		//give a value to the final state
 		prevState = stateHistory.pop();
 		if(win) {
@@ -297,7 +306,7 @@ public class GeneticAIPlayer extends Player{
 			prevState = state;//prep for next iteration
 		}
 	}
-	
+
 	public GeneticAIPlayerDB getDB() {
 		return dataBase;
 	}

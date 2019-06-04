@@ -16,7 +16,13 @@ public class GeneticAIPlayerDB {
 	}
 	
 	public double getValue(StateData state) {
-		return states.get(state);
+		double value = 0;
+		try {
+			value = states.get(state);
+		} catch (NullPointerException e) {
+			//this comes here if the state has never been seen before
+		}
+		return value;
 	}
 	
 	public void putValue(StateData state, double value) {
@@ -45,7 +51,7 @@ public class GeneticAIPlayerDB {
 			handValues.sort((a,b) -> {
 				return a.compareTo(b);
 			});
-			
+			this.hand = new ArtistCount[handValues.size()];
 			this.hand = handValues.toArray(this.hand);
 			this.seasonValues = seasonValues;
 		}

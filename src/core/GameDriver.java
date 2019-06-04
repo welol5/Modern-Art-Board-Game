@@ -25,14 +25,16 @@ import player.RandomPlayer;
  *
  */
 public class GameDriver implements Runnable{
-	
+
 	//multiple games vars
 	private int iterations = 100000;
 
 	//Defaults to make testing easier
-	private static final String[] defaultNames = {"RandomAIPlayer","ReactiveAIPlayer","MemoryAIPlayer","PredictiveAIPlayer"};
-	private static final PlayerType[] defaultTypes = {PlayerType.RANDOM,PlayerType.REACTIVE_AI,PlayerType.MEMORY_AI,PlayerType.BASIC_PREDICTIVE_AI};
+	private static final String[] defaultNames = {"RandomAIPlayer","GeneticAIPlayer","MemoryAIPlayer","PredictiveAIPlayer"};
+	private static final PlayerType[] defaultTypes = {PlayerType.RANDOM,PlayerType.GENETIC_AI,PlayerType.MEMORY_AI,PlayerType.BASIC_PREDICTIVE_AI};
+
 	private GeneticAIPlayerDB dataBase = new GeneticAIPlayerDB();//only need this with geneticAIPlayers
+	private int aiTraining = Integer.MIN_VALUE;
 
 	//IO var
 	private BasicIO io;
@@ -52,6 +54,10 @@ public class GameDriver implements Runnable{
 		if(type == IOType.COMMAND_LINE) {
 			io = new CommandLine();
 		}
+
+		if(aiTraining) {
+			this.aiTraining = -1;//set to -1 to let the game know an ai will be trained
+		}
 	}
 
 	/**
@@ -61,10 +67,7 @@ public class GameDriver implements Runnable{
 	 * @param names that will be used for the players
 	 */
 	public GameDriver(IOType type, boolean aiTraining, String[] names) {
-		if(type == IOType.COMMAND_LINE) {
-			io = new CommandLine();
-		}
-
+		this(type,aiTraining);
 		this.names = names;
 	}
 
@@ -76,7 +79,7 @@ public class GameDriver implements Runnable{
 			//set everything to 0
 			wins[i] = 0;
 		}
-		
+
 		//double AIWinRatio = 0;//this can be used later
 		for(int game = 0; game < iterations; game++) {
 			//setup the game state
@@ -234,8 +237,22 @@ public class GameDriver implements Runnable{
 			io.announceWinner(winner);
 			wins[winnerTurn] += 1;
 			System.out.println("Games played : " + (game+1));
+
+			if(aiTraining > -1) {//only train if a Genetic player exists
+				//make the GeneticAI learn
+				//first find the highest other player
+				int highestMoney = -1;
+				for(int p = 0; p < players.length; p++) {
+					if(p == aiTraining) {//skip the learning player
+						continue;
+					} else if(players[p].getMoney() > highestMoney) {
+						highestMoney = players[p].getMoney();
+					}
+				}
+				((GeneticAIPlayer)players[aiTraining]).learn(winnerTurn == aiTraining ? true : false, players[aiTraining].getMoney()-highestMoney);
+			}
 		}
-		
+
 		//show win %
 		System.out.println("Final results");		
 		for(int i = 0; i < wins.length; i++) {
@@ -274,6 +291,7 @@ public class GameDriver implements Runnable{
 					players[i] = new BasicPredictiveAIPlayer(names[i], io, players.length, i);
 				}
 			}else if(types[i] == PlayerType.GENETIC_AI){
+				aiTraining = i;//set the index so that learn can be called on this player
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
 					players[i] = new GeneticAIPlayer("GeneticAIPlayer" + i, io, players.length, i, dataBase,0.05,0.2);
 				} else {
