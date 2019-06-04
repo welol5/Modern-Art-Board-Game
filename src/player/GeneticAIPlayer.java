@@ -49,12 +49,21 @@ public class GeneticAIPlayer extends Player{
 	@Override
 	public Card chooseCard(ObservableGameState state) {
 		
-
-		//this will be left here until the full method is implemented
-		if(hand.size() == 0) {
-			return null;
+		int cardToPlay = 0;
+		double bestNextStateValue = Double.NEGATIVE_INFINITY;
+		for(int i = 0; i < hand.size(); i++) {
+			ArrayList<Card> tempHand = (ArrayList<Card>) hand.clone();
+			tempHand.remove(tempHand.size());
+			
+			if(i == 0) {
+				bestNextStateValue = dataBase.getValue(dataBase.new StateData(tempHand, state.getSeasonValues()));
+			} else if(dataBase.getValue(dataBase.new StateData(tempHand, state.getSeasonValues())) > bestNextStateValue) {
+				bestNextStateValue = dataBase.getValue(dataBase.new StateData(tempHand, state.getSeasonValues()));
+				cardToPlay = i;
+			}
 		}
-		return hand.remove(random.nextInt(hand.size()));
+		
+		return hand.remove(cardToPlay);
 	}
 
 	@Override
