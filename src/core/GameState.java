@@ -1,19 +1,9 @@
 package core;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
-import java.util.PriorityQueue;
 import java.util.Random;
-
-import io.BasicIO;
-import player.BasicAIPlayer;
-import player.HumanPlayer;
-import player.Player;
-import player.RandomPlayer;
 
 /**
  * 
@@ -35,10 +25,10 @@ public class GameState {
 
 	private HashMap<Artist, Integer> artistValues;//contains the values for each artists paintings
 	
-	private ArrayList<SeasonValue> seasonCounts;//keeps track of how many of each painting has been sold and is sorted
-	private static Comparator<SeasonValue> valuesComparitor = new Comparator<SeasonValue>() {
+	private ArrayList<ArtistCount> seasonCounts;//keeps track of how many of each painting has been sold and is sorted
+	private static Comparator<ArtistCount> valuesComparitor = new Comparator<ArtistCount>() {
 		@Override
-		public int compare(SeasonValue o1, SeasonValue o2) {
+		public int compare(ArtistCount o1, ArtistCount o2) {
 			return o1.compareTo(o2);
 		}
 		
@@ -64,9 +54,9 @@ public class GameState {
 		
 		//init seasonCounts with a way to compare values
 		//this is a special arraylist that sorts the list after a new item is added
-		seasonCounts = new ArrayList<SeasonValue>();
+		seasonCounts = new ArrayList<ArtistCount>();
 		for(Artist artist : Artist.values()) {
-			seasonCounts.add(new SeasonValue(artist));
+			seasonCounts.add(new ArtistCount(artist));
 		}
 		seasonCounts.sort(valuesComparitor);
 		//System.out.println(seasonCounts.get(0));
@@ -85,7 +75,7 @@ public class GameState {
 	 * Resets the counts of the paintings sold
 	 */
 	public void resetSeason() {
-		for(SeasonValue value : seasonCounts) {
+		for(ArtistCount value : seasonCounts) {
 			value.reset();
 		}
 		seasonCounts.sort(valuesComparitor);
@@ -98,7 +88,7 @@ public class GameState {
 	 */
 	public boolean sell(Artist artist, boolean doubleAuction) {
 		
-		for(SeasonValue value : seasonCounts) {
+		for(ArtistCount value : seasonCounts) {
 			if(value.getArtist() == artist) {
 				value.auction(doubleAuction);
 			}
@@ -125,6 +115,10 @@ public class GameState {
 		return top3;
 	}
 	
+	/**
+	 * Goes to the top 3 artists and updates their prices
+	 * @param top3 a list of the top 3 artists
+	 */
 	public void updateTopThree(Artist[] top3) {
 		int increase = 30;
 		for(Artist artist : top3) {
@@ -145,6 +139,14 @@ public class GameState {
 			}
 		}
 		return -1;
+	}
+	
+	/**
+	 * @return returns the list of the artists and their counts ordered by value
+	 */
+	public ArtistCount[] getSeasonValues() {
+		ArtistCount[] counts = new ArtistCount[seasonCounts.size()];
+		return seasonCounts.toArray(counts);
 	}
 
 	/**
@@ -272,64 +274,5 @@ public class GameState {
 		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.STANDARD));//
 		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.STANDARD));//
 		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.STANDARD));//
-	}
-	
-	/**
-	 *  Holds the count of how many of each artist painting has been sold during the current season.
-	 *  This exists to make getting the top 3 artist easier
-	 * @author William Elliman
-	 *
-	 */
-	private class SeasonValue implements Comparable<SeasonValue>{
-		
-		private final Artist artist;
-		private int count = 0;
-		
-		public SeasonValue(Artist artist) {
-			this.artist = artist;
-		}
-		
-		public void auction(boolean isDouble) {
-			count++;
-			if(isDouble) {
-				count++;
-			}
-		}
-		
-		public int getCount() {
-			return count;
-		}
-		
-		public Artist getArtist() {
-			return artist;
-		}
-		
-		/**
-		 * Resets the count for a new season
-		 */
-		public void reset() {
-			count = 0;
-		}
-		
-		public String toString() {
-			return artist + " : " + count;
-		}
-
-		@Override
-		public int compareTo(SeasonValue o) {
-			int diff = count-o.getCount();
-			if(diff != 0) {
-				return -diff;
-			} else {
-				for(Artist artist : Artist.values()) {
-					if(artist == this.artist) {
-						return -1;
-					} else if(artist == o.getArtist()){
-						return 1;
-					}
-				}
-			}
-			return 0;
-		}
 	}
 }

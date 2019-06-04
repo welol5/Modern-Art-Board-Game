@@ -2,6 +2,7 @@ package player;
 
 import core.Artist;
 import core.Card;
+import core.ObservableGameState;
 import io.BasicIO;
 
 /**
@@ -19,7 +20,7 @@ public class HumanPlayer extends Player{
 	}
 
 	@Override
-	public Card chooseCard() {
+	public Card chooseCard(ObservableGameState state) {
 		
 		io.showHand(this, hand);
 		int index = io.getHandIndex(hand.size());
@@ -27,27 +28,27 @@ public class HumanPlayer extends Player{
 	}
 
 	@Override
-	public int getBid(Card card, int highestSoFar, boolean idDouble) {
+	public int getBid(ObservableGameState state) {
 		
-		return io.getBid(name, money, highestSoFar);
+		return io.getBid(name, money, state.highestBid);
 	}
 
 	@Override
-	public int getFixedPrice(Card card) {
-		return io.getFixedPrice(card);
+	public int getFixedPrice(ObservableGameState state) {
+		return io.getFixedPrice(state.card);
 	}
 
 	@Override
-	public boolean buy(Card card, int price) {
+	public boolean buy(ObservableGameState state) {
 		//does not allow player to go into debt
-		if(price > money) {
+		if(state.highestBid > money) {
 			return false;
 		}
-		return io.askPlayertoBuy(card, price);
+		return io.askPlayertoBuy(state.card, state.highestBid);
 	}
 
 	@Override
-	public Card chooseSecondCard(Artist artist) {
+	public Card chooseSecondCard(Artist artist, ObservableGameState state) {
 		
 		//skip asking for a second card if a player does not have one
 		boolean contains = false;
@@ -66,6 +67,18 @@ public class HumanPlayer extends Player{
 
 	@Override
 	public void announceCard(Card card, boolean isDouble) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void announceSeasonEnd(int season, ObservableGameState state) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void announceAuctionWinner(int turn, String name, int price) {
 		// TODO Auto-generated method stub
 		
 	}

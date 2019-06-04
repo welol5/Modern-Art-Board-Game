@@ -1,13 +1,13 @@
 package core;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import io.BasicIO;
 import io.CommandLine;
 import io.IOType;
-import player.BasicAIPlayer;
+import player.ReactiveAIPlayer;
 import player.HumanPlayer;
+import player.MemoryAIPlayer;
 import player.Player;
 import player.PlayerType;
 import player.RandomPlayer;
@@ -23,15 +23,19 @@ import player.RandomPlayer;
  */
 public class GameDriver implements Runnable{
 	
+	//multiple games vars
+	private int iterations = 1000;
+
 	//Defaults to make testing easier
-	private static final String[] defaultNames = {"Player1","Player2","Player3"};
-	private static final PlayerType[] defaultTypes = {PlayerType.Random,PlayerType.Random,PlayerType.BasicAI};
+	private static final String[] defaultNames = {"RandomPlayer1","ReactiveAIPlayer","MemoryAIPlayer"};
+	private static final PlayerType[] defaultTypes = {PlayerType.RANDOM,PlayerType.REACTIVE_AI,PlayerType.MEMORY_AI};
 
 	//IO var
 	private BasicIO io;
 
 	//GameState var
 	GameState state;
+	//ObservableGameState OGS;
 	Player[] players;
 	String[] names;
 
@@ -62,149 +66,169 @@ public class GameDriver implements Runnable{
 
 	@Override
 	public void run() {
-		//setup the game state
-		state = new GameState(defaultNames.length);
-		//Make the list of players
-		players = makePlayers(defaultNames, io, defaultTypes);
-		int turn = 0;//keeps track of whose turn it is
+		int memoryAIWins = 0;
+		int reactiveAIWins = 0;
+		//double AIWinRatio = 0;//this can be used later
+		for(int game = 0; game < iterations; game++) {
+			//setup the game state
+			state = new GameState(defaultNames.length);
+			//make the observableState
 
-		//the game is now ready for the first season
-		for(int i = 1; i <= 4; i++) {
-			io.startSeason(i);
-			state.resetSeason();
-			//this is setup for the end of the season
-			Artist[] top3;
+			//Make the list of players
+			players = makePlayers(defaultNames, io, defaultTypes);
+			int turn = 0;//keeps track of whose turn it is
 
-			//deal out cards
-			for(int d = 0; d < state.dealAmounts[i-1]; d++) {
-				for(Player player : players) {
-					player.deal(state.drawCard());
-				}
-			}
+			//the game is now ready for the first season
+			for(int i = 1; i <= 4; i++) {
+				//io.startSeason(i);
+				state.resetSeason();
+				//this is setup for the end of the season
+				Artist[] top3;
 
-			boolean[] emptyHands = new boolean[players.length];
-			for(;true;turn = (turn+1)%players.length) {
-
-				//debug
-				//show players money //this sometimes causes issues with io but its a debug thing anyway
-				//				for(Player player : players) {
-				//					System.err.println(player.name + " : " + player.getMoney());
-				//				}
-
-				//get the painting that people will bid on
-				Card card = players[turn].chooseCard();
-				//if null is returned, the player had no cards
-				if(card == null) {
-					emptyHands[turn] = true;
-
-					//if all the players had no cards the season should end
-					boolean allEmpty = true;
-					for(int h = 0; h < emptyHands.length && allEmpty; h++) {
-						allEmpty = allEmpty && emptyHands[h];
+				//deal out cards
+				for(int d = 0; d < state.dealAmounts[i-1]; d++) {
+					for(Player player : players) {
+						player.deal(state.drawCard());
 					}
-					if(allEmpty) {
-						top3 = state.getTopThree();
-						state.updateTopThree(top3);
+				}
+
+				boolean[] emptyHands = new boolean[players.length];
+				for(;true;turn = (turn+1)%players.length) {
+
+					//debug
+					//show players money //this sometimes causes issues with io but its a debug thing anyway
+					//				for(Player player : players) {
+					//					System.out.println(player.name + " : " + player.getMoney());
+					//				}
+
+					//get the painting that people will bid on
+					Card card = players[turn].chooseCard(new ObservableGameState(players.length, null, -1,-1, state, false));
+					//if null is returned, the player had no cards
+					if(card == null) {
+						emptyHands[turn] = true;
+
+						//if all the players had no cards the season should end
+						boolean allEmpty = true;
+						for(int h = 0; h < emptyHands.length && allEmpty; h++) {
+							allEmpty = allEmpty && emptyHands[h];
+						}
+						if(allEmpty) {
+							top3 = state.getTopThree();
+							state.updateTopThree(top3);
+							break;
+						}
+
+						continue;
+					}
+
+					//check for a double auction
+					Card second = null;
+					if(card.getAuctionType() == AuctionType.DOUBLE) {
+						second = card;
+						card = players[turn].chooseSecondCard(second.getArtist(), new ObservableGameState(players.length, second, -1,-1, state, false));
+						//if card is null then other players should be asked
+						if(card == null) {
+							card = getSecondCard(second,turn, second.getArtist());
+						}
+
+						//if card is still null, no one put in a second and a standard auction should occur
+						if(card == null) {
+							card = second;
+							second = null;//need to remove pointer
+						}
+					}
+
+					boolean seasonEnd = false;
+					boolean isDouble;
+					if(second == null) {
+						seasonEnd = state.sell(card.getArtist(), false);
+						isDouble = false;
+					} else {
+						seasonEnd = state.sell(card.getArtist(), true);
+						isDouble = true;
+					}
+
+					//announce the played card to the players
+					for(Player player : players) {
+						player.announceCard(card, !(second == null));
+					}
+
+					if(!seasonEnd) {//this checks if the season is over by asking GameState
+						//the bidding can now begin
+						//io.announceCard(card);//TODO deal with doubleAuctions better
+						Bid winningBid;
+						if(card.getAuctionType() == AuctionType.ONCE_AROUND) {
+							//System.out.println("Once Around");//debug
+							winningBid = onceAround(turn,card,!(second == null));
+						} else if(card.getAuctionType() == AuctionType.FIXED_PRICE){
+							//System.out.println("Fixed");//debug
+							winningBid = fixedPrice(turn,card,players[turn].getFixedPrice(new ObservableGameState(players.length, card, -1,-1, state, isDouble)),!(second == null));
+						} else if(card.getAuctionType() == AuctionType.SEALED){
+							//System.out.println("Sealed");//debug
+							winningBid = sealed(card,!(second == null));
+						} else {
+							winningBid = standardBidding(turn, card, !(second == null));
+						}
+
+						//execute the bid
+						if(winningBid.index == turn) {
+							players[winningBid.index].pay(winningBid.price);
+							players[winningBid.index].givePainting(card);
+							if(second != null) {
+								players[winningBid.index].givePainting(second);
+							}
+						} else {
+							players[winningBid.index].pay(winningBid.price);
+							players[turn].recive(winningBid.price);
+							players[winningBid.index].givePainting(card);
+							if(second != null) {
+								players[winningBid.index].givePainting(second);
+							}
+						}
+						//io.auctionWinner(players[winningBid.index], winningBid.price);
+					} else {
+						//break out of the season once it is over
 						break;
 					}
-
-					continue;
 				}
 
-				//check for a double auction
-				Card second = null;
-				if(card.getAuctionType() == AuctionType.DOUBLE) {
-					second = card;
-					card = players[turn].chooseSecondCard(second.getArtist());
-					//if card is null then other players should be asked
-					if(card == null) {
-						card = getSecondCard(turn, second.getArtist());
-					}
-
-					//if card is still null, no one put in a second and a standard auction should occur
-					if(card == null) {
-						card = second;
-						second = null;//need to remove pointer
-					}
-				}
-
-				boolean seasonEnd = false;
-				if(second == null) {
-					seasonEnd = state.sell(card.getArtist(), false);
-				} else {
-					seasonEnd = state.sell(card.getArtist(), true);
-				}
-
-				//announce the played card to the players
-				for(Player player : players) {
-					player.announceCard(card, !(second == null));
-				}
-
-				if(!seasonEnd) {//this checks if the season is over by asking GameState
-					//the bidding can now begin
-					io.announceCard(card);//TODO deal with doubleAuctions better
-					Bid winningBid;
-					if(card.getAuctionType() == AuctionType.ONCE_AROUND) {
-						//System.out.println("Once Around");//debug
-						winningBid = onceAround(turn,card,!(second == null));
-					} else if(card.getAuctionType() == AuctionType.FIXED_PRICE){
-						//System.out.println("Fixed");//debug
-						winningBid = fixedPrice(turn,card,players[turn].getFixedPrice(card),!(second == null));
-					} else if(card.getAuctionType() == AuctionType.SEALED){
-						//System.out.println("Sealed");//debug
-						winningBid = sealed(card,!(second == null));
-					} else {
-						winningBid = standardBidding(turn, card, !(second == null));
-					}
-
-					//execute the bid
-					if(winningBid.index == turn) {
-						players[winningBid.index].pay(winningBid.price);
-						players[winningBid.index].givePainting(card);
-						if(second != null) {
-							players[winningBid.index].givePainting(second);
-						}
-					} else {
-						players[winningBid.index].pay(winningBid.price);
-						players[turn].recive(winningBid.price);
-						players[winningBid.index].givePainting(card);
-						if(second != null) {
-							players[winningBid.index].givePainting(second);
+				//the season is over by this point
+				top3 = state.getTopThree();
+				for(Player player: players) {
+					ArrayList<Card> paintings = player.getWinnings();
+					for(Card card : paintings) {
+						if(top3[0] == card.getArtist() || top3[1] == card.getArtist() || top3[2] == card.getArtist()) {
+							player.recive(state.getArtistValue(card.getArtist()));
 						}
 					}
-					io.auctionWinner(players[winningBid.index], winningBid.price);
-				} else {
-					//break out of the season once it is over
-					break;
+					//reset the players winnings
+					player.clearWinnings();
 				}
 			}
 
-			//the season is over by this point
-			top3 = state.getTopThree();
-			for(Player player: players) {
-				ArrayList<Card> paintings = player.getWinnings();
-				for(Card card : paintings) {
-					if(top3[0] == card.getArtist() || top3[1] == card.getArtist() || top3[2] == card.getArtist()) {
-						player.recive(state.getArtistValue(card.getArtist()));
-					}
+			//the game is over, time to see who won
+			Player winner = null;
+			for(Player player : players) {
+				if(winner == null) {
+					winner = player;
+				} else if(winner.getMoney() < player.getMoney()) {
+					winner = player;
 				}
-				//reset the players winnings
-				player.clearWinnings();
+				//debug
+				//System.out.println(player.name + " : " + player.getMoney());
 			}
-		}
-
-		//the game is over, time to see who won
-		Player winner = null;
-		for(Player player : players) {
-			if(winner == null) {
-				winner = player;
-			} else if(winner.getMoney() < player.getMoney()) {
-				winner = player;
+			io.announceWinner(winner);
+			if(winner.name.equalsIgnoreCase("MemoryAIplayer")) {
+				memoryAIWins++;
+			} else if (winner.name.equalsIgnoreCase("ReactiveAIPlayer")) {
+				reactiveAIWins++;
 			}
-			//debug
-			System.out.println(player.name + " : " + player.getMoney());
+			System.out.println("Games played : " + game);
 		}
-		io.announceWinner(winner);
+		System.out.println("Final results");
+		//System.out.println("AI wins      : " + AIWins);
+		System.out.println("Memory AI win % : " + ((double)memoryAIWins)/((double)iterations)*100);
+		System.out.println("Reactive AI win % : " + ((double)reactiveAIWins)/((double)iterations)*100);
 	}
 
 	/**
@@ -217,13 +241,19 @@ public class GameDriver implements Runnable{
 	private Player[] makePlayers(String[] names, BasicIO io, PlayerType[] types) {
 		Player[] players = new Player[names.length];
 		for(int i = 0; i < players.length; i++) {
-			if(types[i] == PlayerType.Human) {
+			if(types[i] == PlayerType.HUMAN) {
 				players[i] = new HumanPlayer(names[i], io);
-			} else if(types[i] == PlayerType.BasicAI) {
+			} else if(types[i] == PlayerType.REACTIVE_AI) {
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
-					players[i] = new BasicAIPlayer("AIPlayer" + i, io);
+					players[i] = new ReactiveAIPlayer("ReactiveAIPlayer" + i, io);
 				} else {
-					players[i] = new BasicAIPlayer(names[i], io);
+					players[i] = new ReactiveAIPlayer(names[i], io);
+				}
+			} else if(types[i] == PlayerType.MEMORY_AI){
+				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
+					players[i] = new MemoryAIPlayer("MemoryAIPlayer" + i, io, players.length, i);
+				} else {
+					players[i] = new MemoryAIPlayer(names[i], io, players.length, i);
 				}
 			} else {
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
@@ -240,15 +270,15 @@ public class GameDriver implements Runnable{
 	 * Gets a second card from a player if the first was a double
 	 * @param turn the index of the player
 	 * @param artist the type of artist that is required
-	 * @return the card the palyer decides to use
+	 * @return the card the player decides to use
 	 */
-	private Card getSecondCard(int turn, Artist artist) {
+	private Card getSecondCard(Card firstCard, int turn, Artist artist) {
 		Card card = null;
 		for(int i = 0; i < players.length; i++) {
 			int playerTurn = (turn + i + 1)%players.length;
-			card = players[playerTurn].chooseSecondCard(artist);
+			card = players[playerTurn].chooseSecondCard(artist, new ObservableGameState(players.length, firstCard, -1,-1, state, false));
 		}
-		return null;
+		return card;
 	}
 
 	/**
@@ -276,7 +306,7 @@ public class GameDriver implements Runnable{
 				}
 
 				//get the price a player is willing to pay
-				int bid = players[(turn+biddingTurn+1)%players.length].getBid(card, highestBid, isDouble);
+				int bid = players[(turn+biddingTurn+1)%players.length].getBid(new ObservableGameState(players.length, card, highestBid,(turn+biddingTurn+1)%players.length, state, isDouble, bidding));
 				if(bid==-1 || bid <= highestBid) {
 					bidding[(turn+biddingTurn+1)%players.length] = false;
 				} else {
@@ -313,7 +343,7 @@ public class GameDriver implements Runnable{
 		int highestBidder = turn;
 		for(int i = 0; i < players.length; i++) {
 			int biddingTurn = (turn+i+1)%players.length;
-			int bid = players[biddingTurn].getBid(card, highestBid, isDouble);
+			int bid = players[biddingTurn].getBid(new ObservableGameState(players.length, card, highestBid,biddingTurn, state, isDouble));
 			if(bid > highestBid) {
 				highestBid = bid;
 				highestBidder = biddingTurn;
@@ -333,7 +363,7 @@ public class GameDriver implements Runnable{
 	private Bid fixedPrice(int turn, Card card, int price, boolean isDouble) {
 		for(int i = 0; i < players.length-1; i++) {
 			int biddingTurn = (turn+i+1)%players.length;
-			if(players[biddingTurn].buy(card, price)) {
+			if(players[biddingTurn].buy(new ObservableGameState(players.length, card, price,-1, state, isDouble))) {
 				return new Bid(biddingTurn, price);
 			}
 		}
@@ -349,7 +379,7 @@ public class GameDriver implements Runnable{
 		int highestBidder = -1;
 		int highestPrice = -1;
 		for(int i = 0; i < players.length; i++) {
-			int bid = players[i].getBid(card, -1, isDouble);
+			int bid = players[i].getBid(new ObservableGameState(players.length, card, -1,-1, state, isDouble));
 			if(bid > highestPrice) {
 				highestPrice = bid;
 				highestBidder = i;
