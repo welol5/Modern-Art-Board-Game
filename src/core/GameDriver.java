@@ -28,8 +28,8 @@ public class GameDriver implements Runnable{
 	private int iterations = 100000;
 
 	//Defaults to make testing easier
-	private static final String[] defaultNames = {"RandomAIPlayer","MemoryAIPlayer","PredictiveAIPlayer","ReactiveAIPlayer"};
-	private static final PlayerType[] defaultTypes = {PlayerType.RANDOM,PlayerType.MEMORY_AI,PlayerType.BASIC_PREDICTIVE_AI,PlayerType.REACTIVE_AI};
+	private static final String[] defaultNames = {"RandomAIPlayer","ReactiveAIPlayer","MemoryAIPlayer","PredictiveAIPlayer"};
+	private static final PlayerType[] defaultTypes = {PlayerType.RANDOM,PlayerType.REACTIVE_AI,PlayerType.MEMORY_AI,PlayerType.BASIC_PREDICTIVE_AI};
 
 	//IO var
 	private BasicIO io;
