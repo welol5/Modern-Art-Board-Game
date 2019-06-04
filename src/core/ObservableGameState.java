@@ -49,6 +49,10 @@ public class ObservableGameState {
 	}
 	
 	public ArtistCount[] getSeasonValues() {
-		return state.getSeasonValues();
+		ArtistCount[] copyArray = new ArtistCount[state.getSeasonValues().length];
+		for(int i = 0; i < copyArray.length; i++) {
+			copyArray[i] = state.getSeasonValues()[i].copy();
+		}
+		return copyArray;
 	}
 }
