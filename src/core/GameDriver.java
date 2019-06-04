@@ -7,6 +7,8 @@ import io.CommandLine;
 import io.IOType;
 import player.ReactiveAIPlayer;
 import player.BasicPredictiveAIPlayer;
+import player.GeneticAIPlayer;
+import player.GeneticAIPlayerDB;
 import player.HumanPlayer;
 import player.MemoryAIPlayer;
 import player.Player;
@@ -30,6 +32,7 @@ public class GameDriver implements Runnable{
 	//Defaults to make testing easier
 	private static final String[] defaultNames = {"RandomAIPlayer","ReactiveAIPlayer","MemoryAIPlayer","PredictiveAIPlayer"};
 	private static final PlayerType[] defaultTypes = {PlayerType.RANDOM,PlayerType.REACTIVE_AI,PlayerType.MEMORY_AI,PlayerType.BASIC_PREDICTIVE_AI};
+	private GeneticAIPlayerDB dataBase = new GeneticAIPlayerDB();//only need this with geneticAIPlayers
 
 	//IO var
 	private BasicIO io;
@@ -270,7 +273,13 @@ public class GameDriver implements Runnable{
 				} else {
 					players[i] = new BasicPredictiveAIPlayer(names[i], io, players.length, i);
 				}
-			}else {
+			}else if(types[i] == PlayerType.GENETIC_AI){
+				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
+					players[i] = new GeneticAIPlayer("GeneticAIPlayer" + i, io, players.length, i, dataBase,0.05,0.2);
+				} else {
+					players[i] = new GeneticAIPlayer(names[i], io, players.length, i, dataBase,0.05,0.2);
+				}
+			} else {
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
 					players[i] = new RandomPlayer("RandomPlayer" + i, io);
 				} else {
