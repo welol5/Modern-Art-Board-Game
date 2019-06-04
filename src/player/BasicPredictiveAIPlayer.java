@@ -324,13 +324,17 @@ public class BasicPredictiveAIPlayer extends Player{
 		ArtistCount[] artistCounts = state.getSeasonValues();
 		
 		//add in other players winnings
-		for(Player player : players) {
+		for(int i = 0; i < players.length; i++) {
+			//skip this player
+			if(i == turnIndex) {
+				continue;
+			}
 			//find the highest count artist
 			int highestCount = 0;
 			Artist highestArtist = null;
 			for(Artist artist : Artist.values()) {
 				int count = 0;
-				for(Card card : player.getWinnings()) {
+				for(Card card : players[i].getWinnings()) {
 					if(card.getArtist() == artist) {
 						count++;
 					}
