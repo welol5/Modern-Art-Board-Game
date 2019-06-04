@@ -316,8 +316,41 @@ public class BasicPredictiveAIPlayer extends Player{
 		//the favored artist will be the one with the fewest cards needed to complete the set
 		//this also requires the cards needed to be in hand
 		//if no set can be completed with this it will choose the one with the closest to completing a complete set
+		
+		//this AI will also try to predict what the other players will do
+		//it will do it by just adding 1 to the season values of the other players favored artists
+		//their favored artist will just be what they have won the most of
 
 		ArtistCount[] artistCounts = state.getSeasonValues();
+		
+		//add in other players winnings
+		for(Player player : players) {
+			//find the highest count artist
+			int highestCount = 0;
+			Artist highestArtist = null;
+			for(Artist artist : Artist.values()) {
+				int count = 0;
+				for(Card card : player.getWinnings()) {
+					if(card.getArtist() == artist) {
+						count++;
+					}
+				}
+				if(count > highestCount) {
+					highestCount = count;
+					highestArtist = artist;
+				}
+			}
+			
+			//increment seasonValue
+			//highestArtist is null if the player won no cards
+			if(highestArtist != null) {
+				for(ArtistCount c : artistCounts) {
+					if(c.getArtist() == highestArtist) {
+						c.auction(false);
+					}
+				}
+			}
+		}
 
 		int highestCount = -1;//used for picking if no set can be made
 		Artist highestArtist = null;//used for picking if no set can be made
