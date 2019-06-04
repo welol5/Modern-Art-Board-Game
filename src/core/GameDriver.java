@@ -1,5 +1,6 @@
 package core;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -68,10 +69,14 @@ public class GameDriver implements Runnable{
 				FileInputStream f = new FileInputStream(new File("db.txt"));
 				ObjectInputStream o = new ObjectInputStream(f);
 				database = (GeneticAIPlayerDB) o.readObject();
+				System.out.println("loaded");
+			} catch (EOFException e) {
+				e.printStackTrace();
+				System.out.println("The file has been corrupted");
 			} catch (IOException | ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				database = new GeneticAIPlayerDB();
-				//e.printStackTrace();
+				e.printStackTrace();
 			}
 		}
 	}
@@ -274,15 +279,16 @@ public class GameDriver implements Runnable{
 			}
 			
 			//save the database every 1000 games
-			if(game % 1000 == 0) {
+			if(game % 10000 == 0) {
 				try {
 					FileOutputStream f = new FileOutputStream(new File("db.txt"));
 					ObjectOutputStream o = new ObjectOutputStream(f);
 					o.writeObject(database);
+					System.out.println("saved");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					//e.printStackTrace();
-					//while(true);
+					e.printStackTrace();
+					while(true);
 				}
 				
 			}

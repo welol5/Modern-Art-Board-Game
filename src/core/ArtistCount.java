@@ -1,7 +1,14 @@
 package core;
 
+import java.io.Serializable;
 
-public class ArtistCount implements Comparable<ArtistCount> {
+public class ArtistCount implements Comparable<ArtistCount>, Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8235301809371821812L;
+	
+	
 	private final Artist artist;
 	private int count = 0;
 	
