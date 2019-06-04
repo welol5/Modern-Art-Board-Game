@@ -25,11 +25,11 @@ import player.RandomPlayer;
 public class GameDriver implements Runnable{
 	
 	//multiple games vars
-	private int iterations = 1000;
+	private int iterations = 100000;
 
 	//Defaults to make testing easier
-	private static final String[] defaultNames = {"ReactiveAIPlayer","MemoryAIPlayer","PredictiveAPPlayer"};
-	private static final PlayerType[] defaultTypes = {PlayerType.REACTIVE_AI,PlayerType.MEMORY_AI,PlayerType.BASIC_PREDICTIVE_AI};
+	private static final String[] defaultNames = {"RandomAIPlayer","MemoryAIPlayer","PredictiveAIPlayer","ReactiveAIPlayer"};
+	private static final PlayerType[] defaultTypes = {PlayerType.RANDOM,PlayerType.MEMORY_AI,PlayerType.BASIC_PREDICTIVE_AI,PlayerType.REACTIVE_AI};
 
 	//IO var
 	private BasicIO io;
@@ -67,9 +67,13 @@ public class GameDriver implements Runnable{
 
 	@Override
 	public void run() {
-		int memoryAIWins = 0;
-		int reactiveAIWins = 0;
-		int BPAIWins = 0;
+		//keep track of wins
+		int[] wins = new int[defaultNames.length];
+		for(int i = 0; i < wins.length; i++) {
+			//set everything to 0
+			wins[i] = 0;
+		}
+		
 		//double AIWinRatio = 0;//this can be used later
 		for(int game = 0; game < iterations; game++) {
 			//setup the game state
@@ -210,30 +214,30 @@ public class GameDriver implements Runnable{
 
 			//the game is over, time to see who won
 			Player winner = null;
+			int temp = 0;;
+			int winnerTurn = -1;
 			for(Player player : players) {
 				if(winner == null) {
 					winner = player;
+					winnerTurn = temp;
 				} else if(winner.getMoney() < player.getMoney()) {
 					winner = player;
+					winnerTurn = temp;
 				}
+				temp++;
 				//debug
 				//System.out.println(player.name + " : " + player.getMoney());
 			}
 			io.announceWinner(winner);
-			if(winner.name.equalsIgnoreCase("MemoryAIplayer")) {
-				memoryAIWins++;
-			} else if (winner.name.equalsIgnoreCase("ReactiveAIPlayer")) {
-				reactiveAIWins++;
-			} else if (winner.name.equalsIgnoreCase("PredictiveAIPlayer")) {
-				BPAIWins++;
-			}
+			wins[winnerTurn] += 1;
 			System.out.println("Games played : " + (game+1));
 		}
-		System.out.println("Final results");
-		//System.out.println("AI wins      : " + AIWins);
-		System.out.println("Memory AI win % : " + ((double)memoryAIWins)/((double)iterations)*100);
-		System.out.println("Reactive AI win % : " + ((double)reactiveAIWins)/((double)iterations)*100);
-		System.out.println("Predictive AI win % : " + ((double)BPAIWins)/((double)iterations)*100);
+		
+		//show win %
+		System.out.println("Final results");		
+		for(int i = 0; i < wins.length; i++) {
+			System.out.println(players[i].name + " win % : " + ((double)wins[i])/((double)iterations)*100);
+		}
 	}
 
 	/**
