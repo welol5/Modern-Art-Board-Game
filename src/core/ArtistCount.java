@@ -9,6 +9,11 @@ public class ArtistCount implements Comparable<ArtistCount> {
 		this.artist = artist;
 	}
 	
+	public ArtistCount(Artist artist, int count) {
+		this.artist = artist;
+		this.count = count;
+	}
+	
 	public void auction(boolean isDouble) {
 		count++;
 		if(isDouble) {
@@ -50,5 +55,9 @@ public class ArtistCount implements Comparable<ArtistCount> {
 			}
 		}
 		return 0;
+	}
+	
+	public ArtistCount copy() {
+		return new ArtistCount(artist,count);
 	}
 }
