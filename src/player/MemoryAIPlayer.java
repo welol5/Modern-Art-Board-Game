@@ -182,9 +182,6 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 	public void announceCard(ObservableGameState state) {
 		//prep for bidding
 		biddingCard = state.card;
-		
-		int bestPlayer = -1;
-		int bestPlayerMoney = -1;
 
 		//first it to find the player who is doing the best that is not this AI
 		for(int i = 0; i < players.length; i++) {
