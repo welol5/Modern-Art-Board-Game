@@ -211,31 +211,4 @@ public class BasicPredictiveAIPlayer extends MemoryAIPlayer{
 			playerCardCounts[i]++;
 		}
 	}
-
-	private class ArtistPlayChance{
-		private double chance = 0;
-		public final Artist artist;
-		public final double cardCount;
-
-		public ArtistPlayChance(Artist artist) {
-			this.artist = artist;
-
-			int cardCount = 16;
-			for(int i = 0; i < 5; i++) {
-				if(artist == Artist.values()[i]) {
-					cardCount = 12+i;
-				}
-			}
-			this.cardCount = cardCount;
-		}
-
-		public void updateChance(int playedCards, int totalPlayedCards) {
-			//this assumes an even distribution
-			chance = (cardCount-playedCards)/(70-totalPlayedCards);
-		}
-
-		public double getChance() {
-			return chance;
-		}
-	}
 }
