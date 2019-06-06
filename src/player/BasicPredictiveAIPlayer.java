@@ -26,33 +26,12 @@ public class BasicPredictiveAIPlayer extends MemoryAIPlayer{
 	private Random random = new Random();
 
 	//memory
-	//hand keeps track of the cards in the players hand
-	private ArrayList<ArtistCount> playedCards = new ArrayList<ArtistCount>();//this could probably be an array
-	private HashMap<Artist,Integer> unknownCards;
-	private ArtistPlayChance[] chances = new ArtistPlayChance[Artist.values().length];//knows the chances of seeing any card in general
 	
 	//keep track of other players
 	private int[] playerCardCounts;
 	
 	public BasicPredictiveAIPlayer(String name, BasicIO io,ObservableGameState state, int playerCount, int turnIndex) {
 		super(name,io,state,playerCount,turnIndex);
-
-		//init playedCards to 0s
-		for(Artist artist : Artist.values()) {
-			playedCards.add(new ArtistCount(artist));
-		}
-
-		//init ArtistPlayChances
-		for(int i = 0; i < Artist.values().length; i++) {
-			chances[i] = new ArtistPlayChance(Artist.values()[i]);
-		}
-		
-		//assume even distribution
-		//init unknownCards
-		unknownCards = new HashMap<Artist,Integer>();
-		for(int i = 0 ; i < Artist.values().length; i++) {
-			unknownCards.put(Artist.values()[i], 15-i);
-		}
 		
 		//init playerCardCounts
 		playerCardCounts = new int[playerCount];
@@ -130,40 +109,6 @@ public class BasicPredictiveAIPlayer extends MemoryAIPlayer{
 
 	@Override
 	public void announceCard(Card card, boolean isDouble) {
-		for(int i = 0; i < playedCards.size(); i++) {
-			if(playedCards.get(i).getArtist() == card.getArtist()) {
-				playedCards.get(i).auction(isDouble);
-			}
-		}
-		
-		//find the total number of unknown cards
-		int total = 0;
-		for(ArtistCount c : playedCards) {
-			total += c.getCount();
-		}
-		total += hand.size();
-		
-		//update all of the chances
-		for(int i = 0; i < chances.length; i++) {
-			//find how many cards have been played
-			int artistPlayedCards = 0;
-			for(int k = 0; k < playedCards.size(); k++) {
-				if(playedCards.get(k).getArtist() == chances[i].artist) {
-					artistPlayedCards = playedCards.get(k).getCount();
-				}
-			}
-			
-			//add in cards in hand
-			for(Card handCard : hand) {
-				if(handCard.getArtist() == chances[i].artist) {
-					artistPlayedCards++;
-				}
-			}
-			
-			//update
-			chances[i].updateChance(artistPlayedCards, total);
-		}
-		
 		
 		//prep for bidding
 		biddingCard = card;
@@ -261,7 +206,6 @@ public class BasicPredictiveAIPlayer extends MemoryAIPlayer{
 	@Override
 	public void deal(Card card) {
 		hand.add(card);
-		unknownCards.put(card.getArtist(), unknownCards.get(card.getArtist())-1);
 		//players got delt another card
 		for(int i = 0; i < playerCardCounts.length; i++) {
 			playerCardCounts[i]++;
