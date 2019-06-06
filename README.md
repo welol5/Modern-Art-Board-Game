@@ -12,3 +12,4 @@ Files in the bin folder should always have the newest version
 
 ## Currently WIP
 I am working on cleaning up the code
+Currently trying to remove the data stored in OGS
