@@ -22,9 +22,6 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 	private Random random = new Random();
 
 	//memory
-	//hand keeps track of the cards in the players hand
-	private ArrayList<ArtistCount> playedCards = new ArrayList<ArtistCount>();//this could probably be an array
-	private ArtistPlayChance[] chances = new ArtistPlayChance[Artist.values().length];
 	
 	//keep track of other players
 	private Player[] players;
@@ -36,16 +33,6 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 	
 	public MemoryAIPlayer(String name, BasicIO io, int playerCount, int turnIndex) {
 		super(name,io);
-
-		//init playedCards to 0s
-		for(Artist artist : Artist.values()) {
-			playedCards.add(new ArtistCount(artist));
-		}
-
-		//init ArtistPlayChances
-		for(int i = 0; i < Artist.values().length; i++) {
-			chances[i] = new ArtistPlayChance(Artist.values()[i]);
-		}
 		
 		//init player array
 		players = new Player[playerCount];
@@ -242,12 +229,6 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 
 	@Override
 	public void announceCard(Card card, boolean isDouble) {
-		for(int i = 0; i < playedCards.size(); i++) {
-			if(playedCards.get(i).getArtist() == card.getArtist()) {
-				playedCards.get(i).auction(isDouble);
-			}
-		}
-		
 		//prep for bidding
 		biddingCard = card;
 	}
