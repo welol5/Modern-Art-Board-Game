@@ -35,11 +35,11 @@ import player.RandomPlayer;
 public class GameDriver implements Runnable{
 
 	//multiple games vars
-	private int iterations = 100000;
+	private int iterations = 1000;
 
 	//Defaults to make testing easier
-	private static final String[] defaultNames = {"RandomAIPlayer","GeneticAIPlayer","MemoryAIPlayer","PredictiveAIPlayer"};
-	private static final PlayerType[] defaultTypes = {PlayerType.RANDOM,PlayerType.GENETIC_AI,PlayerType.MEMORY_AI,PlayerType.BASIC_PREDICTIVE_AI};
+	private static final String[] defaultNames = {"RandomAIPlayer","MemoryAIPlayer","PredictiveAIPlayer"};
+	private static final PlayerType[] defaultTypes = {PlayerType.RANDOM,PlayerType.MEMORY_AI,PlayerType.BASIC_PREDICTIVE_AI};
 
 	private GeneticAIPlayerDB database = null;//only need this with geneticAIPlayers
 	private int aiTraining = Integer.MIN_VALUE;
