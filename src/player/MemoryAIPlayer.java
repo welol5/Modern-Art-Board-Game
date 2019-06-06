@@ -128,7 +128,7 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 			}
 			//if a profit can be made, don't let them win
 		} else {
-			maxValue /= 2;
+			maxValue *= (players.length-1)/players.length;
 		}
 		
 		return getBid(highestBid,maxValue);
