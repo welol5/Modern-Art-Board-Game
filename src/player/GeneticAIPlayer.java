@@ -17,6 +17,9 @@ import io.BasicIO;
  * This player keeps a record of values for every state of the game. It uses a version of Temporal
  * difference where it is on policy. This will probably be updated to SARSA learning later on but
  * this is simpler for now.
+ * 
+ * This may not work for now and it is not my priority.
+ * 
  * @author William Elliman
  *
  */

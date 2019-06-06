@@ -6,7 +6,10 @@ import core.ObservableGameState;
 import io.BasicIO;
 
 /**
- * The class that allows human players to play by asking an IO object for all the humans decisions
+ * The class that allows human players to play by asking an IO object for all the humans decisions.
+ * 
+ * This may not work for now and it is not my priority.
+ * 
  * @author William Elliman
  *
  */
