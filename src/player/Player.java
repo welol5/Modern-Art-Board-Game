@@ -117,7 +117,7 @@ public abstract class Player {
 	 * Allows the driver to tell all the players what card will be auctioned off without asking for a bid
 	 * @param card
 	 */
-	public abstract void announceCard(Card card, boolean isDouble);
+	public abstract void announceCard(ObservableGameState state);
 	
 	/**
 	 * Announces to the player that a season is ending

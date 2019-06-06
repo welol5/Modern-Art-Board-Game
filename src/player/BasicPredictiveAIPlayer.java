@@ -21,7 +21,7 @@ import io.BasicIO;
  * @author William Elliman
  *
  */
-public class BasicPredictiveAIPlayer extends Player{
+public class BasicPredictiveAIPlayer extends MemoryAIPlayer{
 
 	private Random random = new Random();
 
@@ -42,7 +42,7 @@ public class BasicPredictiveAIPlayer extends Player{
 	//private boolean isDouble;
 	
 	public BasicPredictiveAIPlayer(String name, BasicIO io, int playerCount, int turnIndex) {
-		super(name);
+		super(name,io,playerCount,turnIndex);
 
 		//init playedCards to 0s
 		for(Artist artist : Artist.values()) {
@@ -262,10 +262,10 @@ public class BasicPredictiveAIPlayer extends Player{
 	}
 
 	@Override
-	public void announceCard(Card card, boolean isDouble) {
+	public void announceCard(ObservableGameState state) {
 		for(int i = 0; i < playedCards.size(); i++) {
-			if(playedCards.get(i).getArtist() == card.getArtist()) {
-				playedCards.get(i).auction(isDouble);
+			if(playedCards.get(i).getArtist() == state.card.getArtist()) {
+				playedCards.get(i).auction(state.isDouble);
 			}
 		}
 		
@@ -299,7 +299,7 @@ public class BasicPredictiveAIPlayer extends Player{
 		
 		
 		//prep for bidding
-		biddingCard = card;
+		biddingCard = state.card;
 		//this.isDouble = isDouble;
 	}
 
@@ -309,7 +309,7 @@ public class BasicPredictiveAIPlayer extends Player{
 	 * @param favor if this is 0 it will return the most favored, 1 is second most favored and so on
 	 * @return the favored artist
 	 */
-	private Artist chooseFavordArtist(ObservableGameState state, int favor) {
+	protected Artist chooseFavordArtist(ObservableGameState state, int favor) {
 		//TODO replace this method with one that takes into consideration what other players have won
 		//this will be done so that a search problem can start to be formulated
 
@@ -386,7 +386,7 @@ public class BasicPredictiveAIPlayer extends Player{
 	 * @param state that contains the card being bid on
 	 * @return the value of the artist of the card
 	 */
-	private int getValue(ObservableGameState state) {
+	protected int getValue(ObservableGameState state) {
 		int value = 0;
 		boolean inTop3 = false;
 		int index = -1;

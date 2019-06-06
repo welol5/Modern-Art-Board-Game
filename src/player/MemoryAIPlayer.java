@@ -22,24 +22,26 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 	private Random random = new Random();
 
 	//memory
-	
+
 	//keep track of other players
 	private Player[] players;
 	private final int turnIndex;//keep track of where itself is in the list of turns
 	private int turn = 0;
-	
+	private int bestPlayer = -1;
+	private int bestPlayerMoney = -1;
+
 	//memory during bidding
 	private Card biddingCard;
-	
+
 	public MemoryAIPlayer(String name, BasicIO io, int playerCount, int turnIndex) {
 		super(name,io);
-		
+
 		//init player array
 		players = new Player[playerCount];
 		for(int i = 0; i < players.length; i++) {
 			players[i] = new RandomPlayer(null,null);
 		}
-		
+
 		this.turnIndex = turnIndex;
 	}
 
@@ -111,39 +113,9 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 
 	@Override
 	public int getBid(ObservableGameState state) {
-		int bestPlayer = -1;
-		int bestPlayerMoney = -1;
-		
-		//first it to find the player who is doing the best that is not this AI
-		for(int i = 0; i < players.length; i++) {
-			//skip this player
-			if(i == turnIndex) {
-				continue;
-			}
-			
-			//the best player will be found by finding the est values for each player
-			//first calculate the players est value
-			Artist[] top3 = state.getTopSeasonValues();
-			int value = players[i].getMoney();
-			for(Card c : players[i].getWinnings()) {
-				if(c.getArtist() == top3[0]) {
-					value += state.getArtistValue(top3[0]) + 30;
-				} else if(c.getArtist() == top3[1]) {
-					value += state.getArtistValue(top3[0]) + 20;
-				} else if(c.getArtist() == top3[2]) {
-					value += state.getArtistValue(top3[0]) + 10;
-				}
-			}
-			
-			//value now holds the players value
-			if(value > bestPlayerMoney) {
-				bestPlayerMoney = value;
-				bestPlayer = i;
-			}
-		}
-		
+
 		//now the best other player has been found
-		
+
 		//find that players value
 		Artist[] top3 = state.getTopSeasonValues();
 		for(Card card : players[bestPlayer].getWinnings()) {
@@ -156,21 +128,22 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 			}
 		}
 		//bestPlayerMoney holds the highest value another player has
-		
-		//calculate this players value
-		int AIvalue = money;
-		for(Card card : getWinnings()) {
-			if(card.getArtist() == top3[0]) {
-				AIvalue += state.getArtistValue(card.getArtist()) + 30;
-			} else if(card.getArtist() == top3[1]) {
-				AIvalue += state.getArtistValue(card.getArtist()) + 20;
-			} else if(card.getArtist() == top3[2]) {
-				AIvalue += state.getArtistValue(card.getArtist()) + 10;
-			}
-		}
-		
+
+		//Not used
+//		//calculate this players value
+//		int AIvalue = money;
+//		for(Card card : getWinnings()) {
+//			if(card.getArtist() == top3[0]) {
+//				AIvalue += state.getArtistValue(card.getArtist()) + 30;
+//			} else if(card.getArtist() == top3[1]) {
+//				AIvalue += state.getArtistValue(card.getArtist()) + 20;
+//			} else if(card.getArtist() == top3[2]) {
+//				AIvalue += state.getArtistValue(card.getArtist()) + 10;
+//			}
+//		}
+
 		//AIvalue and BestPlayerMoney hold money values
-		
+
 		//set the maxValue to the
 		int maxValue = getValue(state);
 		if(state.isDouble) {
@@ -188,14 +161,14 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 		} else {
 			maxValue /= 2;
 		}
-		
+
 		//if it a once around return the max value this AI will pay
 		if((state.card.getAuctionType() == AuctionType.ONCE_AROUND || state.card.getAuctionType() == AuctionType.SEALED) && maxValue > state.highestBid) {
 			return maxValue;
 		} else if (state.card.getAuctionType() == AuctionType.ONCE_AROUND || state.card.getAuctionType() == AuctionType.SEALED) {
 			return -1;
 		}
-		
+
 		//try to buy the painting for the lowest possible price
 		//System.out.println(maxValue);
 		if(maxValue > state.highestBid) {
@@ -206,47 +179,55 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 	}
 
 	@Override
-	public int getFixedPrice(ObservableGameState state) {
-		int maxValue = getValue(state)/2;
-		if(maxValue < money) {
-			return maxValue;
-		} else {
-			return money;
-		}
-	}
-
-	@Override
-	public boolean buy(ObservableGameState state) {
-
-		int value = getValue(state);
-
-		if(state.highestBid < value/2 && money > state.highestBid) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	@Override
-	public void announceCard(Card card, boolean isDouble) {
+	public void announceCard(ObservableGameState state) {
 		//prep for bidding
-		biddingCard = card;
-	}
-	
-	@Override
-	public void announceSeasonEnd(int season, ObservableGameState state) {
-		Artist[] top3 = state.getTopSeasonValues();
+		biddingCard = state.card;
+		
+		int bestPlayer = -1;
+		int bestPlayerMoney = -1;
+
+		//first it to find the player who is doing the best that is not this AI
 		for(int i = 0; i < players.length; i++) {
-			for(Player player : players) {
-				for(Card c : player.getWinnings()) {
-					if(top3[0] == c.getArtist() || top3[1] == c.getArtist() || top3[2] == c.getArtist()) {
-						player.recive(state.getArtistValue(c.getArtist()));
-					}
+			//skip this player
+			if(i == turnIndex) {
+				continue;
+			}
+
+			//the best player will be found by finding the est values for each player
+			//first calculate the players est value
+			Artist[] top3 = state.getTopSeasonValues();
+			int value = players[i].getMoney();
+			for(Card c : players[i].getWinnings()) {
+				if(c.getArtist() == top3[0]) {
+					value += state.getArtistValue(top3[0]) + 30;
+				} else if(c.getArtist() == top3[1]) {
+					value += state.getArtistValue(top3[0]) + 20;
+				} else if(c.getArtist() == top3[2]) {
+					value += state.getArtistValue(top3[0]) + 10;
 				}
+			}
+
+			//value now holds the players value
+			if(value > bestPlayerMoney) {
+				bestPlayerMoney = value;
+				bestPlayer = i;
 			}
 		}
 	}
-	
+
+	@Override
+	public void announceSeasonEnd(int season, ObservableGameState state) {
+		Artist[] top3 = state.getTopSeasonValues();
+		for(Player player : players) {
+			for(Card c : player.getWinnings()) {
+				if(top3[0] == c.getArtist() || top3[1] == c.getArtist() || top3[2] == c.getArtist()) {
+					player.recive(state.getArtistValue(c.getArtist()));
+				}
+			}
+		}
+
+	}
+
 	@Override
 	public void announceAuctionWinner(int turn, String name, int price) {
 		players[turn].pay(price);

@@ -165,7 +165,7 @@ public class GameDriver implements Runnable{
 
 					//announce the played card to the players
 					for(Player player : players) {
-						player.announceCard(card, !(second == null));
+						player.announceCard(new ObservableGameState(players.length, card, -1, -1, state, isDouble));
 					}
 
 					if(!seasonEnd) {//this checks if the season is over by asking GameState
