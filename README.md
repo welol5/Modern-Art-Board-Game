@@ -9,3 +9,6 @@ This is a reasearch project about devloping AI for a board game that is not as d
 
 ## Other notes
 Files in the bin folder should always have the newest version
+
+## Currently WIP
+I am working on cleaning up the code
