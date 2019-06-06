@@ -114,36 +114,6 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 	@Override
 	public int getBid(ObservableGameState state) {
 
-		//now the best other player has been found
-
-		//find that players value
-		Artist[] top3 = state.getTopSeasonValues();
-		for(Card card : players[bestPlayer].getWinnings()) {
-			if(card.getArtist() == top3[0]) {
-				bestPlayerMoney += state.getArtistValue(card.getArtist()) + 30;
-			} else if(card.getArtist() == top3[1]) {
-				bestPlayerMoney += state.getArtistValue(card.getArtist()) + 20;
-			} else if(card.getArtist() == top3[2]) {
-				bestPlayerMoney += state.getArtistValue(card.getArtist()) + 10;
-			}
-		}
-		//bestPlayerMoney holds the highest value another player has
-
-		//Not used
-//		//calculate this players value
-//		int AIvalue = money;
-//		for(Card card : getWinnings()) {
-//			if(card.getArtist() == top3[0]) {
-//				AIvalue += state.getArtistValue(card.getArtist()) + 30;
-//			} else if(card.getArtist() == top3[1]) {
-//				AIvalue += state.getArtistValue(card.getArtist()) + 20;
-//			} else if(card.getArtist() == top3[2]) {
-//				AIvalue += state.getArtistValue(card.getArtist()) + 10;
-//			}
-//		}
-
-		//AIvalue and BestPlayerMoney hold money values
-
 		//set the maxValue to the
 		int maxValue = getValue(state);
 		if(state.isDouble) {
