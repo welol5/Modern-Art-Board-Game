@@ -144,7 +144,7 @@ public class ReactiveAIPlayer extends Player{
 	 * @param favor if this is 0 it will return the most favored, 1 is second most favored and so on
 	 * @return the favored artist
 	 */
-	private Artist chooseFavordArtist(ObservableGameState state, int favor) {
+	protected Artist chooseFavordArtist(ObservableGameState state, int favor) {
 
 		//the favored artist will be the one with the fewest cards needed to complete the set
 		//this also requires the cards needed to be in hand
@@ -182,7 +182,7 @@ public class ReactiveAIPlayer extends Player{
 	 * @param state that contains the card being bid on
 	 * @return the value of the artist of the card
 	 */
-	private int getValue(ObservableGameState state) {
+	protected int getValue(ObservableGameState state) {
 		int value = 0;
 		boolean inTop3 = false;
 		int index = -1;

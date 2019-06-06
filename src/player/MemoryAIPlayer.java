@@ -17,7 +17,7 @@ import io.BasicIO;
  * @author William Elliman
  *
  */
-public class MemoryAIPlayer extends Player{
+public class MemoryAIPlayer extends ReactiveAIPlayer{
 
 	private Random random = new Random();
 
@@ -33,10 +33,9 @@ public class MemoryAIPlayer extends Player{
 	
 	//memory during bidding
 	private Card biddingCard;
-	private boolean isDouble;
 	
 	public MemoryAIPlayer(String name, BasicIO io, int playerCount, int turnIndex) {
-		super(name);
+		super(name,io);
 
 		//init playedCards to 0s
 		for(Artist artist : Artist.values()) {
@@ -249,100 +248,8 @@ public class MemoryAIPlayer extends Player{
 			}
 		}
 		
-		//find the total number of unknown cards
-		int total = 0;
-		for(ArtistCount c : playedCards) {
-			total += c.getCount();
-		}
-		total += hand.size();
-		
-		//update all of the chances
-		for(int i = 0; i < chances.length; i++) {
-			//find how many cards have been played
-			int artistPlayedCards = 0;
-			for(int k = 0; k < playedCards.size(); k++) {
-				if(playedCards.get(k).getArtist() == chances[i].artist) {
-					artistPlayedCards = playedCards.get(k).getCount();
-				}
-			}
-			
-			//add in cards in hand
-			for(Card handCard : hand) {
-				if(handCard.getArtist() == chances[i].artist) {
-					artistPlayedCards++;
-				}
-			}
-			
-			//update
-			chances[i].updateChance(artistPlayedCards, total);
-		}
-		
 		//prep for bidding
 		biddingCard = card;
-		this.isDouble = isDouble;
-	}
-
-	/**
-	 * 
-	 * @param state state of the game
-	 * @param favor if this is 0 it will return the most favored, 1 is second most favored and so on
-	 * @return the favored artist
-	 */
-	private Artist chooseFavordArtist(ObservableGameState state, int favor) {
-
-		//the favored artist will be the one with the fewest cards needed to complete the set
-		//this also requires the cards needed to be in hand
-		//if no set can be completed with this it will choose the one with the closest to completing a complete set
-
-		ArtistCount[] artistCounts = state.getSeasonValues();
-
-		int highestCount = -1;//used for picking if no set can be made
-		Artist highestArtist = null;//used for picking if no set can be made
-		for(int i = favor; i < artistCounts.length; i++) {
-			int count = artistCounts[i].getCount();
-			//include the card if one is being played
-			if(state.card != null && state.card.getArtist() == artistCounts[i].getArtist()) {
-				count++;
-			}
-			for(Card card : hand) {
-				if(card.getArtist() == artistCounts[i].getArtist()) {
-					count++;
-				}
-				if(count >= 5) {
-					return artistCounts[i].getArtist();
-				} else if(count > highestCount){
-					highestCount = count;
-					highestArtist = artistCounts[i].getArtist();
-				}
-			}
-
-		}
-
-		return highestArtist;
-	}
-
-	/**
-	 * Gets the value of the card/artist in a specific state
-	 * @param state that contains the card being bid on
-	 * @return the value of the artist of the card
-	 */
-	private int getValue(ObservableGameState state) {
-		int value = 0;
-		boolean inTop3 = false;
-		int index = -1;
-		for(int i = 0; i < state.getTopSeasonValues().length; i++) {
-			if(state.getTopSeasonValues()[i] == state.card.getArtist()) {
-				inTop3 = true;
-				index = i;
-			}
-		}
-
-		if(inTop3) {
-			value = state.getArtistValue(state.card.getArtist()) + (30-(10*index));
-		} else {
-			value = 0;
-		}
-		return value;
 	}
 	
 	@Override
