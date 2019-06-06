@@ -23,11 +23,6 @@ public class ReactiveAIPlayer extends Player{
 
 	public ReactiveAIPlayer(String name, BasicIO io) {
 		super(name);
-
-		//init playedCards to 0s
-//		for(Artist artist : Artist.values()) {
-//			playedCards.add(new ArtistCount(artist));
-//		}
 	}
 
 	@Override
@@ -56,7 +51,7 @@ public class ReactiveAIPlayer extends Player{
 			} else {
 				//no doubles exist so return the first one if any exist
 				for(Card card : hand) {
-					if(card.getArtist() == favored) {
+					if(card.getArtist() == favored && card.getAuctionType() != AuctionType.DOUBLE) {
 						hand.remove(hand.indexOf(card));
 						return card;
 					}
@@ -64,7 +59,7 @@ public class ReactiveAIPlayer extends Player{
 			}
 		}
 
-		//this will be left here until the full method is implemented
+		//If all else fails return null for no card or a random one
 		if(hand.size() == 0) {
 			return null;
 		}
@@ -140,15 +135,11 @@ public class ReactiveAIPlayer extends Player{
 
 	@Override
 	public void announceCard(Card card, boolean isDouble) {
-//		for(int i = 0; i < playedCards.size(); i++) {
-//			if(playedCards.get(i).getArtist() == card.getArtist()) {
-//				playedCards.get(i).auction(isDouble);
-//			}
-//		}
+		
 	}
 
 	/**
-	 * 
+	 * This will return the artist that this AI can force to win the fastest
 	 * @param state state of the game
 	 * @param favor if this is 0 it will return the most favored, 1 is second most favored and so on
 	 * @return the favored artist
@@ -212,13 +203,11 @@ public class ReactiveAIPlayer extends Player{
 
 	@Override
 	public void announceSeasonEnd(int season, ObservableGameState state) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void announceAuctionWinner(int turn, String name, int price) {
-		// TODO Auto-generated method stub
 		
 	}
 }
