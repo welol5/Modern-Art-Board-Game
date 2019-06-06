@@ -48,7 +48,7 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 	public Card chooseCard() {
 		//go through the artists in terms of most to least favored
 		for(int f = 0; f < Artist.values().length; f++) {
-			Artist favored = chooseFavordArtist(state, f);
+			Artist favored = chooseFavordArtist(f);
 			Card bestCard = null;
 
 			//if a card that is a double auction of the favored artist can be found, play it

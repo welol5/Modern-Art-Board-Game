@@ -45,7 +45,7 @@ public class BasicPredictiveAIPlayer extends MemoryAIPlayer{
 	public Card chooseCard() {
 		//go through the artists in terms of most to least favored
 		for(int f = 0; f < Artist.values().length; f++) {
-			Artist favored = chooseFavordArtist(state, f);
+			Artist favored = chooseFavordArtist(f);
 			Card bestCard = null;
 
 			//if a card that is a double auction of the favored artist can be found, play it
@@ -122,7 +122,7 @@ public class BasicPredictiveAIPlayer extends MemoryAIPlayer{
 	 * @param favor if this is 0 it will return the most favored, 1 is second most favored and so on
 	 * @return the favored artist
 	 */
-	protected Artist chooseFavordArtist(ObservableGameState state, int favor) {
+	protected Artist chooseFavordArtist(int favor) {
 		//TODO replace this method with one that takes into consideration what other players have won
 		//this will be done so that a search problem can start to be formulated
 
@@ -192,14 +192,6 @@ public class BasicPredictiveAIPlayer extends MemoryAIPlayer{
 		}
 
 		return highestArtist;
-	}
-	
-	@Override
-	public void announceAuctionWinner(int turn, String name, int price) {
-		players[turn].pay(price);
-		players[turn].givePainting(biddingCard);
-		biddingCard = null;
-		turn++;
 	}
 	
 	//Override superclass implemented method

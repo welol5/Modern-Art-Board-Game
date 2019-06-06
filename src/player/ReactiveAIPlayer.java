@@ -35,7 +35,7 @@ public class ReactiveAIPlayer extends Player{
 	public Card chooseCard() {
 		//go through the artists in terms of most to least favored
 		for(int f = 0; f < Artist.values().length; f++) {
-			Artist favored = chooseFavordArtist(state, f);
+			Artist favored = chooseFavordArtist(f);
 			Card bestCard = null;
 
 			//if a card that is a double auction of the favored artist can be found, play it
@@ -154,7 +154,7 @@ public class ReactiveAIPlayer extends Player{
 	 * @param favor if this is 0 it will return the most favored, 1 is second most favored and so on
 	 * @return the favored artist
 	 */
-	protected Artist chooseFavordArtist(ObservableGameState state, int favor) {
+	protected Artist chooseFavordArtist(int favor) {
 
 		//the favored artist will be the one with the fewest cards needed to complete the set
 		//this also requires the cards needed to be in hand
