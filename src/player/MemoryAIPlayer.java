@@ -130,21 +130,8 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 		} else {
 			maxValue /= 2;
 		}
-
-		//if it a once around return the max value this AI will pay
-		if((biddingCard.getAuctionType() == AuctionType.ONCE_AROUND || biddingCard.getAuctionType() == AuctionType.SEALED) && maxValue > highestBid) {
-			return maxValue;
-		} else if (biddingCard.getAuctionType() == AuctionType.ONCE_AROUND || biddingCard.getAuctionType() == AuctionType.SEALED) {
-			return -1;
-		}
-
-		//try to buy the painting for the lowest possible price
-		//System.out.println(maxValue);
-		if(maxValue > highestBid) {
-			return highestBid + 1;
-		} else {
-			return -1;
-		}
+		
+		return getBid(highestBid,maxValue);
 	}
 
 	@Override

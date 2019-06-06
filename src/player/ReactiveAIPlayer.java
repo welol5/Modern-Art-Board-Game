@@ -20,10 +20,10 @@ import io.BasicIO;
 public class ReactiveAIPlayer extends Player{
 
 	private Random random = new Random();
-	
+
 	protected Card biddingCard = null;
 	protected boolean isDouble = false;
-	
+
 	protected ObservableGameState state;
 
 	public ReactiveAIPlayer(String name, BasicIO io, ObservableGameState state) {
@@ -99,19 +99,22 @@ public class ReactiveAIPlayer extends Player{
 
 	@Override
 	public int getBid(int highestBid) {
+		return getBid(highestBid, getValue()/2);
+	}
 
-		//first thing to do is to find the max the ai is willing to pay
-		//starting with it always being half its est. value 
-		int value  = getValue();
-		if(isDouble) {
-			value *=2;
+	public int getBid(int highestBid, int highestValue) {
+
+		//if it a once around return the max value this AI will pay
+		if((biddingCard.getAuctionType() == AuctionType.ONCE_AROUND || biddingCard.getAuctionType() == AuctionType.SEALED) && highestValue > highestBid) {
+			return highestValue;
+		} else if (biddingCard.getAuctionType() == AuctionType.ONCE_AROUND || biddingCard.getAuctionType() == AuctionType.SEALED) {
+			return -1;
 		}
 
-		int maxValue = value/2;
-
-		//bid one more than the highest if the highest is lower than the maxValue
-		if(highestBid < maxValue && money > maxValue+1) {
-			return highestBid+1;
+		//try to buy the painting for the lowest possible price
+		//System.out.println(maxValue);
+		if(highestValue > highestBid) {
+			return highestBid + 1;
 		} else {
 			return -1;
 		}
@@ -210,7 +213,7 @@ public class ReactiveAIPlayer extends Player{
 
 	@Override
 	public void announceSeasonEnd(int season) {
-		
+
 	}
 
 	@Override
