@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import io.BasicIO;
 import io.CommandLine;
@@ -38,8 +39,8 @@ public class GameDriver implements Runnable{
 	private int iterations = 1000;
 
 	//Defaults to make testing easier
-	private static final String[] defaultNames = {"RandomAIPlayer","MemoryAIPlayer","PredictiveAIPlayer"};
-	private static final PlayerType[] defaultTypes = {PlayerType.RANDOM,PlayerType.MEMORY_AI,PlayerType.BASIC_PREDICTIVE_AI};
+	private static final String[] defaultNames = {"ReactiveAIPlayer","MemoryAIPlayer","PredictiveAIPlayer"};
+	private static final PlayerType[] defaultTypes = {PlayerType.REACTIVE_AI,PlayerType.MEMORY_AI,PlayerType.BASIC_PREDICTIVE_AI};
 
 	private GeneticAIPlayerDB database = null;//only need this with geneticAIPlayers
 	private int aiTraining = Integer.MIN_VALUE;
@@ -49,6 +50,7 @@ public class GameDriver implements Runnable{
 
 	//GameState var
 	GameState state;
+	ObservableGameState OGS;
 	//ObservableGameState OGS;
 	Player[] players;
 	String[] names;
@@ -90,7 +92,8 @@ public class GameDriver implements Runnable{
 			//make the observableState
 
 			//Make the list of players
-			players = makePlayers(defaultNames, io, defaultTypes);
+			OGS = new ObservableGameState(state);
+			players = makePlayers(defaultNames, io, defaultTypes, OGS);
 			int turn = 0;//keeps track of whose turn it is
 
 			//the game is now ready for the first season
@@ -117,7 +120,7 @@ public class GameDriver implements Runnable{
 					//				}
 
 					//get the painting that people will bid on
-					Card card = players[turn].chooseCard(new ObservableGameState(players.length, null, -1,-1, state, false));
+					Card card = players[turn].chooseCard();
 					//if null is returned, the player had no cards
 					if(card == null) {
 						emptyHands[turn] = true;
@@ -140,7 +143,7 @@ public class GameDriver implements Runnable{
 					Card second = null;
 					if(card.getAuctionType() == AuctionType.DOUBLE) {
 						second = card;
-						card = players[turn].chooseSecondCard(second.getArtist(), new ObservableGameState(players.length, second, -1,-1, state, false));
+						card = players[turn].chooseSecondCard(second.getArtist());
 						//if card is null then other players should be asked
 						if(card == null) {
 							card = getSecondCard(second,turn, second.getArtist());
@@ -154,18 +157,12 @@ public class GameDriver implements Runnable{
 					}
 
 					boolean seasonEnd = false;
-					boolean isDouble;
-					if(second == null) {
-						seasonEnd = state.sell(card.getArtist(), false);
-						isDouble = false;
-					} else {
-						seasonEnd = state.sell(card.getArtist(), true);
-						isDouble = true;
-					}
+					boolean isDouble = !(second == null);
+					seasonEnd = state.sell(card.getArtist(), isDouble);
 
 					//announce the played card to the players
 					for(Player player : players) {
-						player.announceCard(new ObservableGameState(players.length, card, -1, -1, state, isDouble));
+						player.announceCard(card, isDouble);
 					}
 
 					if(!seasonEnd) {//this checks if the season is over by asking GameState
@@ -177,7 +174,7 @@ public class GameDriver implements Runnable{
 							winningBid = onceAround(turn,card,!(second == null));
 						} else if(card.getAuctionType() == AuctionType.FIXED_PRICE){
 							//System.out.println("Fixed");//debug
-							winningBid = fixedPrice(turn,card,players[turn].getFixedPrice(new ObservableGameState(players.length, card, -1,-1, state, isDouble)),!(second == null));
+							winningBid = fixedPrice(turn,players[turn].getFixedPrice());
 						} else if(card.getAuctionType() == AuctionType.SEALED){
 							//System.out.println("Sealed");//debug
 							winningBid = sealed(card,!(second == null));
@@ -240,20 +237,6 @@ public class GameDriver implements Runnable{
 			//io.announceWinner(winner);
 			wins[winnerTurn] += 1;
 			System.out.println("Games played : " + (game+1));
-
-			if(aiTraining > -1) {//only train if a Genetic player exists
-				//make the GeneticAI learn
-				//first find the highest other player
-				int highestMoney = -1;
-				for(int p = 0; p < players.length; p++) {
-					if(p == aiTraining) {//skip the learning player
-						continue;
-					} else if(players[p].getMoney() > highestMoney) {
-						highestMoney = players[p].getMoney();
-					}
-				}
-				((GeneticAIPlayer)players[aiTraining]).learn(winnerTurn == aiTraining ? true : false, players[aiTraining].getMoney()-highestMoney);
-			}
 		}
 
 		//show win %
@@ -270,28 +253,28 @@ public class GameDriver implements Runnable{
 	 * @param types of the players
 	 * @return the list of players
 	 */
-	private Player[] makePlayers(String[] names, BasicIO io, PlayerType[] types) {
+	private Player[] makePlayers(String[] names, BasicIO io, PlayerType[] types, ObservableGameState state) {
 		Player[] players = new Player[names.length];
 		for(int i = 0; i < players.length; i++) {
 			if(types[i] == PlayerType.HUMAN) {
 				players[i] = new HumanPlayer(names[i], io);
 			} else if(types[i] == PlayerType.REACTIVE_AI) {
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
-					players[i] = new ReactiveAIPlayer("ReactiveAIPlayer" + i, io);
+					players[i] = new ReactiveAIPlayer("ReactiveAIPlayer" + i, io, state);
 				} else {
-					players[i] = new ReactiveAIPlayer(names[i], io);
+					players[i] = new ReactiveAIPlayer(names[i], io, state);
 				}
 			} else if(types[i] == PlayerType.MEMORY_AI){
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
-					players[i] = new MemoryAIPlayer("MemoryAIPlayer" + i, io, players.length, i);
+					players[i] = new MemoryAIPlayer("MemoryAIPlayer" + i, io, state, players.length, i);
 				} else {
-					players[i] = new MemoryAIPlayer(names[i], io, players.length, i);
+					players[i] = new MemoryAIPlayer(names[i], io, state, players.length, i);
 				}
 			} else if(types[i] == PlayerType.BASIC_PREDICTIVE_AI){
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
-					players[i] = new BasicPredictiveAIPlayer("PredictiveAIPlayer" + i, io, players.length, i);
+					players[i] = new BasicPredictiveAIPlayer("PredictiveAIPlayer" + i, io, state, players.length, i);
 				} else {
-					players[i] = new BasicPredictiveAIPlayer(names[i], io, players.length, i);
+					players[i] = new BasicPredictiveAIPlayer(names[i], io, state, players.length, i);
 				}
 			}else if(types[i] == PlayerType.GENETIC_AI){
 				aiTraining = i;//set the index so that learn can be called on this player
@@ -321,7 +304,7 @@ public class GameDriver implements Runnable{
 		Card card = null;
 		for(int i = 0; i < players.length; i++) {
 			int playerTurn = (turn + i + 1)%players.length;
-			card = players[playerTurn].chooseSecondCard(artist, new ObservableGameState(players.length, firstCard, -1,-1, state, false));
+			card = players[playerTurn].chooseSecondCard(artist);
 		}
 		return card;
 	}
@@ -351,7 +334,8 @@ public class GameDriver implements Runnable{
 				}
 
 				//get the price a player is willing to pay
-				int bid = players[(turn+biddingTurn+1)%players.length].getBid(new ObservableGameState(players.length, card, highestBid,(turn+biddingTurn+1)%players.length, state, isDouble, bidding));
+				OGS.stillBidding = Arrays.copyOf(bidding, bidding.length);//rsete this so players can mess with it if they want
+				int bid = players[(turn+biddingTurn+1)%players.length].getBid(highestBid);
 				if(bid==-1 || bid <= highestBid) {
 					bidding[(turn+biddingTurn+1)%players.length] = false;
 				} else {
@@ -388,7 +372,7 @@ public class GameDriver implements Runnable{
 		int highestBidder = turn;
 		for(int i = 0; i < players.length; i++) {
 			int biddingTurn = (turn+i+1)%players.length;
-			int bid = players[biddingTurn].getBid(new ObservableGameState(players.length, card, highestBid,biddingTurn, state, isDouble));
+			int bid = players[biddingTurn].getBid(highestBid);
 			if(bid > highestBid) {
 				highestBid = bid;
 				highestBidder = biddingTurn;
@@ -405,10 +389,10 @@ public class GameDriver implements Runnable{
 	 * @param price the price the card is being sold at
 	 * @return the winning bidder index and price it was sold for
 	 */
-	private Bid fixedPrice(int turn, Card card, int price, boolean isDouble) {
+	private Bid fixedPrice(int turn, int price) {
 		for(int i = 0; i < players.length-1; i++) {
 			int biddingTurn = (turn+i+1)%players.length;
-			if(players[biddingTurn].buy(new ObservableGameState(players.length, card, price,-1, state, isDouble))) {
+			if(players[biddingTurn].buy(price)) {
 				return new Bid(biddingTurn, price);
 			}
 		}
@@ -424,7 +408,7 @@ public class GameDriver implements Runnable{
 		int highestBidder = -1;
 		int highestPrice = -1;
 		for(int i = 0; i < players.length; i++) {
-			int bid = players[i].getBid(new ObservableGameState(players.length, card, -1,-1, state, isDouble));
+			int bid = players[i].getBid(-1);
 			if(bid > highestPrice) {
 				highestPrice = bid;
 				highestBidder = i;

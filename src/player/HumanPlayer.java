@@ -20,7 +20,7 @@ public class HumanPlayer extends Player{
 	}
 
 	@Override
-	public Card chooseCard(ObservableGameState state) {
+	public Card chooseCard() {
 		
 		io.showHand(this, hand);
 		int index = io.getHandIndex(hand.size());
@@ -28,27 +28,27 @@ public class HumanPlayer extends Player{
 	}
 
 	@Override
-	public int getBid(ObservableGameState state) {
+	public int getBid(int highestBid) {
 		
-		return io.getBid(name, money, state.highestBid);
+		return io.getBid(name, money, highestBid);
 	}
 
 	@Override
-	public int getFixedPrice(ObservableGameState state) {
-		return io.getFixedPrice(state.card);
+	public int getFixedPrice() {
+		return io.getFixedPrice(null);//TODO this needs to be fixed for human players
 	}
 
 	@Override
-	public boolean buy(ObservableGameState state) {
+	public boolean buy(int price) {
 		//does not allow player to go into debt
-		if(state.highestBid > money) {
+		if(price > money) {
 			return false;
 		}
-		return io.askPlayertoBuy(state.card, state.highestBid);
+		return io.askPlayertoBuy(null, price);//TODO fix for human players
 	}
 
 	@Override
-	public Card chooseSecondCard(Artist artist, ObservableGameState state) {
+	public Card chooseSecondCard(Artist artist) {
 		
 		//skip asking for a second card if a player does not have one
 		boolean contains = false;
@@ -66,13 +66,13 @@ public class HumanPlayer extends Player{
 	}
 
 	@Override
-	public void announceCard(ObservableGameState state) {
+	public void announceCard(Card card, boolean isDouble) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void announceSeasonEnd(int season, ObservableGameState state) {
+	public void announceSeasonEnd(int season) {
 		// TODO Auto-generated method stub
 		
 	}

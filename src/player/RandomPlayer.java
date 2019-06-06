@@ -24,7 +24,7 @@ public class RandomPlayer extends Player {
 	}
 
 	@Override
-	public Card chooseCard(ObservableGameState state) {
+	public Card chooseCard() {
 		if(hand.size() == 0) {
 			return null;
 		}
@@ -32,7 +32,7 @@ public class RandomPlayer extends Player {
 	}
 
 	@Override
-	public Card chooseSecondCard(Artist artist, ObservableGameState state) {
+	public Card chooseSecondCard(Artist artist) {
 		//check if the hand contains the artist
 		boolean contains = false;
 		for(Card c : hand) {
@@ -57,28 +57,28 @@ public class RandomPlayer extends Player {
 	}
 
 	@Override
-	public int getBid(ObservableGameState state) {
-		if(state.highestBid == -1) {
+	public int getBid(int highestBid) {
+		if(highestBid == -1) {
 			return random.nextInt(money);
-		} else if(state.highestBid >= money){
+		} else if(highestBid >= money){
 			return -1;
 		} else {
 			//randomly decides not to bid half the time
 			if(random.nextDouble() < 0.5) {
 				return -1;
 			}
-			return random.nextInt(money-state.highestBid)+state.highestBid;
+			return random.nextInt(money-highestBid)+highestBid;
 		}
 	}
 
 	@Override
-	public int getFixedPrice(ObservableGameState state) {
+	public int getFixedPrice() {
 		return random.nextInt(money);
 	}
 
 	@Override
-	public boolean buy(ObservableGameState state) {
-		if(state.highestBid < money) {
+	public boolean buy(int price) {
+		if(price < money) {
 			return random.nextBoolean();
 		} else {
 			return false;
@@ -86,13 +86,13 @@ public class RandomPlayer extends Player {
 	}
 
 	@Override
-	public void announceCard(ObservableGameState state) {
+	public void announceCard(Card card, boolean isDouble) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void announceSeasonEnd(int season, ObservableGameState state) {
+	public void announceSeasonEnd(int season) {
 		// TODO Auto-generated method stub
 		
 	}

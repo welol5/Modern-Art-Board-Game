@@ -20,7 +20,7 @@ import io.BasicIO;
  * @author William Elliman
  *
  */
-public class GeneticAIPlayer extends Player{
+public class GeneticAIPlayer extends MemoryAIPlayer{
 
 	private Random random = new Random();
 
@@ -30,32 +30,18 @@ public class GeneticAIPlayer extends Player{
 	private Stack<GeneticAIPlayerDB.StateData> stateHistory = new Stack<GeneticAIPlayerDB.StateData>();
 	private final double alpha;//rate at which new info replaces old info
 
-	//keep track of other players
-	private Player[] players;
-	private final int turnIndex;//keep track of where itself is in the list of turns
-	private int turn = 0;
-
 	//memory during bidding
-	//private Card biddingCard;
 
-	public GeneticAIPlayer(String name, BasicIO io, int playerCount, int turnIndex, GeneticAIPlayerDB dataBase, double exploreChance, double alpha) {
-		super(name);
+	public GeneticAIPlayer(String name, BasicIO io,ObservableGameState state, int playerCount, int turnIndex, GeneticAIPlayerDB dataBase, double exploreChance, double alpha) {
+		super(name,io,state,playerCount,turnIndex);
 
 		this.exploreChance = exploreChance;
 		this.alpha = alpha;
 		this.dataBase = dataBase;
-
-		//init player array
-		players = new Player[playerCount];
-		for(int i = 0; i < players.length; i++) {
-			players[i] = new RandomPlayer(null,null);
-		}
-
-		this.turnIndex = turnIndex;
 	}
 
 	@Override
-	public Card chooseCard(ObservableGameState state) {
+	public Card chooseCard() {
 
 		//add this state to the state history
 		stateHistory.push(dataBase.new StateData(hand, state.getSeasonValues()));
@@ -92,7 +78,7 @@ public class GeneticAIPlayer extends Player{
 	}
 
 	@Override
-	public Card chooseSecondCard(Artist artist, ObservableGameState state) {
+	public Card chooseSecondCard(Artist artist) {
 		//check if the hand contains the artist
 		boolean contains = false;
 		for(Card c : hand) {
@@ -117,7 +103,7 @@ public class GeneticAIPlayer extends Player{
 	}
 
 	@Override
-	public int getBid(ObservableGameState state) {
+	public int getBid(int highestBid) {
 		int bestPlayer = -1;
 		int bestPlayerMoney = -1;
 
@@ -179,13 +165,13 @@ public class GeneticAIPlayer extends Player{
 		//AIvalue and BestPlayerMoney hold money values
 
 		//set the maxValue to the
-		int maxValue = getValue(state);
-		if(state.isDouble) {
+		int maxValue = getValue();
+		if(isDouble) {
 			maxValue*=2;
 		}
 		//need to know if the player is still bidding
 		//if the player is still bidding, do not let them win if it will make a profit
-		if((state.card.getAuctionType() == AuctionType.ONCE_AROUND || state.card.getAuctionType() == AuctionType.SEALED) || state.stillBidding[bestPlayer]) {
+		if((biddingCard.getAuctionType() == AuctionType.ONCE_AROUND || biddingCard.getAuctionType() == AuctionType.SEALED) || state.stillBidding[bestPlayer]) {
 			//find the cards value
 			//if the card is the bestPlayes, they will profit more from this AI if more than half the value is paid
 			if(turn == bestPlayer) {
@@ -197,24 +183,24 @@ public class GeneticAIPlayer extends Player{
 		}
 
 		//if it a once around return the max value this AI will pay
-		if((state.card.getAuctionType() == AuctionType.ONCE_AROUND || state.card.getAuctionType() == AuctionType.SEALED) && maxValue > state.highestBid) {
+		if((biddingCard.getAuctionType() == AuctionType.ONCE_AROUND || biddingCard.getAuctionType() == AuctionType.SEALED) && maxValue > highestBid) {
 			return maxValue;
-		} else if (state.card.getAuctionType() == AuctionType.ONCE_AROUND || state.card.getAuctionType() == AuctionType.SEALED) {
+		} else if (biddingCard.getAuctionType() == AuctionType.ONCE_AROUND || biddingCard.getAuctionType() == AuctionType.SEALED) {
 			return -1;
 		}
 
 		//try to buy the painting for the lowest possible price
 		//System.out.println(maxValue);
-		if(maxValue > state.highestBid) {
-			return state.highestBid + 1;
+		if(maxValue > highestBid) {
+			return highestBid + 1;
 		} else {
 			return -1;
 		}
 	}
 
 	@Override
-	public int getFixedPrice(ObservableGameState state) {
-		int maxValue = getValue(state)/2;
+	public int getFixedPrice() {
+		int maxValue = getValue()/2;
 		if(maxValue < money) {
 			return maxValue;
 		} else {
@@ -223,57 +209,14 @@ public class GeneticAIPlayer extends Player{
 	}
 
 	@Override
-	public boolean buy(ObservableGameState state) {
+	public boolean buy(int price) {
 
-		int value = getValue(state);
+		int value = getValue();
 
-		if(state.highestBid < value/2 && money > state.highestBid) {
+		if(price < value/2 && money > price) {
 			return true;
 		} else {
 			return false;
-		}
-	}
-
-	@Override
-	public void announceCard(ObservableGameState state) {
-
-	}
-
-	/**
-	 * Gets the value of the card/artist in a specific state
-	 * @param state that contains the card being bid on
-	 * @return the value of the artist of the card
-	 */
-	private int getValue(ObservableGameState state) {
-		int value = 0;
-		boolean inTop3 = false;
-		int index = -1;
-		for(int i = 0; i < state.getTopSeasonValues().length; i++) {
-			if(state.getTopSeasonValues()[i] == state.card.getArtist()) {
-				inTop3 = true;
-				index = i;
-			}
-		}
-
-		if(inTop3) {
-			value = state.getArtistValue(state.card.getArtist()) + (30-(10*index));
-		} else {
-			value = 0;
-		}
-		return value;
-	}
-
-	@Override
-	public void announceSeasonEnd(int season, ObservableGameState state) {
-		Artist[] top3 = state.getTopSeasonValues();
-		for(int i = 0; i < players.length; i++) {
-			for(Player player : players) {
-				for(Card c : player.getWinnings()) {
-					if(top3[0] == c.getArtist() || top3[1] == c.getArtist() || top3[2] == c.getArtist()) {
-						player.recive(state.getArtistValue(c.getArtist()));
-					}
-				}
-			}
 		}
 	}
 

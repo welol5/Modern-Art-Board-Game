@@ -20,13 +20,19 @@ import io.BasicIO;
 public class ReactiveAIPlayer extends Player{
 
 	private Random random = new Random();
+	
+	protected Card biddingCard = null;
+	protected boolean isDouble = false;
+	
+	protected ObservableGameState state;
 
-	public ReactiveAIPlayer(String name, BasicIO io) {
+	public ReactiveAIPlayer(String name, BasicIO io, ObservableGameState state) {
 		super(name);
+		this.state = state;
 	}
 
 	@Override
-	public Card chooseCard(ObservableGameState state) {
+	public Card chooseCard() {
 		//go through the artists in terms of most to least favored
 		for(int f = 0; f < Artist.values().length; f++) {
 			Artist favored = chooseFavordArtist(state, f);
@@ -67,7 +73,7 @@ public class ReactiveAIPlayer extends Player{
 	}
 
 	@Override
-	public Card chooseSecondCard(Artist artist, ObservableGameState state) {
+	public Card chooseSecondCard(Artist artist) {
 		//check if the hand contains the artist
 		boolean contains = false;
 		for(Card c : hand) {
@@ -92,28 +98,28 @@ public class ReactiveAIPlayer extends Player{
 	}
 
 	@Override
-	public int getBid(ObservableGameState state) {
+	public int getBid(int highestBid) {
 
 		//first thing to do is to find the max the ai is willing to pay
 		//starting with it always being half its est. value 
-		int value  = getValue(state);
-		if(state.isDouble) {
+		int value  = getValue();
+		if(isDouble) {
 			value *=2;
 		}
 
 		int maxValue = value/2;
 
 		//bid one more than the highest if the highest is lower than the maxValue
-		if(state.highestBid < maxValue && money > maxValue+1) {
-			return state.highestBid+1;
+		if(highestBid < maxValue && money > maxValue+1) {
+			return highestBid+1;
 		} else {
 			return -1;
 		}
 	}
 
 	@Override
-	public int getFixedPrice(ObservableGameState state) {
-		int maxValue = getValue(state)/2;
+	public int getFixedPrice() {
+		int maxValue = getValue()/2;
 		if(maxValue < money) {
 			return maxValue;
 		} else {
@@ -122,11 +128,11 @@ public class ReactiveAIPlayer extends Player{
 	}
 
 	@Override
-	public boolean buy(ObservableGameState state) {
+	public boolean buy(int price) {
 
-		int value = getValue(state);
+		int value = getValue();
 
-		if(state.highestBid < value/2 && money > state.highestBid) {
+		if(price < value/2 && money > price) {
 			return true;
 		} else {
 			return false;
@@ -134,8 +140,9 @@ public class ReactiveAIPlayer extends Player{
 	}
 
 	@Override
-	public void announceCard(ObservableGameState state) {
-		
+	public void announceCard(Card card, boolean isDouble) {
+		this.biddingCard = card;
+		this.isDouble = isDouble;
 	}
 
 	/**
@@ -157,7 +164,7 @@ public class ReactiveAIPlayer extends Player{
 		for(int i = favor; i < artistCounts.length; i++) {
 			int count = artistCounts[i].getCount();
 			//include the card if one is being played
-			if(state.card != null && state.card.getArtist() == artistCounts[i].getArtist()) {
+			if(biddingCard != null && biddingCard.getArtist() == artistCounts[i].getArtist()) {
 				count++;
 			}
 			for(Card card : hand) {
@@ -182,19 +189,19 @@ public class ReactiveAIPlayer extends Player{
 	 * @param state that contains the card being bid on
 	 * @return the value of the artist of the card
 	 */
-	protected int getValue(ObservableGameState state) {
+	protected int getValue() {
 		int value = 0;
 		boolean inTop3 = false;
 		int index = -1;
 		for(int i = 0; i < state.getTopSeasonValues().length; i++) {
-			if(state.getTopSeasonValues()[i] == state.card.getArtist()) {
+			if(state.getTopSeasonValues()[i] == biddingCard.getArtist()) {
 				inTop3 = true;
 				index = i;
 			}
 		}
 
 		if(inTop3) {
-			value = state.getArtistValue(state.card.getArtist()) + (30-(10*index));
+			value = state.getArtistValue(biddingCard.getArtist()) + (30-(10*index));
 		} else {
 			value = 0;
 		}
@@ -202,12 +209,13 @@ public class ReactiveAIPlayer extends Player{
 	}
 
 	@Override
-	public void announceSeasonEnd(int season, ObservableGameState state) {
+	public void announceSeasonEnd(int season) {
 		
 	}
 
 	@Override
 	public void announceAuctionWinner(int turn, String name, int price) {
-		
+		biddingCard = null;
+		isDouble = false;
 	}
 }

@@ -76,26 +76,26 @@ public abstract class Player {
 	 * @param state of the game
 	 * @return the card to bid on
 	 */
-	public abstract Card chooseCard(ObservableGameState state);
+	public abstract Card chooseCard();
 	
 	/**
 	 * When the first card chosen is double auction, a second is needed by the same artist
 	 * @return the second card
 	 */
-	public abstract Card chooseSecondCard(Artist artist, ObservableGameState state);
+	public abstract Card chooseSecondCard(Artist artist);
 	
 	/**
 	 * Used to get the price the player would like to bid
 	 * @param card being bid on
 	 * @return the price the player is willing to pay
 	 */
-	public abstract int getBid(ObservableGameState state);
+	public abstract int getBid(int highestBid);
 	
 	/**
 	 * Gets the price that will be used to sell the card
 	 * @return the price
 	 */
-	public abstract int getFixedPrice(ObservableGameState state);
+	public abstract int getFixedPrice();
 	
 	/**
 	 * Asks the player if they will buy the card
@@ -103,7 +103,7 @@ public abstract class Player {
 	 * @param price the player would buy the card at
 	 * @return the players answer
 	 */
-	public abstract boolean buy(ObservableGameState state);
+	public abstract boolean buy(int price);
 	
 	/**
 	 * This is here for debugging
@@ -117,13 +117,13 @@ public abstract class Player {
 	 * Allows the driver to tell all the players what card will be auctioned off without asking for a bid
 	 * @param card
 	 */
-	public abstract void announceCard(ObservableGameState state);
+	public abstract void announceCard(Card card, boolean isDouble);
 	
 	/**
 	 * Announces to the player that a season is ending
 	 * @param season
 	 */
-	public abstract void announceSeasonEnd(int season, ObservableGameState state);
+	public abstract void announceSeasonEnd(int season);
 	
 	/**
 	 * Announces to the player that another layer has won the auction
