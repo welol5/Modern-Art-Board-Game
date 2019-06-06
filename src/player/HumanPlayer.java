@@ -66,7 +66,7 @@ public class HumanPlayer extends Player{
 	}
 
 	@Override
-	public void announceCard(Card card, boolean isDouble) {
+	public void announceCard(ObservableGameState state) {
 		// TODO Auto-generated method stub
 		
 	}
