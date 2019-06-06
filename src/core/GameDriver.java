@@ -62,23 +62,6 @@ public class GameDriver implements Runnable{
 		if(type == IOType.COMMAND_LINE) {
 			io = new CommandLine();
 		}
-
-		if(aiTraining) {
-			this.aiTraining = -1;//set to -1 to let the game know an ai will be trained
-			try {
-				FileInputStream f = new FileInputStream(new File("db.txt"));
-				ObjectInputStream o = new ObjectInputStream(f);
-				database = (GeneticAIPlayerDB) o.readObject();
-				System.out.println("loaded");
-			} catch (EOFException e) {
-				e.printStackTrace();
-				System.out.println("The file has been corrupted");
-			} catch (IOException | ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				database = new GeneticAIPlayerDB();
-				e.printStackTrace();
-			}
-		}
 	}
 
 	/**
@@ -101,9 +84,7 @@ public class GameDriver implements Runnable{
 			wins[i] = 0;
 		}
 
-		//double AIWinRatio = 0;//this can be used later
-		boolean infinity = true;//set this to true if the program should run forever
-		for(int game = 0; game < iterations || infinity; game++) {
+		for(int game = 0; game < iterations; game++) {
 			//setup the game state
 			state = new GameState(defaultNames.length);
 			//make the observableState
@@ -272,25 +253,6 @@ public class GameDriver implements Runnable{
 					}
 				}
 				((GeneticAIPlayer)players[aiTraining]).learn(winnerTurn == aiTraining ? true : false, players[aiTraining].getMoney()-highestMoney);
-			}
-			
-			if(infinity) {
-				System.out.println(players[aiTraining].name + " win % : " + ((double)wins[aiTraining])/((double)game)*100);
-			}
-			
-			//save the database every 1000 games
-			if(game % 10000 == 0) {
-				try {
-					FileOutputStream f = new FileOutputStream(new File("db.txt"));
-					ObjectOutputStream o = new ObjectOutputStream(f);
-					o.writeObject(database);
-					System.out.println("saved");
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					while(true);
-				}
-				
 			}
 		}
 
