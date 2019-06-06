@@ -279,9 +279,9 @@ public class GameDriver implements Runnable{
 			}else if(types[i] == PlayerType.GENETIC_AI){
 				aiTraining = i;//set the index so that learn can be called on this player
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
-					players[i] = new GeneticAIPlayer("GeneticAIPlayer" + i, io, players.length, i, database,0.05,0.2);
+					players[i] = new GeneticAIPlayer("GeneticAIPlayer" + i, io,state, players.length, i, database,0.05,0.2);
 				} else {
-					players[i] = new GeneticAIPlayer(names[i], io, players.length, i, database,0.05,0.2);
+					players[i] = new GeneticAIPlayer(names[i], io,state, players.length, i, database,0.05,0.2);
 				}
 			} else {
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
