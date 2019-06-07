@@ -83,31 +83,6 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 	}
 
 	@Override
-	public Card chooseSecondCard(Artist artist) {
-		//check if the hand contains the artist
-		boolean contains = false;
-		for(Card c : hand) {
-			if(c.getArtist() == artist && c.getAuctionType() != AuctionType.DOUBLE) {
-				contains = true;
-				break;
-			}
-		}
-		if(!contains) {
-			return null;
-		}
-
-		//the player has a card that will work, choose one randomly
-		Card card = null;
-		int index = 0;
-		while(card == null || (card.getArtist() != artist && card.getAuctionType() != AuctionType.DOUBLE)) {
-			index = random.nextInt(hand.size());
-			card = hand.get(index);
-		}
-		hand.remove(index);
-		return card;
-	}
-
-	@Override
 	public void announceCard(Card card, boolean isDouble) {
 		
 		//prep for bidding
