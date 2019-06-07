@@ -158,7 +158,6 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 				}
 			}
 		}
-
 	}
 
 	@Override
