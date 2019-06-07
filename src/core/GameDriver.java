@@ -40,8 +40,8 @@ public class GameDriver implements Runnable{
 	private int iterations = 1000;
 
 	//Defaults to make testing easier
-	private static final String[] defaultNames = {"ReactiveAIPlayer","MemoryAIPlayer","PredictiveAIPlayer"};
-	private static final PlayerType[] defaultTypes = {PlayerType.REACTIVE_AI,PlayerType.MEMORY_AI,PlayerType.BASIC_PREDICTIVE_AI};
+	private static final String[] defaultNames = {"ReactiveAIPlayer", "PredictiveAIPlayerV2", "PredictiveAIPlayer"};
+	private static final PlayerType[] defaultTypes = {PlayerType.REACTIVE_AI, PlayerType.BASIC_PREDICTIVE_AI_V2, PlayerType.BASIC_PREDICTIVE_AI};
 
 	private GeneticAIPlayerDB database = null;//only need this with geneticAIPlayers
 	private int aiTraining = Integer.MIN_VALUE;
@@ -279,7 +279,7 @@ public class GameDriver implements Runnable{
 				}
 			} else if(types[i] == PlayerType.BASIC_PREDICTIVE_AI_V2){
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
-					players[i] = new BasicPredictiveAIPlayerV2("PredictiveAIPlayer" + i, io, state, players.length, i);
+					players[i] = new BasicPredictiveAIPlayerV2("PredictiveAIPlayerV2" + i, io, state, players.length, i);
 				} else {
 					players[i] = new BasicPredictiveAIPlayerV2(names[i], io, state, players.length, i);
 				}
