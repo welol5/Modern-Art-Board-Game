@@ -16,6 +16,7 @@ import io.CommandLine;
 import io.IOType;
 import player.ReactiveAIPlayer;
 import player.BasicPredictiveAIPlayer;
+import player.BasicPredictiveAIPlayerV2;
 import player.GeneticAIPlayer;
 import player.GeneticAIPlayerDB;
 import player.HumanPlayer;
@@ -276,7 +277,13 @@ public class GameDriver implements Runnable{
 				} else {
 					players[i] = new BasicPredictiveAIPlayer(names[i], io, state, players.length, i);
 				}
-			}else if(types[i] == PlayerType.GENETIC_AI){
+			} else if(types[i] == PlayerType.BASIC_PREDICTIVE_AI_V2){
+				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
+					players[i] = new BasicPredictiveAIPlayerV2("PredictiveAIPlayer" + i, io, state, players.length, i);
+				} else {
+					players[i] = new BasicPredictiveAIPlayerV2(names[i], io, state, players.length, i);
+				}
+			} else if(types[i] == PlayerType.GENETIC_AI){
 				aiTraining = i;//set the index so that learn can be called on this player
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
 					players[i] = new GeneticAIPlayer("GeneticAIPlayer" + i, io,state, players.length, i, database,0.05,0.2);
