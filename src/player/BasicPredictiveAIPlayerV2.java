@@ -196,14 +196,19 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 					return c.getArtist();//return the good artist
 				}
 			}
-		} else if(favoredArtists.size() > 1 && !(favoredArtists.get(1) == state.getSeasonValues()[1].getArtist())) {
+			
+		}
+		
+		if(favoredArtists.size() > 1 && !(favoredArtists.get(1) == state.getSeasonValues()[1].getArtist())) {
 			//need to check if the hand has a card
 			for(Card c : hand) {
 				if(c.getArtist() == favoredArtists.get(1) && c.getAuctionType() != AuctionType.DOUBLE) {
 					return c.getArtist();//return the good artist
 				}
 			}
-		} else if( favoredArtists.size() > 2 && !(favoredArtists.get(2) == state.getSeasonValues()[2].getArtist())) {
+		}
+		
+		if( favoredArtists.size() > 2 && !(favoredArtists.get(2) == state.getSeasonValues()[2].getArtist())) {
 			//need to check if the hand has a card
 			for(Card c : hand) {
 				if(c.getArtist() == favoredArtists.get(2) && c.getAuctionType() != AuctionType.DOUBLE) {
@@ -211,7 +216,16 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 				}
 			}
 		}
-
+		//the above only returns something if something is out of place
+		
+		//return the most favored artist that is in hand (not double)
+		for(int i = 0; i < favoredArtists.size(); i++) {
+			for(Card c : hand) {
+				if(c.getArtist() == favoredArtists.get(i) && c.getAuctionType() != AuctionType.DOUBLE) {
+					return c.getArtist();
+				}
+			}
+		}
 
 		//If noting can be done, return the artist of the first non double card in hand
 		for(Card c : hand) {
