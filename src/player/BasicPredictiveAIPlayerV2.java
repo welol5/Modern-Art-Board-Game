@@ -12,12 +12,7 @@ import core.ArtistCount;
 import io.BasicIO;
 
 /**
- * This player takes advantage of keeping track of the major actions made in the game. It keeps track of who
- * won what card and how much they bid on it. It then uses that infomation to calculate how much it can bid
- * so that it will make a profit and the best other player will not.
- * 
- * NEW STUFF
- * This AI will try to predict what other players will play based on the cards that they have
+ * TODO rewrite this
  * @author William Elliman
  *
  */
@@ -26,7 +21,8 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 	private Random random = new Random();
 
 	//memory
-	private Artist[] favoredArtists = new Artist[3];//keeps track of what artists this AI want to win during the season
+	//private Artist[] favoredArtists = new Artist[3];//keeps track of what artists this AI want to win during the season
+	private ArrayList<Artist> favoredArtists = new ArrayList<Artist>();
 
 	//keep track of other players
 	private int[] playerCardCounts;
@@ -104,8 +100,8 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 		}
 
 		//reset favoredArtists
-		for(int i = 0; i < favoredArtists.length; i++) {
-			favoredArtists[i] = null;
+		for(int i = 0; i < favoredArtists.size(); i++) {
+			favoredArtists.clear();
 		}
 	}
 
@@ -115,72 +111,102 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 	 */
 	protected Artist chooseFavordArtist() {
 
-		if(favoredArtists[0] == null) {//only want to reset favored artists if a new season has started
-			//favored artists are going to be ones that the AI owns cards of both by winning auctions and in hand
-			//first find how many different artists the AI has won paintings of
-			boolean[] diffArtists = new boolean[Artist.values().length];
-			for(int i = 0; i < diffArtists.length; i++) {
-				for(Card c : winnings) {
-					if(c.getArtist() == Artist.values()[i]) {
-						diffArtists[i] = true;
-						break;
-					}
-				}
-			}
-			//count how many artists
-			int count = 0;
-			for(int i = 0; i < diffArtists.length; i++) {
-				if(diffArtists[i]) {
-					count++;
-				}
-			}
+		//print all values considered for favored artist
+//		System.out.println("Hand");
+//		for(Card c : hand) {
+//			System.out.println(c);
+//		}
+//		System.out.println("Season values");
+//		for(ArtistCount c : state.getSeasonValues()) {
+//			System.out.println(c);
+//		}
+//		System.out.println("Winnings");
+//		for(Card c : winnings) {
+//			System.out.println(c);
+//		}
 
-			//After this first check, favored artists may be able to be chosen
-			if(count >= 3) {
-				//if there are 3 or more artists, the top 3 should be the favored ones
-				ArrayList<ArtistCount> orderedFavoredList = new ArrayList<ArtistCount>();
-				for(Artist artist : Artist.values()) {
-					count = 0;
+		if(favoredArtists.size() < 3) {
+			if(winnings.size() > 0) {
+				//sort winnings to be able to choose the best order
+				ArrayList<ArtistCount> sortedWinnings = new ArrayList<ArtistCount>();
+				for(Artist a : Artist.values()) {
+					int count = 0;
 					for(Card c : winnings) {
-						if(c.getArtist() == artist) {
+						if(c.getArtist() == a) {
 							count++;
 						}
 					}
-					orderedFavoredList.add(new ArtistCount(artist,count));
+					sortedWinnings.add(new ArtistCount(a,count));
 				}
-				//sort the list
-				orderedFavoredList.sort((ArtistCount a, ArtistCount b) -> a.compareTo(b));
-				//set favored artists to the top 3 of these
-				for(int i = 0; i < favoredArtists.length; i++) {
-					favoredArtists[i] = orderedFavoredList.get(i).getArtist();
+				sortedWinnings.sort((ArtistCount a, ArtistCount b) -> a.compareTo(b));//love this
+
+				//add these in as needed
+				if(favoredArtists.size() == 0) {
+					favoredArtists.add(sortedWinnings.get(0).getArtist());
+				} else if(favoredArtists.size() == 1) {
+					for(ArtistCount c : sortedWinnings) {
+						//add if the artist is not already added and if the AI has won at least 1
+						if(c.getArtist() != favoredArtists.get(0) && c.getCount() > 0) {
+							favoredArtists.add(c.getArtist());
+							break;
+						}
+					}
+				} else if(favoredArtists.size() == 2) {
+					for(ArtistCount c : sortedWinnings) {
+						//add if the artist is not already added and if the AI has won at least 1
+						if(c.getArtist() != favoredArtists.get(0) && c.getArtist() != favoredArtists.get(0) && c.getCount() > 0) {
+							favoredArtists.add(c.getArtist());
+							break;
+						}
+					}
 				}
 			} else {
-				//the favored artists list cannot be made yet, so it should continue being null
-				//the one favored artist should be one that the AI has many of in hand and it has not won
-				//TODO
+				//nothing has been won yet, play the most common artist in hand
+				Artist bestArtist = null;
+				int bestCount = 0;
+				for(Artist a : Artist.values()) {
+					int count = 0;;
+					for(Card c : hand) {
+						if(c.getArtist() == a) {
+							count++;
+						}
+					}
+					if(count > bestCount) {
+						bestCount = count;
+						bestArtist = a;
+					}
+				}
+				//bestArtist here is the most common one in hand
+//				System.out.println("Best " + bestArtist);
+				return bestArtist;
 			}
 		}
+		
+//		System.out.println("Favored Artists");
+//		for(Artist a : favoredArtists) {
+//			System.out.println(a);
+//		}
 
 		//here the favored artist list is good, so an artist should be chosen from that
 		//the artist that should be chosen as favored is one that would make the season values get closer to favored artist list
-		if(!(favoredArtists[0] == state.getSeasonValues()[0].getArtist())) {
+		if( favoredArtists.size() > 0 && !(favoredArtists.get(0) == state.getSeasonValues()[0].getArtist())) {
 			//need to check if the hand has a card
 			for(Card c : hand) {
-				if(c.getArtist() == favoredArtists[0] && c.getAuctionType() != AuctionType.DOUBLE) {
+				if(c.getArtist() == favoredArtists.get(0) && c.getAuctionType() != AuctionType.DOUBLE) {
 					return c.getArtist();//return the good artist
 				}
 			}
-		} else if(!(favoredArtists[1] == state.getSeasonValues()[1].getArtist())) {
+		} else if(favoredArtists.size() > 1 && !(favoredArtists.get(1) == state.getSeasonValues()[1].getArtist())) {
 			//need to check if the hand has a card
 			for(Card c : hand) {
-				if(c.getArtist() == favoredArtists[1] && c.getAuctionType() != AuctionType.DOUBLE) {
+				if(c.getArtist() == favoredArtists.get(1) && c.getAuctionType() != AuctionType.DOUBLE) {
 					return c.getArtist();//return the good artist
 				}
 			}
-		} else if(!(favoredArtists[2] == state.getSeasonValues()[2].getArtist())) {
+		} else if( favoredArtists.size() > 2 && !(favoredArtists.get(2) == state.getSeasonValues()[2].getArtist())) {
 			//need to check if the hand has a card
 			for(Card c : hand) {
-				if(c.getArtist() == favoredArtists[2] && c.getAuctionType() != AuctionType.DOUBLE) {
+				if(c.getArtist() == favoredArtists.get(2) && c.getAuctionType() != AuctionType.DOUBLE) {
 					return c.getArtist();//return the good artist
 				}
 			}
