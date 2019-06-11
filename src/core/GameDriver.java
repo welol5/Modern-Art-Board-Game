@@ -37,7 +37,7 @@ import player.RandomPlayer;
 public class GameDriver implements Runnable{
 
 	//multiple games vars
-	private int iterations = 1000;
+	private int iterations = 1000000;
 
 	//Defaults to make testing easier
 	private static final String[] defaultNames = {"ReactiveAIPlayer", "PredictiveAIPlayer", "PredictiveAIPlayerV2"};
