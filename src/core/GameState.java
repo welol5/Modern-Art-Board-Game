@@ -95,7 +95,7 @@ public class GameState {
 		}
 		seasonCounts.sort(valuesComparitor);
 		
-		if(seasonCounts.get(0).getCount() == 5) {
+		if(seasonCounts.get(0).getCount() >= 5) {
 			updateTopThree(getTopThree());
 			return true;
 		} else {
@@ -120,6 +120,7 @@ public class GameState {
 	 * @param top3 a list of the top 3 artists
 	 */
 	public void updateTopThree(Artist[] top3) {
+		//System.out.println("update");
 		int increase = 30;
 		for(Artist artist : top3) {
 			artistValues.put(artist, artistValues.get(artist)+increase);
