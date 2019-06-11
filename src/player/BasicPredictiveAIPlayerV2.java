@@ -77,6 +77,33 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 		}
 		return hand.remove(random.nextInt(hand.size()));
 	}
+	
+	@Override
+	public int getBid(int highestBid, int highestValue) {
+
+		//if it a once around return the max value this AI will pay
+		if((biddingCard.getAuctionType() == AuctionType.ONCE_AROUND || biddingCard.getAuctionType() == AuctionType.SEALED) && highestValue > highestBid) {
+			return highestValue;
+		} else if (biddingCard.getAuctionType() == AuctionType.ONCE_AROUND || biddingCard.getAuctionType() == AuctionType.SEALED) {
+			return -1;
+		}
+
+		//try to buy the painting for the lowest possible price
+		//System.out.println(maxValue);
+		//System.out.println("here");
+		if(highestValue > highestBid) {
+			int t = 1;
+			while (highestValue-players.length*t-highestBid > 0) {
+				t++;
+			}
+			System.out.println("Highest bid : " + highestBid);
+			System.out.println("Bid         : " + (highestValue-1-players.length*(t-1)-highestBid));
+			System.out.println("Value       : " + highestValue);
+			return highestBid + highestValue-1-players.length*(t-1)-highestBid;
+		} else {
+			return -1;
+		}
+	}
 
 	@Override
 	public void announceCard(Card card, boolean isDouble) {
