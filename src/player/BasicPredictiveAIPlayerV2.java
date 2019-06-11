@@ -132,6 +132,15 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 			favoredArtists.clear();
 		}
 	}
+	
+	@Override
+	public void announceAuctionWinner(int turn, String name, int price) {
+		players[turn].pay(price);
+		players[turn].givePainting(biddingCard);
+		biddingCard = null;
+		turn++;
+		System.out.println(name);
+	}
 
 	/**
 	 * 
