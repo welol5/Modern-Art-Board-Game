@@ -22,7 +22,7 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 
 	//memory
 	//private Artist[] favoredArtists = new Artist[3];//keeps track of what artists this AI want to win during the season
-	private ArrayList<Artist> favoredArtists = new ArrayList<Artist>();
+	protected ArrayList<Artist> favoredArtists = new ArrayList<Artist>();
 
 	//keep track of other players
 	private int[] playerCardCounts;
