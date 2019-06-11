@@ -1,19 +1,30 @@
 package player;
 
+import java.util.ArrayList;
+
 import core.Artist;
+import core.ArtistCount;
 import core.AuctionType;
 import core.Card;
 import core.ObservableGameState;
 import io.BasicIO;
 
 public class LateGameStratAI extends BasicPredictiveAIPlayerV2{
-	
-	int season;
+
+	protected int season = 1;
+	protected ArrayList<ArtistCount> unknownCards = new ArrayList<ArtistCount>();
+	int cardCount = 70;
+
 
 	public LateGameStratAI(String name, BasicIO io, ObservableGameState state, int playerCount, int turnIndex) {
 		super(name, io, state, playerCount, turnIndex);
+
+		//hardcode
+		for(int i = 15-Artist.values().length; i > 15; i++) {
+			unknownCards.add(new ArtistCount(Artist.values()[i-15+Artist.values().length],i));//this is confusing and I hate it
+		}
 	}
-	
+
 	@Override
 	public Card chooseCard() {
 		//go through the artists in terms of most to least favored
@@ -53,7 +64,7 @@ public class LateGameStratAI extends BasicPredictiveAIPlayerV2{
 		}
 		return hand.remove(random.nextInt(hand.size()));
 	}
-	
+
 	public void announceSeasonEnd(int season) {
 		//keep track of player money
 		Artist[] top3 = state.getTopSeasonValues();
@@ -69,6 +80,45 @@ public class LateGameStratAI extends BasicPredictiveAIPlayerV2{
 		for(int i = 0; i < favoredArtists.size(); i++) {
 			favoredArtists.clear();
 		}
+
+		season++;
 	}
 
+	@Override
+	public void announceCard(Card card, boolean isDouble) {
+
+		//prep for bidding
+		biddingCard = card;
+		this.isDouble = isDouble;
+		getBestOtherPlayer();
+
+		//keep track of unknown cards
+		for(ArtistCount c : unknownCards) {
+			if(c.getArtist() == card.getArtist()) {
+				c.removeCard();
+				cardCount--;
+				if(isDouble) {
+					c.removeCard();
+					cardCount--;
+				}
+			}
+		}
+	}
+
+	@Override
+	public void deal(Card card) {
+		hand.add(card);
+		//players got delt another card
+		for(int i = 0; i < playerCardCounts.length; i++) {
+			playerCardCounts[i]++;
+		}
+
+		//keep track of unknown cards
+		for(ArtistCount c : unknownCards) {
+			if(c.getArtist() == card.getArtist()) {
+				c.removeCard();
+				cardCount--;
+			}
+		}
+	}
 }

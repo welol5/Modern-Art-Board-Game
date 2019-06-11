@@ -25,7 +25,7 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 	protected ArrayList<Artist> favoredArtists = new ArrayList<Artist>();
 
 	//keep track of other players
-	private int[] playerCardCounts;
+	protected int[] playerCardCounts;
 
 	public BasicPredictiveAIPlayerV2(String name, BasicIO io,ObservableGameState state, int playerCount, int turnIndex) {
 		super(name,io,state,playerCount,turnIndex);
