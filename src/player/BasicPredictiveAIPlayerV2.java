@@ -89,12 +89,8 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 		//need to know if the player is still bidding
 		//if the player is still bidding, do not let them win if it will make a profit
 		if(biddingCard.getAuctionType() == AuctionType.ONCE_AROUND || biddingCard.getAuctionType() == AuctionType.SEALED) {
-			//find the cards value
-			//if the card is the bestPlayes, they will profit more from this AI if more than half the value is paid
-			if(turn == bestPlayer) {
-				maxValue /= 2;
-			}
-			//if a profit can be made, don't let them win
+			maxValue *= (players.length-1)/players.length;
+			return maxValue;
 		} else {
 			maxValue *= (players.length-1)/players.length;
 			System.out.println("ValueAfter : " + maxValue);
