@@ -112,7 +112,7 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 		biddingCard = card;
 		this.isDouble = isDouble;
 		getBestOtherPlayer();
-		System.out.println(card);
+		//System.out.println(card);
 	}
 
 	@Override
