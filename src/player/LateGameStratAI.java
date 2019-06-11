@@ -142,7 +142,7 @@ public class LateGameStratAI extends BasicPredictiveAIPlayerV2{
 				}
 			}
 		}
-		//this should never execute
+		//this should never execute 
 		return false;
 	}
 }
