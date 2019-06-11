@@ -90,6 +90,7 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 
 		//set the maxValue to the
 		int maxValue = getValue();
+		System.out.println("Value : " + maxValue);
 		if(isDouble) {
 			maxValue*=2;
 		}
