@@ -98,7 +98,7 @@ public class GameDriver implements Runnable{
 
 			//the game is now ready for the first season
 			for(int i = 1; i <= 4; i++) {
-				io.startSeason(i);
+				//io.startSeason(i);
 				state.resetSeason();
 				//this is setup for the end of the season
 				Artist[] top3;

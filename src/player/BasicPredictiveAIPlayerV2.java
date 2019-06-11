@@ -82,7 +82,7 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 
 		//set the maxValue to the
 		int maxValue = getValue();
-		System.out.println("Value : " + maxValue);
+		//System.out.println("Value : " + maxValue);
 		if(isDouble) {
 			maxValue*=2;
 		}
@@ -93,7 +93,7 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 			return maxValue;
 		} else {
 			maxValue = (int)(((double)maxValue)*(((double)players.length)-1)/((double)players.length));
-			System.out.println("ValueAfter : " + maxValue);
+			//System.out.println("ValueAfter : " + maxValue);
 		}
 		
 		return getBid(highestBid,maxValue);
@@ -117,9 +117,9 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 			while (highestValue-players.length*t-highestBid > 0) {
 				t++;
 			}
-			System.out.println("Highest bid : " + highestBid);
-			System.out.println("Bid         : " + (highestBid + highestValue-players.length*(t-1)-highestBid));
-			System.out.println("Value       : " + highestValue);
+//			System.out.println("Highest bid : " + highestBid);
+//			System.out.println("Bid         : " + (highestBid + highestValue-players.length*(t-1)-highestBid));
+//			System.out.println("Value       : " + highestValue);
 			return highestBid + highestValue-players.length*(t-1)-highestBid;
 		} else {
 			return -1;
