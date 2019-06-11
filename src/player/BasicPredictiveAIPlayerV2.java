@@ -18,7 +18,7 @@ import io.BasicIO;
  */
 public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 
-	private Random random = new Random();
+	protected Random random = new Random();
 
 	//memory
 	//private Artist[] favoredArtists = new Artist[3];//keeps track of what artists this AI want to win during the season
