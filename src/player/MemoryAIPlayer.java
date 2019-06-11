@@ -166,5 +166,6 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 		players[turn].givePainting(biddingCard);
 		biddingCard = null;
 		turn++;
+		System.out.println("dont be here");
 	}
 }
