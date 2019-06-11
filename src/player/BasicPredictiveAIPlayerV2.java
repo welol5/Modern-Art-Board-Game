@@ -96,9 +96,9 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 			while (highestValue-players.length*t-highestBid > 0) {
 				t++;
 			}
-			System.out.println("Highest bid : " + highestBid);
-			System.out.println("Bid         : " + (highestBid + highestValue-players.length*(t-1)-highestBid));
-			System.out.println("Value       : " + highestValue);
+//			System.out.println("Highest bid : " + highestBid);
+//			System.out.println("Bid         : " + (highestBid + highestValue-players.length*(t-1)-highestBid));
+//			System.out.println("Value       : " + highestValue);
 			return highestBid + highestValue-players.length*(t-1)-highestBid;
 		} else {
 			return -1;
@@ -135,12 +135,12 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 	
 	@Override
 	public void announceAuctionWinner(int turn, String name, int price) {
-		System.out.println("Here");
+		//System.out.println("Here");
 		players[turn].pay(price);
 		players[turn].givePainting(biddingCard);
 		biddingCard = null;
 		turn++;
-		System.out.println(name);
+		//System.out.println(name);
 	}
 
 	/**
