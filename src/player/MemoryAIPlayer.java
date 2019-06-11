@@ -90,7 +90,7 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 
 		//set the maxValue to the
 		int maxValue = getValue();
-		System.out.println("Value : " + maxValue);
+		//System.out.println("Value : " + maxValue);
 		if(isDouble) {
 			maxValue*=2;
 		}
@@ -105,7 +105,7 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 			//if a profit can be made, don't let them win
 		} else {
 			maxValue *= (players.length-1)/players.length;
-			System.out.println("ValueAfter : " + maxValue);
+			//System.out.println("ValueAfter : " + maxValue);
 		}
 		
 		return getBid(highestBid,maxValue);
