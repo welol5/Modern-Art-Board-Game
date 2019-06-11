@@ -11,7 +11,7 @@ The players in the player package are snapshots of different ideas. They will be
 ---
 
 ## Other notes
-Files in the bin folder should always have the newest version
+Files in the bin folder should always have the newest version. Also due to me coding on a windows machine, I am pushing debug updates that I am pulling to a linux teminal, so some updates may not work properly.
 
 ## Currently WIP
-The JavaDoc for the players may not be totally accurate because I am working on the AIs
+The JavaDoc for the players may not be totally accurate because I am working on the AIs.
