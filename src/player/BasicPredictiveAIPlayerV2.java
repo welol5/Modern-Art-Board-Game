@@ -78,6 +78,31 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 		return hand.remove(random.nextInt(hand.size()));
 	}
 	
+	public int getBid(int highestBid) {
+
+		//set the maxValue to the
+		int maxValue = getValue();
+		System.out.println("Value : " + maxValue);
+		if(isDouble) {
+			maxValue*=2;
+		}
+		//need to know if the player is still bidding
+		//if the player is still bidding, do not let them win if it will make a profit
+		if(biddingCard.getAuctionType() == AuctionType.ONCE_AROUND || biddingCard.getAuctionType() == AuctionType.SEALED) {
+			//find the cards value
+			//if the card is the bestPlayes, they will profit more from this AI if more than half the value is paid
+			if(turn == bestPlayer) {
+				maxValue /= 2;
+			}
+			//if a profit can be made, don't let them win
+		} else {
+			maxValue *= (players.length-1)/players.length;
+			System.out.println("ValueAfter : " + maxValue);
+		}
+		
+		return getBid(highestBid,maxValue);
+	}
+	
 	@Override
 	public int getBid(int highestBid, int highestValue) {
 
