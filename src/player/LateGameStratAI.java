@@ -131,4 +131,18 @@ public class LateGameStratAI extends BasicPredictiveAIPlayerV2{
 		}
 		return count/((double)cardCount);
 	}
+	
+	protected boolean canWin(Artist artist) {
+		for(ArtistCount c : unknownCards) {
+			if(c.getArtist() == artist) {
+				if(c.getCount() < 5) {
+					return false;
+				} else {
+					return true;
+				}
+			}
+		}
+		//this should never execute
+		return false;
+	}
 }
