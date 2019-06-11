@@ -135,6 +135,7 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 	
 	@Override
 	public void announceAuctionWinner(int turn, String name, int price) {
+		System.out.println("Here");
 		players[turn].pay(price);
 		players[turn].givePainting(biddingCard);
 		biddingCard = null;
