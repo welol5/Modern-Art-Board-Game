@@ -198,6 +198,10 @@ public class GameDriver implements Runnable{
 							}
 						}
 						//io.auctionWinner(players[winningBid.index], winningBid.price);
+						//tell each player the bid has been won
+						for(Player p : players) {
+							p.announceAuctionWinner(winningBid.index, players[winningBid.index].name, winningBid.price);
+						}
 					} else {
 						//break out of the season once it is over
 						break;
