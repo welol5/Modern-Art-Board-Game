@@ -97,7 +97,7 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 				t++;
 			}
 			System.out.println("Highest bid : " + highestBid);
-			System.out.println("Bid         : " + (highestBid + highestValue-1-players.length*(t-1)-highestBid));
+			System.out.println("Bid         : " + (highestBid + highestValue-players.length*(t-1)-highestBid));
 			System.out.println("Value       : " + highestValue);
 			return highestBid + highestValue-players.length*(t-1)-highestBid;
 		} else {
