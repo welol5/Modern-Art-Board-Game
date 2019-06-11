@@ -140,7 +140,7 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 		players[turn].givePainting(biddingCard);
 		biddingCard = null;
 		turn++;
-		System.out.println(name);
+		System.out.println(name + " : " + price);
 	}
 
 	/**
