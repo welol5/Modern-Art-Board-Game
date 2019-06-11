@@ -36,6 +36,10 @@ public class ArtistCount implements Comparable<ArtistCount>, Serializable {
 		return artist;
 	}
 	
+	public void removeCard() {
+		count--;
+	}
+	
 	/**
 	 * Resets the count for a new season
 	 */
