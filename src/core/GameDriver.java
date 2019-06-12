@@ -201,6 +201,11 @@ public class GameDriver implements Runnable{
 				}
 
 				//the season is over by this point
+				//tell the players the season is over
+				for(Player p : players) {
+					p.announceSeasonEnd(i);
+				}
+				
 				top3 = state.getTopThree();
 				for(Player player: players) {
 					ArrayList<Card> paintings = player.getWinnings();
