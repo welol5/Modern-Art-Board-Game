@@ -306,7 +306,7 @@ public class GameDriver implements Runnable{
 
 	/**
 	 * Gets a second card from a player if the first was a double
-	 * @param turn the index of the player
+	 * @param turn the index of the player that played the double card
 	 * @param artist the type of artist that is required
 	 * @return the card the player decides to use
 	 */
