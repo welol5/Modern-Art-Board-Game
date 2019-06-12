@@ -7,7 +7,7 @@ import core.AuctionType;
 import core.Card;
 import player.Player;
 
-public abstract class BasicIO {
+public interface BasicIO {
 	
 	/**
 	 * This method should be used to get all of the names of the players in the game.

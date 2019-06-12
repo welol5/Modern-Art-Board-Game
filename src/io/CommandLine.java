@@ -10,7 +10,7 @@ import core.AuctionType;
 import core.Card;
 import player.Player;
 
-public class CommandLine extends BasicIO{
+public class CommandLine implements BasicIO{
 
 	BufferedReader input = new BufferedReader(new InputStreamReader(System.in));//the main input method for this IO type
 
