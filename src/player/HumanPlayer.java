@@ -81,7 +81,7 @@ public class HumanPlayer extends Player{
 		if(isDouble) {
 			io.announceAuctionType(AuctionType.DOUBLE);
 		}
-		io.announceAuctionType(card.getAuctionType());
+		//io.announceAuctionType(card.getAuctionType());
 	}
 
 	@Override
