@@ -86,7 +86,7 @@ public abstract class BasicIO {
 	 * @param player that won
 	 * @param price they paid
 	 */
-	public abstract void auctionWinner(Player player, int price);
+	public abstract void auctionWinner(String name, int price);
 	
 	/**
 	 * Announces the type of auction

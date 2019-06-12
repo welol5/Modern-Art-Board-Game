@@ -175,8 +175,8 @@ public class CommandLine extends BasicIO{
 	}
 
 	@Override
-	public void auctionWinner(Player player, int price) {
-		System.out.println(player.name + " has won this auction. They paid " + price);
+	public void auctionWinner(String name, int price) {
+		System.out.println(name + " has won this auction. They paid " + price);
 	}
 
 	@Override
