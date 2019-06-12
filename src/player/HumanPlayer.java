@@ -41,7 +41,7 @@ public class HumanPlayer extends Player{
 
 	@Override
 	public int getFixedPrice() {
-		return io.getFixedPrice(null);//TODO this needs to be fixed for human players
+		return io.getFixedPrice(biddingCard);
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class HumanPlayer extends Player{
 		if(price > money) {
 			return false;
 		}
-		return io.askPlayertoBuy(null, price);//TODO fix for human players
+		return io.askPlayertoBuy(biddingCard, price);
 	}
 
 	@Override
