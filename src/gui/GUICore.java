@@ -127,7 +127,7 @@ public class GUICore extends Application implements BasicIO{
 	}
 	
 	/////////////////////////////////////////////////
-	//below here are helper methods to shoe specific things
+	//below here are helper methods to show specific things
 	
 	private void showStartup(Stage stage) {
 		double screenHeight = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
