@@ -11,7 +11,7 @@ The players in the player package are snapshots of different ideas. They will be
 ---
 
 ## Other notes
-Files in the bin folder should always have the newest version. Also due to me coding on a windows machine, I am pushing debug updates that I am pulling to a linux teminal, so some updates may not work properly.
+Files in the bin folder should always have the newest version. Also due to me coding on a windows machine, I am pushing debug updates that I am pulling to a linux teminal, so some updates may not work properly. The JavaDoc is not complete and I will be updating it hopfully within the next 2 weeks.
 
 ## Currently WIP
-The JavaDoc for the players may not be totally accurate because I am working on the AIs.
+It has become hard to really see what is going on in the program through only command line interfaces. I am working on a GUI that will be able to show much more info at a time and it will be far esier to read. This will take some time and until it is done there will not be any updates to the AIs.
