@@ -132,10 +132,20 @@ public class LateGameStratAI extends BasicPredictiveAIPlayerV2{
 		return count/((double)cardCount);
 	}
 	
-	protected boolean canWin(Artist artist) {
+	protected boolean canWin(Artist artist, boolean includeHand) {
 		for(ArtistCount c : unknownCards) {
+			
+			int handCount = 0;
+			if(includeHand) {
+				for(Card card : hand) {
+					if(card.getArtist() == c.getArtist()) {
+						handCount++;
+					}
+				}
+			}
+			
 			if(c.getArtist() == artist) {
-				if(c.getCount() < 5) {
+				if(c.getCount()+handCount < 5) {
 					return false;
 				} else {
 					return true;
