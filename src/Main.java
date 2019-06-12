@@ -1,5 +1,7 @@
 import core.GameDriver;
+import gui.GUICore;
 import io.IOType;
+import javafx.application.Application;
 
 /**
  * 
@@ -11,6 +13,7 @@ import io.IOType;
 public class Main {
 	
 	private static String[] names = {"Random1","Random2","AIPlayer"};
+	private static GUICore gui = new GUICore();
 
 	public static void main(String[] args) {
 		
