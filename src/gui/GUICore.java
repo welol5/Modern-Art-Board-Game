@@ -130,8 +130,11 @@ public class GUICore extends Application implements BasicIO{
 	//below here are helper methods to show specific things
 	
 	private void showStartup(Stage stage) {
-		Scene mainMenuScene = new Scene(new MainMenuPane(stage.getWidth(),stage.getHeight()));
+		Scene mainMenuScene = new Scene(new MainMenuPane(this,stage.getWidth(),stage.getHeight()));
 		stage.setScene(mainMenuScene);
 	}
-
+	
+	public void startGame(Stage stage) {
+		
+	}
 }

@@ -16,9 +16,12 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 public class MainMenuPane extends VBox{
+	
+	private GUICore parent;
 
-	public MainMenuPane(double width, double height) {
+	public MainMenuPane(GUICore parent, double width, double height) {
 		super();
+		this.parent = parent;
 
 		double screenHeight = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 
