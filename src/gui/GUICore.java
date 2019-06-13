@@ -12,6 +12,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import player.HumanPlayer;
 import player.Player;
 import player.PlayerType;
 
@@ -19,6 +20,9 @@ public class GUICore extends Application{
 	
 	private MainMenuPane mainMenuPane;
 	private Stage mainStage;
+	
+	//player and game vars
+	private Player[] players;
 	
 	public static void main(String[] args) {
 		Application.launch(args);
@@ -55,12 +59,28 @@ public class GUICore extends Application{
 			return;
 		}
 		PlayerType[] types = mainMenuPane.getPlayerTypes();
-		System.out.println("Done");
+		
+		//make the list of players
+		
 		
 		//swap to a game screen using the first human player as the view
+//		PlayerView view = new PlayerView();
+//		Scene playerScene = new Scene(view);
+//		mainStage.setScene(playerScene);
 	}
 	
 	public Stage getMainStage() {
 		return mainStage;
 	}
+	
+	//helper methods
+	
+//	private void makePlayers(String[] names, PlayerType[] types) {
+//		players = new Player[names.length];
+//		for(int i = 0; i < players.length; i++) {
+//			if(types[i] == PlayerType.HUMAN) {
+//				players[i] = new HumanPlayer(name[i]);
+//			}
+//		}
+//	}
 }
