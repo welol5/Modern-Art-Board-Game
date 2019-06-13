@@ -13,7 +13,7 @@ import core.ObservableGameState;
  * @author William Elliman
  *
  */
-public abstract class Player{
+public abstract class Player extends Observable{
 	public final String name;
 	protected int money;
 	protected ArrayList<Card> hand;
