@@ -11,21 +11,14 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import player.Player;
+import player.PlayerType;
 
 public class GUICore extends Application{
+	
+	private MainMenuPane mainMenuPane;
+	private Stage mainStage;
 	
 	public static void main(String[] args) {
 		Application.launch(args);
@@ -33,6 +26,8 @@ public class GUICore extends Application{
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		mainStage = primaryStage;
+		
 		//setup basic overall stuff
 		primaryStage.setTitle("Modern Art");
 		primaryStage.setHeight(Toolkit.getDefaultToolkit().getScreenSize().getHeight()*(3.0/4.0));
@@ -48,11 +43,24 @@ public class GUICore extends Application{
 	//below here are helper methods to show specific things
 	
 	private void showStartup(Stage stage) {
-		Scene mainMenuScene = new Scene(new MainMenuPane(this,stage.getWidth(),stage.getHeight()));
+		mainMenuPane = new MainMenuPane(this,stage.getWidth(),stage.getHeight());
+		Scene mainMenuScene = new Scene(mainMenuPane);
 		stage.setScene(mainMenuScene);
 	}
 	
-	public void startGame(Stage stage) {
+	public void startGame() {
+		String[] names = mainMenuPane.getNames();
+		//do nothing if names are bad
+		if(names == null) {
+			return;
+		}
+		PlayerType[] types = mainMenuPane.getPlayerTypes();
+		System.out.println("Done");
 		
+		//swap to a game screen using the first human player as the view
+	}
+	
+	public Stage getMainStage() {
+		return mainStage;
 	}
 }

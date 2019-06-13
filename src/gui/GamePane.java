@@ -6,7 +6,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import player.Player;
 
-public class GamePane extends GridPane {
+public class GamePane extends GridPane{
 	
 	private Player player;
 
@@ -15,9 +15,4 @@ public class GamePane extends GridPane {
 		this.player = player;
 	}
 	
-	private Node makeCardPanel() {
-		HBox cards = new HBox();
-		
-		return cards;
-	}
 }
