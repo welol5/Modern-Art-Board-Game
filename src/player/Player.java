@@ -34,6 +34,10 @@ public abstract class Player{
 		winnings.add(card);
 	}
 	
+	public ArrayList<Card> getHand() {
+		return hand;
+	}
+	
 	/**
 	 * 
 	 * @return the list of paintings won by the player
