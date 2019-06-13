@@ -130,54 +130,8 @@ public class GUICore extends Application implements BasicIO{
 	//below here are helper methods to show specific things
 	
 	private void showStartup(Stage stage) {
-		double screenHeight = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
-		
-		//make the scene
-		VBox pane = new VBox();
-		pane.setStyle("-fx-background-color: #726952;");
-		VBox nameListPane = new VBox();
-		nameListPane.setSpacing(screenHeight/200);
-		for(int i = 0; i < 5; i++) {
-			HBox line = new HBox();
-			Text playerNameText = new Text("Player name : ");
-			playerNameText.setFont(Font.font(null,FontWeight.BOLD,(int)(((double)screenHeight)/80.0)));
-			playerNameText.setFill(Color.WHITE);
-			line.getChildren().add(playerNameText);
-			line.getChildren().add(new TextField());
-			line.setAlignment(Pos.CENTER);
-			
-			nameListPane.getChildren().add(line);
-		}
-		
-		//make an interesting looking title
-		Text title = new Text("Modern Art");
-		title.setTextAlignment(TextAlignment.CENTER);
-		title.setFont(Font.font("Impact", FontWeight.BOLD, (int)(((double)screenHeight)/10.0)));
-		DropShadow ds = new DropShadow();
-		ds.setRadius(screenHeight/200);
-		ds.setOffsetX(screenHeight/200);
-		ds.setOffsetY(screenHeight/200);
-		//ds.setColor(Color.DARKGRAY);
-		title.setEffect(ds);
-		title.setFill(Color.WHITE);
-		title.setStroke(Color.web("#5b4c37"));
-		title.setStrokeWidth(screenHeight/300.0);
-		
-		//need a go button
-		Button goButton = new Button("Start Game");
-		
-		//add everything to the main box
-		pane.getChildren().add(title);
-		pane.getChildren().add(nameListPane);
-		pane.getChildren().add(goButton);
-		pane.setSpacing(screenHeight/50);//dynamic to screen size
-		pane.setFillWidth(true);
-		pane.setAlignment(Pos.CENTER);
-		
-		//set the pane as the scene
-		pane.setPrefSize(stage.getWidth(), stage.getHeight());//set sizes
-		Scene scene = new Scene(pane);
-		stage.setScene(scene);
+		Scene mainMenuScene = new Scene(new MainMenuPane(stage.getWidth(),stage.getHeight()));
+		stage.setScene(mainMenuScene);
 	}
 
 }
