@@ -261,34 +261,34 @@ public class GameDriver implements Runnable{
 				players[i] = new HumanPlayer(names[i], io);
 			} else if(types[i] == PlayerType.REACTIVE_AI) {
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
-					players[i] = new ReactiveAIPlayer("ReactiveAIPlayer" + i, io, state);
+					players[i] = new ReactiveAIPlayer("ReactiveAIPlayer" + i, state);
 				} else {
-					players[i] = new ReactiveAIPlayer(names[i], io, state);
+					players[i] = new ReactiveAIPlayer(names[i], state);
 				}
 			} else if(types[i] == PlayerType.MEMORY_AI){
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
-					players[i] = new MemoryAIPlayer("MemoryAIPlayer" + i, io, state, players.length, i);
+					players[i] = new MemoryAIPlayer("MemoryAIPlayer" + i, state, players.length, i);
 				} else {
-					players[i] = new MemoryAIPlayer(names[i], io, state, players.length, i);
+					players[i] = new MemoryAIPlayer(names[i], state, players.length, i);
 				}
 			} else if(types[i] == PlayerType.BASIC_PREDICTIVE_AI){
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
-					players[i] = new BasicPredictiveAIPlayer("PredictiveAIPlayer" + i, io, state, players.length, i);
+					players[i] = new BasicPredictiveAIPlayer("PredictiveAIPlayer" + i, state, players.length, i);
 				} else {
-					players[i] = new BasicPredictiveAIPlayer(names[i], io, state, players.length, i);
+					players[i] = new BasicPredictiveAIPlayer(names[i], state, players.length, i);
 				}
 			} else if(types[i] == PlayerType.BASIC_PREDICTIVE_AI_V2){
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
-					players[i] = new BasicPredictiveAIPlayerV2("PredictiveAIPlayerV2" + i, io, state, players.length, i);
+					players[i] = new BasicPredictiveAIPlayerV2("PredictiveAIPlayerV2" + i, state, players.length, i);
 				} else {
-					players[i] = new BasicPredictiveAIPlayerV2(names[i], io, state, players.length, i);
+					players[i] = new BasicPredictiveAIPlayerV2(names[i], state, players.length, i);
 				}
 			} else if(types[i] == PlayerType.GENETIC_AI){
 				//aiTraining = i;//set the index so that learn can be called on this player
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
-					players[i] = new GeneticAIPlayer("GeneticAIPlayer" + i, io,state, players.length, i, database,0.05,0.2);
+					players[i] = new GeneticAIPlayer("GeneticAIPlayer" + i,state, players.length, i, database,0.05,0.2);
 				} else {
-					players[i] = new GeneticAIPlayer(names[i], io,state, players.length, i, database,0.05,0.2);
+					players[i] = new GeneticAIPlayer(names[i],state, players.length, i, database,0.05,0.2);
 				}
 			} else {
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {

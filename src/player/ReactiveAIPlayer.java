@@ -26,7 +26,7 @@ public class ReactiveAIPlayer extends Player{
 
 	protected ObservableGameState state;
 
-	public ReactiveAIPlayer(String name, BasicIO io, ObservableGameState state) {
+	public ReactiveAIPlayer(String name, ObservableGameState state) {
 		super(name);
 		this.state = state;
 	}

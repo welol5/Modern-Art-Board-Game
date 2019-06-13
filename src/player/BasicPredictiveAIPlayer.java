@@ -30,8 +30,8 @@ public class BasicPredictiveAIPlayer extends MemoryAIPlayer{
 	//keep track of other players
 	private int[] playerCardCounts;
 	
-	public BasicPredictiveAIPlayer(String name, BasicIO io,ObservableGameState state, int playerCount, int turnIndex) {
-		super(name,io,state,playerCount,turnIndex);
+	public BasicPredictiveAIPlayer(String name,ObservableGameState state, int playerCount, int turnIndex) {
+		super(name,state,playerCount,turnIndex);
 		
 		//init playerCardCounts
 		playerCardCounts = new int[playerCount];

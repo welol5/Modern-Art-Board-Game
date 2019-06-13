@@ -32,8 +32,8 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 
 	//memory during bidding
 
-	public MemoryAIPlayer(String name, BasicIO io, ObservableGameState state, int playerCount, int turnIndex) {
-		super(name,io, state);
+	public MemoryAIPlayer(String name, ObservableGameState state, int playerCount, int turnIndex) {
+		super(name, state);
 
 		//init player array
 		players = new Player[playerCount];

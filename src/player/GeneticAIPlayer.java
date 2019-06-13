@@ -35,8 +35,8 @@ public class GeneticAIPlayer extends MemoryAIPlayer{
 
 	//memory during bidding
 
-	public GeneticAIPlayer(String name, BasicIO io,ObservableGameState state, int playerCount, int turnIndex, GeneticAIPlayerDB dataBase, double exploreChance, double alpha) {
-		super(name,io,state,playerCount,turnIndex);
+	public GeneticAIPlayer(String name,ObservableGameState state, int playerCount, int turnIndex, GeneticAIPlayerDB dataBase, double exploreChance, double alpha) {
+		super(name,state,playerCount,turnIndex);
 
 		this.exploreChance = exploreChance;
 		this.alpha = alpha;

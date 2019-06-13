@@ -16,8 +16,8 @@ public class LateGameStratAI extends BasicPredictiveAIPlayerV2{
 	int cardCount = 70;
 
 
-	public LateGameStratAI(String name, BasicIO io, ObservableGameState state, int playerCount, int turnIndex) {
-		super(name, io, state, playerCount, turnIndex);
+	public LateGameStratAI(String name, ObservableGameState state, int playerCount, int turnIndex) {
+		super(name, state, playerCount, turnIndex);
 
 		//hardcode
 		for(int i = 15-Artist.values().length; i > 15; i++) {
