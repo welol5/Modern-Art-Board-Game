@@ -38,7 +38,7 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 		//init player array
 		players = new Player[playerCount];
 		for(int i = 0; i < players.length; i++) {
-			players[i] = new RandomPlayer(null,null);
+			players[i] = new RandomPlayer(null);
 		}
 
 		this.turnIndex = turnIndex;

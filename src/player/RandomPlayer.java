@@ -16,11 +16,9 @@ import io.BasicIO;
 public class RandomPlayer extends Player {
 	
 	Random random = new Random();
-	BasicIO io;
 
-	public RandomPlayer(String name, BasicIO io) {
+	public RandomPlayer(String name) {
 		super(name);
-		this.io = io;
 	}
 
 	@Override

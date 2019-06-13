@@ -292,9 +292,9 @@ public class GameDriver implements Runnable{
 				}
 			} else {
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
-					players[i] = new RandomPlayer("RandomPlayer" + i, io);
+					players[i] = new RandomPlayer("RandomPlayer" + i);
 				} else {
-					players[i] = new RandomPlayer(names[i], io);
+					players[i] = new RandomPlayer(names[i]);
 				}
 			}
 		}
