@@ -1,6 +1,8 @@
 package player;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 import core.Artist;
 import core.Card;
@@ -11,7 +13,7 @@ import core.ObservableGameState;
  * @author William Elliman
  *
  */
-public abstract class Player {
+public abstract class Player extends Observable{
 	public final String name;
 	protected int money;
 	protected ArrayList<Card> hand;
@@ -30,6 +32,7 @@ public abstract class Player {
 	 */
 	public void givePainting(Card card) {
 		winnings.add(card);
+		notifyObservers();
 	}
 	
 	/**
@@ -45,6 +48,7 @@ public abstract class Player {
 	 */
 	public void clearWinnings() {
 		winnings.clear();
+		notifyObservers();
 	}
 	
 	/**
@@ -53,6 +57,7 @@ public abstract class Player {
 	 */
 	public void deal(Card card) {
 		hand.add(card);
+		notifyObservers();
 	}
 	
 	/**
@@ -61,6 +66,7 @@ public abstract class Player {
 	 */
 	public void pay(int amount) {
 		money -= amount;
+		notifyObservers();
 	}
 	
 	/**
@@ -69,6 +75,7 @@ public abstract class Player {
 	 */
 	public void recive(int amount) {
 		money += amount;
+		notifyObservers();
 	}
 	
 	/**
