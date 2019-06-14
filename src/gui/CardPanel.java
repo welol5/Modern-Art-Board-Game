@@ -7,17 +7,21 @@ import java.util.Observer;
 import core.Card;
 import javafx.scene.layout.HBox;
 
-public class CardPanel extends HBox implements Observer {
+public class CardPanel extends HBox{
 	
 	private ArrayList<Card> hand;
 	
 	public CardPanel(ArrayList<Card> hand) {
 		this.hand = hand;
-		
 	}
 
-	@Override
-	public void update(Observable o, Object arg) {
+	public void update() {
+		this.getChildren().clear();//clear the list
+		
+		//rebuild the list from hand
+		for(Card c : hand) {
+			this.getChildren().add(new GUICard(c));
+		}
 		
 	}
 

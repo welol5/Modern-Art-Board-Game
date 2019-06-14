@@ -12,8 +12,8 @@ import javafx.stage.Stage;
 
 public class GUICard extends VBox{
 	
-	public GUICard(Parent parent, Card card) {
-		super(parent);
+	public GUICard(Card card) {
+		super();
 		Text artistName = new Text();
 		
 		//find the text and color to use
@@ -40,6 +40,6 @@ public class GUICard extends VBox{
 		this.getChildren().add(artistName);
 		
 		//set the color
-		this.setStyle("-fx-background-color: " + color.toString() + ";");
+		this.setStyle("-fx-background-color: #" + color.toString().substring(2) + ";");
 	}
 }

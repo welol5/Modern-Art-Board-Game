@@ -4,7 +4,10 @@ import core.Artist;
 import core.AuctionType;
 import core.Card;
 import core.ObservableGameState;
+import gui.PlayerView;
 import io.BasicIO;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 /**
  * The class that allows human players to play by asking an IO object for all the humans decisions.
@@ -19,10 +22,19 @@ public class HumanPlayer extends Player{
 	private BasicIO io;
 	private Card biddingCard = null;
 	private boolean isDouble = false;
+	
+	//gui var for interaction
+	private Pane guiArea;
 
-	public HumanPlayer(String name, BasicIO io) {
+	public HumanPlayer(String name, Pane guiArea) {
 		super(name);
-		this.io = io;
+		this.io = io;//TODO this is weird for now
+		this.guiArea = guiArea;
+		
+		PlayerView view = new PlayerView(this);
+		view.setPrefSize(guiArea.getWidth(), guiArea.getHeight());
+		
+		guiArea.getChildren().add(view);
 	}
 
 	@Override

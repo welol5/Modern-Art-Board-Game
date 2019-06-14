@@ -143,7 +143,7 @@ public class MainMenuPane extends VBox{
 		for(ComboBox<String> c : playerTypes) {
 			for(int k = 0; k < playerTypesNames.length; k++) {
 				if(c.getSelectionModel().getSelectedItem().equals(playerTypesNames[k]) && !c.getSelectionModel().getSelectedItem().equals(playerTypesNames[0])) {
-					types[i] = PlayerType.values()[k+1];
+					types[i] = PlayerType.values()[k-1];
 					i++;
 				}
 			}

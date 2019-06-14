@@ -32,6 +32,7 @@ public abstract class Player extends Observable{
 	 */
 	public void givePainting(Card card) {
 		winnings.add(card);
+		setChanged();
 	}
 	
 	public ArrayList<Card> getHand() {
@@ -51,6 +52,7 @@ public abstract class Player extends Observable{
 	 */
 	public void clearWinnings() {
 		winnings.clear();
+		setChanged();
 	}
 	
 	/**
@@ -59,6 +61,7 @@ public abstract class Player extends Observable{
 	 */
 	public void deal(Card card) {
 		hand.add(card);
+		setChanged();
 	}
 	
 	/**
@@ -67,6 +70,7 @@ public abstract class Player extends Observable{
 	 */
 	public void pay(int amount) {
 		money -= amount;
+		setChanged();
 	}
 	
 	/**
@@ -75,6 +79,7 @@ public abstract class Player extends Observable{
 	 */
 	public void recive(int amount) {
 		money += amount;
+		setChanged();
 	}
 	
 	/**

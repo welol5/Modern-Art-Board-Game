@@ -6,6 +6,7 @@ import java.util.Arrays;
 import io.BasicIO;
 import io.CommandLine;
 import io.IOType;
+import javafx.stage.Stage;
 import player.ReactiveAIPlayer;
 import player.BasicPredictiveAIPlayer;
 import player.BasicPredictiveAIPlayerV2;
@@ -37,36 +38,23 @@ public class GameDriver implements Runnable{
 
 	private GeneticAIPlayerDB database = null;//only need this with geneticAIPlayers
 
-	//IO var
-	private BasicIO io;
-
 	//GameState var
-	GameState state;
-	ObservableGameState OGS;
+	private GameState state;
+	private ObservableGameState OGS;
 	//ObservableGameState OGS;
-	Player[] players;
-	String[] names;
+	private Player[] players;
+	private String[] names;
+	
+	//possible GUI stuff
+	private Stage guiStage;
 
 	/**
 	 * Setup the program by giving it a IO type and tell it if it will be training genetic AI.
 	 * @param type the type of IO that the game will use
 	 * @param aiTraining
 	 */
-	public GameDriver(IOType type, boolean aiTraining){
-		if(type == IOType.COMMAND_LINE) {
-			io = new CommandLine();
-		}
-	}
-
-	/**
-	 * Setup the program by giving it a IO type and tell it if it will be training genetic AI.
-	 * @param type the type of IO that the game will use
-	 * @param aiTraining
-	 * @param names that will be used for the players
-	 */
-	public GameDriver(IOType type, boolean aiTraining, String[] names) {
-		this(type,aiTraining);
-		this.names = names;
+	public GameDriver(Stage gui){
+		guiStage = gui;
 	}
 
 	@Override
@@ -85,7 +73,7 @@ public class GameDriver implements Runnable{
 
 			//Make the list of players
 			OGS = new ObservableGameState(state);
-			players = makePlayers(defaultNames, io, defaultTypes, OGS);
+			players = makePlayers(defaultNames, defaultTypes, OGS);
 			int turn = 0;//keeps track of whose turn it is
 
 			//the game is now ready for the first season
@@ -254,11 +242,11 @@ public class GameDriver implements Runnable{
 	 * @param types of the players
 	 * @return the list of players
 	 */
-	private Player[] makePlayers(String[] names, BasicIO io, PlayerType[] types, ObservableGameState state) {
+	private Player[] makePlayers(String[] names, PlayerType[] types, ObservableGameState state) {
 		Player[] players = new Player[names.length];
 		for(int i = 0; i < players.length; i++) {
 			if(types[i] == PlayerType.HUMAN) {
-				players[i] = new HumanPlayer(names[i], io);
+				players[i] = new HumanPlayer(names[i], guiStage);
 			} else if(types[i] == PlayerType.REACTIVE_AI) {
 				if(names[i].matches("[pP][lL][aA][yY][eE][rR]")) {
 					players[i] = new ReactiveAIPlayer("ReactiveAIPlayer" + i, state);

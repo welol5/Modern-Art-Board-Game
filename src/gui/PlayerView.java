@@ -1,6 +1,8 @@
 package gui;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 import core.Artist;
 import core.AuctionType;
@@ -10,20 +12,26 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import player.Player;
 
-public class PlayerView extends GridPane implements BasicIO{
+public class PlayerView extends GridPane implements BasicIO, Observer{
 
 	private Player player = null;
 
 	//things that will need to be updated
 	private CardPanel cardPane;
 	private Text moneyText;
-
-	public void setPlayer(Player player) {
+	
+	public PlayerView(Player player) {
+		this.setStyle("-fx-background-color: #726952;");
+		
 		this.player = player;
+		player.addObserver(this);
 
 		//add the card panel
 		cardPane = new CardPanel(player.getHand());
 		this.add(cardPane, 0, 1);
+		cardPane.update();
+		
+		//make the infoPane
 
 		//add the money panel
 		moneyText = new Text("Money: $" + player.getMoney() + ",000");
@@ -110,5 +118,12 @@ public class PlayerView extends GridPane implements BasicIO{
 	public void announceWinner(Player player) {
 		// TODO Auto-generated method stub
 
+	}
+
+	//This is where the panel will update everything
+	@Override
+	public void update(Observable o, Object arg) {
+		cardPane.update();
+		moneyText.setText("Money: $" + player.getMoney() + ",000");
 	}
 }
