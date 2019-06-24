@@ -27,15 +27,9 @@ public class HumanPlayer extends Player{
 	//gui var for interaction
 	private Pane guiArea;
 
-	public HumanPlayer(String name, Pane guiArea, ObservableGameState OGS) {
+	public HumanPlayer(String name, ObservableGameState OGS) {
 		super(name);
 		this.io = io;//TODO this is weird for now
-		this.guiArea = guiArea;
-		
-		PlayerView view = new PlayerView(guiArea, this, OGS);
-		view.setPrefSize(guiArea.getWidth(), guiArea.getHeight());
-		
-		guiArea.getChildren().add(view);
 	}
 
 	@Override
@@ -48,7 +42,6 @@ public class HumanPlayer extends Player{
 
 	@Override
 	public int getBid(int highestBid) {
-
 		return io.getBid(name, money, highestBid);
 	}
 
