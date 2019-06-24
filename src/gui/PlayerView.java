@@ -7,12 +7,18 @@ import java.util.Observer;
 import core.Artist;
 import core.AuctionType;
 import core.Card;
+import core.ObservableGameState;
 import io.BasicIO;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import player.Player;
 
-public class PlayerView extends GridPane implements BasicIO, Observer{
+public class PlayerView extends BorderPane implements BasicIO, Observer{
 
 	private Player player = null;
 
@@ -20,22 +26,27 @@ public class PlayerView extends GridPane implements BasicIO, Observer{
 	private CardPanel cardPane;
 	private Text moneyText;
 	
-	public PlayerView(Player player) {
+	public PlayerView(Pane parent, Player player, ObservableGameState OGS) {
 		this.setStyle("-fx-background-color: #726952;");
+		
+		this.setMinSize(parent.getPrefWidth(), parent.getPrefHeight());
 		
 		this.player = player;
 		player.addObserver(this);
 
 		//add the card panel
 		cardPane = new CardPanel(player.getHand());
-		this.add(cardPane, 0, 1);
+		this.setBottom(cardPane);
 		cardPane.update();
 		
 		//make the infoPane
+		InfoPane infoPane = new InfoPane(OGS);
+		infoPane.setStyle("-fx-background-color: #723452;");
+		this.setRight(infoPane);
 
 		//add the money panel
 		moneyText = new Text("Money: $" + player.getMoney() + ",000");
-		this.add(moneyText, 1, 1);
+		this.setTop(moneyText);
 	}
 
 	public CardPanel getCardPanel() {

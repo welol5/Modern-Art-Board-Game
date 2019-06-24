@@ -1,12 +1,14 @@
 package core;
 
+import java.util.Observable;
+
 /**
  * This class acts as a buffer between GameState and Players. It allows players to see information but not change it.
  * Because this is a buffer class, see GameStates JavaDoc for descriptions of methods
  * @author William Elliman
  *
  */
-public class ObservableGameState {
+public class ObservableGameState extends Observable{
 	
 	public boolean[] stillBidding;
 	

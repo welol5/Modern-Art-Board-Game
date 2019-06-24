@@ -6,6 +6,7 @@ import core.Card;
 import core.ObservableGameState;
 import gui.PlayerView;
 import io.BasicIO;
+import javafx.geometry.Pos;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -26,12 +27,12 @@ public class HumanPlayer extends Player{
 	//gui var for interaction
 	private Pane guiArea;
 
-	public HumanPlayer(String name, Pane guiArea) {
+	public HumanPlayer(String name, Pane guiArea, ObservableGameState OGS) {
 		super(name);
 		this.io = io;//TODO this is weird for now
 		this.guiArea = guiArea;
 		
-		PlayerView view = new PlayerView(this);
+		PlayerView view = new PlayerView(guiArea, this, OGS);
 		view.setPrefSize(guiArea.getWidth(), guiArea.getHeight());
 		
 		guiArea.getChildren().add(view);

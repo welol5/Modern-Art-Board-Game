@@ -14,6 +14,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import player.BasicPredictiveAIPlayer;
 import player.BasicPredictiveAIPlayerV2;
@@ -86,11 +87,14 @@ public class GUICore extends Application{
 		state = new GameState(names.length);
 		OGS = new ObservableGameState(state);
 
+		//some code here for now and should be clean later
+		playerPane.setPrefSize(mainStage.getWidth(), mainStage.getHeight());
+		
 		//make the list of players
 		//swap to a game screen using the first human player as the view
 		makePlayers(names,types);
-		//some code here for now and should be clean later
-		playerPane.setPrefSize(mainStage.getWidth(), mainStage.getHeight());
+		
+		//clean this later
 		Scene playerScene = new Scene(playerPane);
 		mainStage.setScene(playerScene);
 
@@ -122,7 +126,7 @@ public class GUICore extends Application{
 		for(int i = 0; i < players.length; i++) {
 			//System.out.println(types[i]);
 			if(types[i] == PlayerType.HUMAN) {
-				players[i] = new HumanPlayer(names[i], playerPane);
+				players[i] = new HumanPlayer(names[i], playerPane, OGS);
 			} else if(types[i] == PlayerType.RANDOM) {
 				players[i] = new RandomPlayer(names[i]);
 			} else if(types[i] == PlayerType.REACTIVE_AI) {
