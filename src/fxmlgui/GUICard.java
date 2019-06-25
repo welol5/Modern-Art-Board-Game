@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class GUICard extends BorderPane{
@@ -50,5 +51,11 @@ public class GUICard extends BorderPane{
 		}
 		
 		this.setCenter(gui);
+	}
+	
+	public void resize(double scale) {
+		((Text)((VBox)this.getCenter()).getChildren().get(0)).setFont(new Font(24*scale));
+		((Text)((VBox)this.getCenter()).getChildren().get(1)).setFont(new Font(112*scale));
+		((Text)((VBox)this.getCenter()).getChildren().get(2)).setFont(new Font(24*scale));
 	}
 }

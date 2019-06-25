@@ -24,6 +24,7 @@ public abstract class Player extends Observable{
 		money = 100;
 		hand = new ArrayList<Card>();
 		winnings = new ArrayList<Card>();
+		setChanged();
 	}
 	
 	/**
