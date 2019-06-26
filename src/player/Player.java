@@ -7,6 +7,8 @@ import java.util.Observer;
 import core.Artist;
 import core.Card;
 import core.ObservableGameState;
+import fxmlgui.PlayerView;
+import io.BasicIO;
 
 /**
  * Abstract class that has all methods snd properties that apply to all players
@@ -19,11 +21,23 @@ public abstract class Player extends Observable{
 	protected ArrayList<Card> hand;
 	protected ArrayList<Card> winnings;
 	
+	protected BasicIO io;
+	
+	//vars to use as retVals
+	protected Card chosenCard = null;
+	protected int bid = -1;
+	protected boolean buy = false;
+	
 	public Player(String name) {
 		this.name = name;
 		money = 100;
 		hand = new ArrayList<Card>();
 		winnings = new ArrayList<Card>();
+		setChanged();
+	}
+	
+	public void setGUI(PlayerView playerView) {
+		io = playerView;
 		setChanged();
 	}
 	
@@ -83,31 +97,43 @@ public abstract class Player extends Observable{
 		setChanged();
 	}
 	
+	public Card getChosenCard() {
+		return chosenCard;
+	}
+
+	public int getBid() {
+		return bid;
+	}
+
+	public boolean isBuy() {
+		return buy;
+	}
+	
 	/**
 	 * Have the player choose a card they would like to bid on.
 	 * @param state of the game
 	 * @return the card to bid on
 	 */
-	public abstract Card chooseCard();
+	public abstract void chooseCard();
 	
 	/**
 	 * When the first card chosen is double auction, a second is needed by the same artist
 	 * @return the second card
 	 */
-	public abstract Card chooseSecondCard(Artist artist);
+	public abstract void chooseSecondCard(Artist artist);
 	
 	/**
 	 * Used to get the price the player would like to bid
 	 * @param card being bid on
 	 * @return the price the player is willing to pay
 	 */
-	public abstract int getBid(int highestBid);
+	public abstract void getBid(int highestBid);
 	
 	/**
 	 * Gets the price that will be used to sell the card
 	 * @return the price
 	 */
-	public abstract int getFixedPrice();
+	public abstract void getFixedPrice();
 	
 	/**
 	 * Asks the player if they will buy the card
@@ -115,7 +141,7 @@ public abstract class Player extends Observable{
 	 * @param price the player would buy the card at
 	 * @return the players answer
 	 */
-	public abstract boolean buy(int price);
+	public abstract void buy(int price);
 	
 	/**
 	 * This is here for debugging

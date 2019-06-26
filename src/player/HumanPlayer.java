@@ -20,7 +20,6 @@ import javafx.stage.Stage;
  */
 public class HumanPlayer extends Player{
 
-	private BasicIO io;
 	private Card biddingCard = null;
 	private boolean isDouble = false;
 	
@@ -29,38 +28,38 @@ public class HumanPlayer extends Player{
 
 	public HumanPlayer(String name, ObservableGameState OGS) {
 		super(name);
-		this.io = io;//TODO this is weird for now
 	}
 
 	@Override
-	public Card chooseCard() {
+	public void chooseCard() {
 
 		io.showHand(this, hand);
 		int index = io.getHandIndex(hand.size());
-		return hand.remove(index);
+		chosenCard = hand.remove(index);
 	}
 
 	@Override
-	public int getBid(int highestBid) {
-		return io.getBid(name, money, highestBid);
+	public void getBid(int highestBid) {
+		bid = io.getBid(name, money, highestBid);
 	}
 
 	@Override
-	public int getFixedPrice() {
-		return io.getFixedPrice(biddingCard);
+	public void getFixedPrice() {
+		bid = io.getFixedPrice(biddingCard);
 	}
 
 	@Override
-	public boolean buy(int price) {
+	public void buy(int price) {
 		//does not allow player to go into debt
 		if(price > money) {
-			return false;
+			buy = false;
+			return;
 		}
-		return io.askPlayertoBuy(biddingCard, price);
+		buy = io.askPlayertoBuy(biddingCard, price);
 	}
 
 	@Override
-	public Card chooseSecondCard(Artist artist) {
+	public void chooseSecondCard(Artist artist) {
 
 		//skip asking for a second card if a player does not have one
 		boolean contains = false;
@@ -70,11 +69,12 @@ public class HumanPlayer extends Player{
 			}
 		}
 		if(!contains) {
-			return null;
+			chosenCard = null;
+			return;
 		}
 
 		io.showHand(this, hand, artist);
-		return hand.remove(io.getHandIndex(hand, artist));
+		chosenCard = hand.remove(io.getHandIndex(hand, artist));
 	}
 
 	@Override

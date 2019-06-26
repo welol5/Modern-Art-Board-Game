@@ -13,8 +13,13 @@ import javafx.scene.text.Text;
 
 public class GUICard extends BorderPane{
 	
+	private volatile boolean selected = false;
+	
 	public GUICard(Card card, boolean isDouble) throws IOException{
 		VBox gui = FXMLLoader.load(getClass().getResource("Card.fxml"));
+		gui.setOnMouseClicked((e) -> {
+			selected = true;
+		});
 		
 		//set the string for the artist
 		String artist = null;
@@ -57,5 +62,9 @@ public class GUICard extends BorderPane{
 		((Text)((VBox)this.getCenter()).getChildren().get(0)).setFont(new Font(24*scale));
 		((Text)((VBox)this.getCenter()).getChildren().get(1)).setFont(new Font(112*scale));
 		((Text)((VBox)this.getCenter()).getChildren().get(2)).setFont(new Font(24*scale));
+	}
+	
+	public boolean getIsSelected() {
+		return selected;
 	}
 }
