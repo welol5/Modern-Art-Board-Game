@@ -3,6 +3,7 @@ package core;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Observable;
 import java.util.Random;
 
 /**
@@ -12,7 +13,7 @@ import java.util.Random;
  * This class is used to hold the higher level data about the game, as well as data that no players know.
  *
  */
-public class GameState {
+public class GameState extends Observable{
 
 	private static final int[] DEAL_3_PLAYERS = {10,6,6,0};
 	private static final int[] DEAL_4_PLAYERS = {9,4,4,0};
@@ -69,6 +70,9 @@ public class GameState {
 		} else {
 			dealAmounts = DEAL_5_PLAYERS;
 		}
+		
+		setChanged();
+		notifyObservers();
 	}
 
 	/**
@@ -79,6 +83,9 @@ public class GameState {
 			value.reset();
 		}
 		seasonCounts.sort(valuesComparitor);
+		
+		setChanged();
+		notifyObservers();
 	}
 
 	/**
@@ -126,6 +133,9 @@ public class GameState {
 			artistValues.put(artist, artistValues.get(artist)+increase);
 			increase-=10;
 		}
+		
+		setChanged();
+		notifyObservers();
 	}
 	
 	/**
