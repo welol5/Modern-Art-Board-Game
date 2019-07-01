@@ -102,7 +102,7 @@ public class GameDriver {
 				} else {
 					winningBid = standardBidding(turn);
 				}
-				
+
 				//let everybody know who won the auction
 				for(Player p : players) {
 					p.announceAuctionWinner(winningBid.index, players[winningBid.index].name, winningBid.price);
@@ -156,40 +156,33 @@ public class GameDriver {
 		int highestBid = 0;
 		int highestBidder = turn;
 		//while there is more than 1 player bidding
-		int stillBidding = 0;//used for checking how many players are bidding
-		do {
-			//hasWinner will only be true if only one player has not backed out of bidding
-			for(int biddingTurn = 0; biddingTurn < players.length; biddingTurn++) {
-				//skip people who are no longer in
-				if(!bidding[(turn+biddingTurn+1)%players.length]) {
-					continue;
-				}
-
-				//get the price a player is willing to pay
-				OGS.stillBidding = Arrays.copyOf(bidding, bidding.length);//rsete this so players can mess with it if they want
-				int bid = players[(turn+biddingTurn+1)%players.length].getBid(highestBid);
-				if(bid==-1 || bid <= highestBid) {
-					bidding[(turn+biddingTurn+1)%players.length] = false;
-				} else {
-					highestBid = bid;
-					highestBidder = (turn+biddingTurn+1)%players.length;
-				}
-
-				//checks for winner
-				stillBidding = 0;
-				for(int b = 0; b < bidding.length; b++) {
-					if(bidding[b]) {
-						stillBidding++;
-					}
-					//System.out.print(bidding[b] + " ");//debug
-				}
-				//System.out.println(" " + stillBidding);//
-				if(stillBidding < 2) {
-					break;
-				}
+		int stillBidding = players.length;//used for checking how many players are bidding
+		for(int biddingTurn = (turn+1)%players.length; stillBidding > 1; biddingTurn = (biddingTurn+1)%players.length) {
+			//skip people who are no longer in
+			if(!bidding[biddingTurn]) {
+				continue;
 			}
 
-		} while(stillBidding > 1);
+			//get the price a player is willing to pay
+			OGS.stillBidding = Arrays.copyOf(bidding, bidding.length);//reset this so players can mess with it if they want
+			int bid = players[biddingTurn].getBid(highestBid);
+			if(bid==-1 || bid <= highestBid) {
+				bidding[biddingTurn] = false;
+			} else {
+				highestBid = bid;
+				highestBidder = biddingTurn;
+			}
+
+			//checks for winner
+			stillBidding = 0;
+			for(int b = 0; b < bidding.length; b++) {
+				if(bidding[b]) {
+					stillBidding++;
+				}
+				//System.out.print(bidding[b] + " ");//debug
+			}
+		}
+
 		return new Bid(highestBidder,highestBid);
 	}
 
