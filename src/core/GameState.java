@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.Observable;
 import java.util.Random;
 
+import javafx.beans.property.ReadOnlyStringProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 /**
  * 
  * @author William Elliman
@@ -19,21 +23,23 @@ public class GameState extends Observable{
 	private static final int[] DEAL_4_PLAYERS = {9,4,4,0};
 	private static final int[] DEAL_5_PLAYERS = {8,3,3,0};
 	public final int[] dealAmounts;
-	
+
 	public final int playerCount;
 
 	private ArrayList<Card> deck = new ArrayList<Card>();//the deck of cards that no palyer can see
 
 	private HashMap<Artist, Integer> artistValues;//contains the values for each artists paintings
-	
+	private HashMap<Artist, StringProperty> artistValuesStrings;
+
 	private ArrayList<ArtistCount> seasonCounts;//keeps track of how many of each painting has been sold and is sorted
 	private static Comparator<ArtistCount> valuesComparitor = new Comparator<ArtistCount>() {
 		@Override
 		public int compare(ArtistCount o1, ArtistCount o2) {
 			return o1.compareTo(o2);
 		}
-		
+
 	};
+	private HashMap<Artist, StringProperty> seasonCountsStrings;
 
 	/**
 	 * This is used to setup a new game. It resets and shuffles the deck, resets players and painting values.
@@ -53,6 +59,12 @@ public class GameState extends Observable{
 			artistValues.put(artist, 0);
 		}
 		
+		//setup for observers
+		artistValuesStrings = new HashMap<Artist, StringProperty>();
+		for(Artist a : Artist.values()) {
+			artistValuesStrings.put(a, new SimpleStringProperty());
+		}
+
 		//init seasonCounts with a way to compare values
 		//this is a special arraylist that sorts the list after a new item is added
 		seasonCounts = new ArrayList<ArtistCount>();
@@ -60,7 +72,14 @@ public class GameState extends Observable{
 			seasonCounts.add(new ArtistCount(artist));
 		}
 		seasonCounts.sort(valuesComparitor);
-		//System.out.println(seasonCounts.get(0));
+		
+		seasonCountsStrings = new HashMap<Artist, StringProperty>();
+		for(Artist a : Artist.values()) {
+			seasonCountsStrings.put(a, new SimpleStringProperty());
+		}
+
+		//update the strings for observers
+		updateStrings();
 
 		//set the deal amounts
 		if(playerCount == 3) {
@@ -70,9 +89,9 @@ public class GameState extends Observable{
 		} else {
 			dealAmounts = DEAL_5_PLAYERS;
 		}
-		
-		setChanged();
-		notifyObservers();
+
+		//update the strings for observers
+		updateStrings();
 	}
 
 	/**
@@ -83,9 +102,9 @@ public class GameState extends Observable{
 			value.reset();
 		}
 		seasonCounts.sort(valuesComparitor);
-		
-		setChanged();
-		notifyObservers();
+
+		//update the strings for observers
+		updateStrings();
 	}
 
 	/**
@@ -94,22 +113,34 @@ public class GameState extends Observable{
 	 * @return an array of the top 3 artists if the season has ended
 	 */
 	public boolean sell(Artist artist, boolean doubleAuction) {
-		
+
 		for(ArtistCount value : seasonCounts) {
 			if(value.getArtist() == artist) {
 				value.auction(doubleAuction);
 			}
 		}
 		seasonCounts.sort(valuesComparitor);
-		
+
 		if(seasonCounts.get(0).getCount() >= 5) {
 			updateTopThree(getTopThree());
+			//update the strings for observers
+			updateStrings();
+			return true;
+		} else {
+			//update the strings for observers
+			updateStrings();
+			return false;
+		}
+	}
+	
+	public boolean seasonEnded() {
+		if(seasonCounts.get(0).getCount() >= 5) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Gets the top 3 artists of the season
 	 * @return the top 3 artist in an array
@@ -121,7 +152,7 @@ public class GameState extends Observable{
 		}
 		return top3;
 	}
-	
+
 	/**
 	 * Goes to the top 3 artists and updates their prices
 	 * @param top3 a list of the top 3 artists
@@ -133,11 +164,11 @@ public class GameState extends Observable{
 			artistValues.put(artist, artistValues.get(artist)+increase);
 			increase-=10;
 		}
-		
-		setChanged();
-		notifyObservers();
+
+		//update the strings for observers
+		updateStrings();
 	}
-	
+
 	/**
 	 * gets the amount of times an artists painting has been sold during the season
 	 * @param artist that the value will be gotten for
@@ -151,7 +182,7 @@ public class GameState extends Observable{
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * @return returns the list of the artists and their counts ordered by value
 	 */
@@ -286,4 +317,51 @@ public class GameState extends Observable{
 		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.STANDARD));//
 		deck.add(new Card(Artist.CHRISTIN_P,AuctionType.STANDARD));//
 	}
+
+	///////////////////////////////////////////////////////
+	//update strings
+
+	private void updateStrings() {
+		for(Artist artist : Artist.values()) {
+			artistValuesStrings.get(artist).set(artistValues.get(artist).toString());
+			for(ArtistCount c : seasonCounts) {
+				if(c.getArtist() == artist) {
+					seasonCountsStrings.get(artist).set("" + c.getCount());
+				}
+			}
+		}
+		
+		//this is here so that the GUI thread is not spammed
+		try {
+			Thread.sleep(10);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	//be able to give the observable strings
+	public ReadOnlyStringProperty getArtistCountString(Artist artist) {
+		return seasonCountsStrings.get(artist);
+	}
+	public ReadOnlyStringProperty getArtistValueString(Artist artist) {
+		return artistValuesStrings.get(artist);
+	}
+	
+	//this works as a test
+//	//debug
+//	public void count() {
+//		for(int i = 0; i < 10; i++) {
+//			artistValues.put(Artist.LITE_METAL, artistValues.get(Artist.LITE_METAL)+1);
+//			updateStrings();
+//			
+//			//TODO slow it down
+//			try {
+//				Thread.sleep(1000);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//	}
 }

@@ -22,16 +22,15 @@ public class RandomPlayer extends Player {
 	}
 
 	@Override
-	public void chooseCard() {
+	public Card chooseCard() {
 		if(hand.size() == 0) {
-			chosenCard = null;
-			return;
+			return null;
 		}
-		chosenCard = hand.remove(random.nextInt(hand.size()));
+		return hand.remove(random.nextInt(hand.size()));
 	}
 
 	@Override
-	public void chooseSecondCard(Artist artist) {
+	public Card chooseSecondCard(Artist artist) {
 		//check if the hand contains the artist
 		boolean contains = false;
 		for(Card c : hand) {
@@ -41,8 +40,7 @@ public class RandomPlayer extends Player {
 			}
 		}
 		if(!contains) {
-			chosenCard = null;
-			return;
+			return null;
 		}
 		
 		//the player has a card that will work, choose one randomly
@@ -52,40 +50,36 @@ public class RandomPlayer extends Player {
 			index = random.nextInt(hand.size());
 			card = hand.get(index);
 		}
-		chosenCard = hand.remove(index);
+		return hand.remove(index);
 	}
 
 	@Override
-	public void getBid(int highestBid) {
+	public int getBid(int highestBid) {
 		
 		if(highestBid == -1) {
-			bid = random.nextInt(money);
-			return;
+			return random.nextInt(money);
 		} else if(highestBid >= money){
-			bid = -1;
-			return;
+			return -1;
 		} else {
 			//randomly decides not to bid half the time
 			if(random.nextDouble() < 0.5) {
-				bid = -1;
-				return;
+				return -1;
 			}
-			bid = random.nextInt(money-highestBid)+highestBid;
-			return;
+			return random.nextInt(money-highestBid)+highestBid;
 		}
 	}
 
 	@Override
-	public void getFixedPrice() {
-		bid = random.nextInt(money);
+	public int getFixedPrice() {
+		return random.nextInt(money);
 	}
 
 	@Override
-	public void buy(int price) {
+	public boolean buy(int price) {
 		if(price < money) {
-			buy = random.nextBoolean();
+			return random.nextBoolean();
 		} else {
-			buy = false;
+			return false;
 		}
 	}
 

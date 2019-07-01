@@ -9,36 +9,51 @@ import core.Card;
 import core.ObservableGameState;
 import fxmlgui.PlayerView;
 import io.BasicIO;
+import javafx.application.Platform;
+import javafx.beans.property.StringProperty;
+import javafx.scene.layout.HBox;
 
 /**
  * Abstract class that has all methods snd properties that apply to all players
  * @author William Elliman
  *
  */
-public abstract class Player extends Observable{
+public abstract class Player{
 	public final String name;
 	protected int money;
 	protected ArrayList<Card> hand;
 	protected ArrayList<Card> winnings;
+	protected ObservableGameState OGS;
 	
-	protected BasicIO io;
+	protected PlayerView playerView;
 	
-	//vars to use as retVals
-	protected Card chosenCard = null;
-	protected int bid = -1;
-	protected boolean buy = false;
+	public Player(String name, PlayerView playerView, ObservableGameState OGS) {
+		this.name = name;
+		money = 100;
+		hand = new ArrayList<Card>();
+		winnings = new ArrayList<Card>();
+		this.playerView = playerView;
+		this.OGS = OGS;
+	}
 	
 	public Player(String name) {
 		this.name = name;
 		money = 100;
 		hand = new ArrayList<Card>();
 		winnings = new ArrayList<Card>();
-		setChanged();
 	}
 	
-	public void setGUI(PlayerView playerView) {
-		io = playerView;
-		setChanged();
+	protected void updateGUI() {
+		//if there is no GUI dont do anything
+		if(playerView == null) {
+			return;
+		}
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				playerView.updateGUI();
+			}
+		});
 	}
 	
 	/**
@@ -47,7 +62,6 @@ public abstract class Player extends Observable{
 	 */
 	public void givePainting(Card card) {
 		winnings.add(card);
-		setChanged();
 	}
 	
 	public ArrayList<Card> getHand() {
@@ -67,7 +81,6 @@ public abstract class Player extends Observable{
 	 */
 	public void clearWinnings() {
 		winnings.clear();
-		setChanged();
 	}
 	
 	/**
@@ -76,7 +89,7 @@ public abstract class Player extends Observable{
 	 */
 	public void deal(Card card) {
 		hand.add(card);
-		setChanged();
+		updateGUI();
 	}
 	
 	/**
@@ -85,7 +98,6 @@ public abstract class Player extends Observable{
 	 */
 	public void pay(int amount) {
 		money -= amount;
-		setChanged();
 	}
 	
 	/**
@@ -94,19 +106,6 @@ public abstract class Player extends Observable{
 	 */
 	public void recive(int amount) {
 		money += amount;
-		setChanged();
-	}
-	
-	public Card getChosenCard() {
-		return chosenCard;
-	}
-
-	public int getBid() {
-		return bid;
-	}
-
-	public boolean isBuy() {
-		return buy;
 	}
 	
 	/**
@@ -114,26 +113,26 @@ public abstract class Player extends Observable{
 	 * @param state of the game
 	 * @return the card to bid on
 	 */
-	public abstract void chooseCard();
+	public abstract Card chooseCard();
 	
 	/**
 	 * When the first card chosen is double auction, a second is needed by the same artist
 	 * @return the second card
 	 */
-	public abstract void chooseSecondCard(Artist artist);
+	public abstract Card chooseSecondCard(Artist artist);
 	
 	/**
 	 * Used to get the price the player would like to bid
 	 * @param card being bid on
 	 * @return the price the player is willing to pay
 	 */
-	public abstract void getBid(int highestBid);
+	public abstract int getBid(int highestBid);
 	
 	/**
 	 * Gets the price that will be used to sell the card
 	 * @return the price
 	 */
-	public abstract void getFixedPrice();
+	public abstract int getFixedPrice();
 	
 	/**
 	 * Asks the player if they will buy the card
@@ -141,7 +140,7 @@ public abstract class Player extends Observable{
 	 * @param price the player would buy the card at
 	 * @return the players answer
 	 */
-	public abstract void buy(int price);
+	public abstract boolean buy(int price);
 	
 	/**
 	 * This is here for debugging

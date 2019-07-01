@@ -32,6 +32,13 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 
 	//memory during bidding
 
+	/**
+	 * 
+	 * @param name
+	 * @param state
+	 * @param playerCount
+	 * @param turnIndex
+	 */
 	public MemoryAIPlayer(String name, ObservableGameState state, int playerCount, int turnIndex) {
 		super(name, state);
 

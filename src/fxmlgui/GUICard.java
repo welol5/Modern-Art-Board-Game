@@ -3,7 +3,10 @@ package fxmlgui;
 import java.io.IOException;
 
 import core.Artist;
+import core.AuctionType;
 import core.Card;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -11,60 +14,73 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class GUICard extends BorderPane{
+public class GUICard{
+
+	private boolean selected = false;
+	private Card card;
 	
-	private volatile boolean selected = false;
+	@FXML Text artistText1;
+	@FXML Text artistText2;
 	
-	public GUICard(Card card, boolean isDouble) throws IOException{
-		VBox gui = FXMLLoader.load(getClass().getResource("Card.fxml"));
-		gui.setOnMouseClicked((e) -> {
-			selected = true;
-		});
-		
-		//set the string for the artist
+	@FXML Text centerText;
+	@FXML VBox wholeCard;
+
+	public void setCard(Card c, boolean isDouble) {
+		card = c;
+
+		//set the string for the artist and the color
 		String artist = null;
-		Color color = Color.GRAY;
+		String color = "#FFFFFF";
 		if(card.getArtist() == Artist.LITE_METAL) {
 			artist = "Lite Metal";
-			color = Color.web("#c6c35b");
+			color = "#c6c35b";
 		} else if(card.getArtist() == Artist.YOKO) {
 			artist = "Yoko";
-			color = Color.web("#6da861");
+			color = "#6da861";
 		} else if(card.getArtist() == Artist.CHRISTIN_P) {
 			artist = "Christin P.";
-			color = Color.web("#b26f5c");
+			color = "#b26f5c";
 		} else if(card.getArtist() == Artist.KARL_GITTER) {
 			artist = "Karl Gitter";
-			color = Color.web("#6196aa");
+			color = "#6196aa";
 		} else if(card.getArtist() == Artist.KRYPTO) {
 			artist = "Krypto";
-			color = Color.web("#917145");
+			color = "#917145";
 		}
+
+		artistText1.setText(artist);
+		artistText2.setText(artist);
 		
-		//set the string
-		((Text)gui.getChildren().get(0)).setText(artist);
-		((Text)gui.getChildren().get(2)).setText(artist);
-		
-		//set the color
-		gui.setStyle("-fx-background-color: #" + color.toString().substring(2) + ";" + "-fx-background-radius: 20.0;");
-		
-		//let the player know if its a double auction by setting the opacity of the x2
-		if(isDouble) {
-			((Text)gui.getChildren().get(1)).setOpacity(1);
+		if(c.getAuctionType() == AuctionType.DOUBLE || isDouble) {
+			centerText.setOpacity(1);
 		} else {
-			((Text)gui.getChildren().get(1)).setOpacity(0);
+			centerText.setOpacity(0);
 		}
 		
-		this.setCenter(gui);
+		wholeCard.setStyle("-fx-background-color: " + color + "; -fx-background-radius: 25");
+		wholeCard.setOnMouseClicked((e) -> setIsSelected());
 	}
-	
-	public void resize(double scale) {
-		((Text)((VBox)this.getCenter()).getChildren().get(0)).setFont(new Font(24*scale));
-		((Text)((VBox)this.getCenter()).getChildren().get(1)).setFont(new Font(112*scale));
-		((Text)((VBox)this.getCenter()).getChildren().get(2)).setFont(new Font(24*scale));
-	}
-	
+
+//	public void resize(double scale) {
+//		((Text)((VBox)this.getCenter()).getChildren().get(0)).setFont(new Font(24*scale));
+//		((Text)((VBox)this.getCenter()).getChildren().get(1)).setFont(new Font(112*scale));
+//		((Text)((VBox)this.getCenter()).getChildren().get(2)).setFont(new Font(24*scale));
+//	}
+
 	public boolean getIsSelected() {
 		return selected;
+	}
+
+	public synchronized void resetIsSelected() {
+		selected = false;
+	}
+
+	public Artist getArtist() {
+		return card.getArtist();
+	}
+	
+	private void setIsSelected() {
+		//System.out.println("Clicked");
+		selected = true;
 	}
 }
