@@ -53,7 +53,17 @@ public class GUICard{
 		
 		if(c.getAuctionType() == AuctionType.DOUBLE || isDouble) {
 			centerText.setOpacity(1);
-		} else {
+			centerText.setText("x2");
+		} else if(c.getAuctionType() == AuctionType.ONCE_AROUND) {
+			centerText.setOpacity(1);
+			centerText.setText("On");
+		} else if(c.getAuctionType() == AuctionType.SEALED) {
+			centerText.setOpacity(1);
+			centerText.setText("Se");
+		} else if(c.getAuctionType() == AuctionType.FIXED_PRICE) {
+			centerText.setOpacity(1);
+			centerText.setText("FP");
+		} else if(c.getAuctionType() == AuctionType.STANDARD) {
 			centerText.setOpacity(0);
 		}
 		

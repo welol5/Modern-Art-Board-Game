@@ -60,7 +60,7 @@ public class PlayerView implements Initializable{
 	private Player player;
 
 	private ArrayList<GUICard> handCards;
-	private boolean bidSet = false;
+	private volatile boolean bidSet = false;
 
 	public void setPlayer(Player player) {
 		this.player = player;
@@ -124,7 +124,31 @@ public class PlayerView implements Initializable{
 
 	}
 
-	public int getBid() {
+	public int getBid(int highestBid) {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				//				System.out.println("Set announcement");
+				if(highestBid > 0) {
+					announcementText.setText("What would you like to bid? The highestBid so far is " + highestBid + ".");
+				} else {
+					announcementText.setText("What would you like to bid?");
+				}
+			}
+		});
+		bidSet = false;
+		while(!bidSet) {}
+		//		System.out.println("Bid recived");
+		return Integer.parseInt(bidBox.getText());
+	}
+
+	public int getFixedPrice() {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				announcementText.setText("How much would you like to offer this painting for?");
+			}
+		});
 		bidSet = false;
 		while(!bidSet) {}
 		return Integer.parseInt(bidBox.getText());
@@ -194,6 +218,7 @@ public class PlayerView implements Initializable{
 	//anouncements
 
 	public void announceCard(Card card, boolean isDouble) {
+
 		//set the string for the artist and the color
 		String artist = null;
 		String color = "#FFFFFF";
@@ -214,20 +239,37 @@ public class PlayerView implements Initializable{
 			color = "#917145";
 		}
 		
+		if(card.getAuctionType() == AuctionType.ONCE_AROUND) {
+			centerText.setOpacity(1);
+			centerText.setText("On");
+		} else if(card.getAuctionType() == AuctionType.SEALED) {
+			centerText.setOpacity(1);
+			centerText.setText("Se");
+		} else if(card.getAuctionType() == AuctionType.FIXED_PRICE) {
+			centerText.setOpacity(1);
+			centerText.setText("FP");
+		} else if(card.getAuctionType() == AuctionType.STANDARD) {
+			centerText.setOpacity(0);
+		}
+		
+		if(isDouble) {
+			centerText.setText(centerText.getText()+"x2");
+		}
+
 		//passing these into Platform.runLater() requires these to be final
 		final String artistText = artist;
 		final String colorText = color;
-		
+
 		Platform.runLater(new Runnable() {
-			
+
 			@Override
 			public void run() {
-//				System.out.println(biddingCardArtist1);
-				biddingCardArtist1.setOpacity(1);
-				biddingCardArtist2.setOpacity(1);
-				
+				updateGUI();
+
 				biddingCardArtist1.setText(artistText);
 				biddingCardArtist2.setText(artistText);
+				biddingCardArtist1.setOpacity(1);
+				biddingCardArtist2.setOpacity(1);
 
 				if(isDouble) {
 					centerText.setOpacity(1);
@@ -238,5 +280,30 @@ public class PlayerView implements Initializable{
 				biddingCardBox.setStyle("-fx-background-color: " + colorText + "; -fx-background-radius: 25");
 			}
 		});
+	}
+
+	public void announceAuctionWinner(String name, int price) {
+		Platform.runLater(new Runnable() {
+
+			@Override
+			public void run() {
+				updateGUI();
+				biddingCardArtist1.setOpacity(0);
+				biddingCardArtist2.setOpacity(0);
+				centerText.setOpacity(0);
+
+				biddingCardBox.setStyle("-fx-background-color: " + "#777777" + "; -fx-background-radius: 25");
+				
+				announcementText.setText(name + " has won the auction for " + price + ".");
+			}
+		});
+		
+		//give the player a moment to see who won
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

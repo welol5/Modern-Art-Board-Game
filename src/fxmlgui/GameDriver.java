@@ -102,6 +102,11 @@ public class GameDriver {
 				} else {
 					winningBid = standardBidding(turn);
 				}
+				
+				//let everybody know who won the auction
+				for(Player p : players) {
+					p.announceAuctionWinner(winningBid.index, players[winningBid.index].name, winningBid.price);
+				}
 
 				//The auction has been won, time to execute the order (66)
 				if(winningBid.index == turn) {

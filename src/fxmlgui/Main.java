@@ -14,6 +14,7 @@ public class Main extends Application{
 		
 		Scene scene = new Scene(mainMenu);
 		primaryStage.setScene(scene);
+		primaryStage.setTitle("Modern Art");
 		primaryStage.show();
 	}
 

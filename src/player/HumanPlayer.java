@@ -40,12 +40,12 @@ public class HumanPlayer extends Player{
 
 	@Override
 	public int getBid(int highestBid) {
-		return playerView.getBid();
+		return playerView.getBid(highestBid);
 	}
 
 	@Override
 	public int getFixedPrice() {
-		return playerView.getBid();
+		return playerView.getFixedPrice();
 	}
 
 	@Override
@@ -71,10 +71,7 @@ public class HumanPlayer extends Player{
 			return null;
 		}
 
-//		io.showHand(this, hand, artist);
-//		chosenCard = hand.remove(io.getHandIndex(hand, artist));
-		
-		return null;
+		return hand.remove(playerView.getCard(artist));
 	}
 
 	@Override
@@ -95,7 +92,8 @@ public class HumanPlayer extends Player{
 	public void announceAuctionWinner(int turn, String name, int price) {
 		biddingCard = null;
 		isDouble = false;
-//		io.auctionWinner(name, price);
+		
+		playerView.announceAuctionWinner(name, price);
 	}
 
 }
