@@ -9,12 +9,12 @@
    <children>
       <Text fx:id="artistText1" strokeType="OUTSIDE" strokeWidth="0.0" text="Artist">
          <font>
-            <Font size="24.0" />
+            <Font size="12.0" />
          </font>
       </Text>
       <Text fx:id="centerText" strokeType="OUTSIDE" strokeWidth="0.0" text="x2" textAlignment="CENTER">
          <font>
-            <Font size="112.0" />
+            <Font size="66.0" />
          </font>
          <VBox.margin>
             <Insets left="20.0" right="20.0" />
@@ -22,7 +22,7 @@
       </Text>
       <Text fx:id="artistText2" rotate="180.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Artist">
          <font>
-            <Font size="24.0" />
+            <Font size="12.0" />
          </font>
       </Text>
    </children>
