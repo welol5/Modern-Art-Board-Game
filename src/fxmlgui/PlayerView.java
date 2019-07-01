@@ -118,6 +118,11 @@ public class PlayerView implements Initializable{
 
 			}
 		} else {
+			
+			if(handCards.size() == 0) {
+				return -1;
+			}
+			
 			//loop through the hand to see if a card is chosen of the specific artist
 			for(int i = 0; true; i = (i+1)%handBox.getChildren().size()) {
 				GUICard gc = handCards.get(i);

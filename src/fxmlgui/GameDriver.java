@@ -105,7 +105,6 @@ public class GameDriver {
 
 				//let everybody know who won the auction
 				for(Player p : players) {
-					System.out.println(p.name);
 					p.announceAuctionWinner(winningBid.index, players[winningBid.index].name, winningBid.price);
 				}
 				
