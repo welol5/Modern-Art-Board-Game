@@ -31,6 +31,11 @@ public class GameDriver {
 					p.deal(state.drawCard());
 				}
 			}
+			
+			//show money ammounts
+			for(Player p : players) {
+				System.out.println(p.name + " : " + p.getMoney());
+			}
 
 			state.resetSeason();
 

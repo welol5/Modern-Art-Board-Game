@@ -295,7 +295,7 @@ public class PlayerView implements Initializable{
 			centerText.setText("FP");
 		} else if(card.getAuctionType() == AuctionType.STANDARD) {
 			centerText.setText("");
-			//centerText.setOpacity(0);
+			centerText.setOpacity(1);
 		}
 		
 		if(isDouble) {
