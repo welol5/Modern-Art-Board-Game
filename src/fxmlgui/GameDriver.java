@@ -105,8 +105,10 @@ public class GameDriver {
 
 				//let everybody know who won the auction
 				for(Player p : players) {
+					System.out.println(p.name);
 					p.announceAuctionWinner(winningBid.index, players[winningBid.index].name, winningBid.price);
 				}
+				
 
 				//The auction has been won, time to execute the order (66)
 				if(winningBid.index == turn) {

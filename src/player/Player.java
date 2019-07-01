@@ -10,6 +10,7 @@ import core.ObservableGameState;
 import fxmlgui.PlayerView;
 import io.BasicIO;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.layout.HBox;
 
@@ -26,6 +27,7 @@ public abstract class Player{
 	protected ObservableGameState OGS;
 	
 	protected PlayerView playerView;
+	private SimpleStringProperty moneyText;
 	
 	public Player(String name, PlayerView playerView, ObservableGameState OGS) {
 		this.name = name;
@@ -34,6 +36,8 @@ public abstract class Player{
 		winnings = new ArrayList<Card>();
 		this.playerView = playerView;
 		this.OGS = OGS;
+		moneyText = new SimpleStringProperty();
+		moneyText.set("" + money);
 	}
 	
 	public Player(String name) {
@@ -41,6 +45,9 @@ public abstract class Player{
 		money = 100;
 		hand = new ArrayList<Card>();
 		winnings = new ArrayList<Card>();
+		
+		playerView = null;
+		moneyText = null;
 	}
 	
 	protected void updateGUI() {
@@ -98,6 +105,9 @@ public abstract class Player{
 	 */
 	public void pay(int amount) {
 		money -= amount;
+		if(moneyText != null) {
+			moneyText.set("" + money);
+		}
 	}
 	
 	/**
@@ -106,6 +116,9 @@ public abstract class Player{
 	 */
 	public void recive(int amount) {
 		money += amount;
+		if(moneyText != null) {
+			moneyText.set("" + money);
+		}
 	}
 	
 	/**
@@ -169,4 +182,8 @@ public abstract class Player{
 	 * @param price that the winner paid
 	 */
 	public abstract void announceAuctionWinner(int turn, String name, int price);
+	
+	public StringProperty getMoneyProperty() {
+		return moneyText;
+	}
 }

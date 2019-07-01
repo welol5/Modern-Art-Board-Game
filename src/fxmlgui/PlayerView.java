@@ -56,14 +56,19 @@ public class PlayerView implements Initializable{
 	@FXML Text centerText;
 
 	@FXML Text announcementText;
+	@FXML Text moneyText;
 
 	private Player player;
 
 	private ArrayList<GUICard> handCards;
+	
 	private volatile boolean bidSet = false;
+	private volatile boolean buySet = false;
+	private volatile boolean fixedPriceBuy = false;
 
 	public void setPlayer(Player player) {
 		this.player = player;
+		moneyText.textProperty().bind(player.getMoneyProperty());
 	}
 
 	@Override
@@ -141,6 +146,27 @@ public class PlayerView implements Initializable{
 		//		System.out.println("Bid recived");
 		return Integer.parseInt(bidBox.getText());
 	}
+	
+	public boolean askPlayerToBuy(int price) {
+		fixedPriceBuy = true;
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				announcementText.setText("Whould you like to buy the card(s) for $" + price);
+			}
+		});
+		
+		//wait for the player to decide
+		while(!buySet) {}
+		fixedPriceBuy = false;
+		
+		if(bidBox.getText().trim().matches("[yY].*")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	public int getFixedPrice() {
 		Platform.runLater(new Runnable() {
@@ -155,6 +181,11 @@ public class PlayerView implements Initializable{
 	}
 
 	@FXML private void setBidSet(ActionEvent event) {
+		
+		if(fixedPriceBuy) {
+			buySet = true;
+			return;
+		}
 
 		//check if the bidBox has a number in it
 		try {
@@ -249,7 +280,8 @@ public class PlayerView implements Initializable{
 			centerText.setOpacity(1);
 			centerText.setText("FP");
 		} else if(card.getAuctionType() == AuctionType.STANDARD) {
-			centerText.setOpacity(0);
+			centerText.setText("");
+			//centerText.setOpacity(0);
 		}
 		
 		if(isDouble) {

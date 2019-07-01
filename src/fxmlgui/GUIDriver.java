@@ -131,10 +131,6 @@ public class GUIDriver implements Initializable, Observer{
 		
 		Player[] players = makePlayers(names,types,OGS);
 		
-		for(Player p : players) {
-			System.out.println(p.name);
-		}
-		
 		playerView.setPlayer(players[0]);
 		
 		gameThread = new Service<Void>() {
