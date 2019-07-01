@@ -35,7 +35,9 @@ public class HumanPlayer extends Player{
 	@Override
 	public Card chooseCard() {
 		updateGUI();
-		return hand.remove(playerView.getCard(null));
+		Card retval = hand.remove(playerView.getCard(null));
+		updateGUI();
+		return retval;
 	}
 
 	@Override

@@ -48,7 +48,7 @@ public class PlayerView implements Initializable{
 	@FXML Text YWin;
 	@FXML Text CPWin;
 	@FXML Text KGWin;
-	@FXML Text KWIn;
+	@FXML Text KWin;
 
 	@FXML VBox biddingCardBox;
 	@FXML Text biddingCardArtist1;
@@ -69,6 +69,7 @@ public class PlayerView implements Initializable{
 	public void setPlayer(Player player) {
 		this.player = player;
 		moneyText.textProperty().bind(player.getMoneyProperty());
+		bindWinnings();
 	}
 
 	@Override
@@ -225,6 +226,14 @@ public class PlayerView implements Initializable{
 		this.CPCount.textProperty().bind(CPCount);
 		this.KGCount.textProperty().bind(KGCount);
 		this.KCount.textProperty().bind(KCount);
+	}
+	
+	public void bindWinnings() {
+		LMWin.textProperty().bind(player.getWinningProperty(Artist.LITE_METAL));
+		YWin.textProperty().bind(player.getWinningProperty(Artist.YOKO));
+		CPWin.textProperty().bind(player.getWinningProperty(Artist.CHRISTIN_P));
+		KGWin.textProperty().bind(player.getWinningProperty(Artist.KARL_GITTER));
+		KWin.textProperty().bind(player.getWinningProperty(Artist.KRYPTO));
 	}
 
 	public synchronized void updateGUI() {
