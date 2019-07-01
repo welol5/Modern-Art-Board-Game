@@ -1,0 +1,2 @@
+Make an AI that always bids the highest it is willing. The math from before only accounts for purchasing other players cards,
+so the AI should break even on those and then force the other players to pay the max on any cards this AI sells
