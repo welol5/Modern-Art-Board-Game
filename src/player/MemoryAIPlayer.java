@@ -117,6 +117,16 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 		
 		return getBid(highestBid,maxValue);
 	}
+	
+	@Override
+	public boolean buy(int price) {
+
+		if(price < (int)(((double)price)*(((double)players.length)-1)/((double)players.length)) && money > price) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	@Override
 	public void announceCard(Card card, boolean isDouble) {
