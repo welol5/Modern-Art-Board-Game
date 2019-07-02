@@ -70,15 +70,17 @@ public class GameDriver {
 
 				//check to see if the season has ended
 				if(state.seasonEnded()) {
-					state.updateTopThree(state.getTopThree());
+					//state.updateTopThree(state.getTopThree());
 
 					//give players what they have won
 					for(Player p : players) {
 						Artist[] top3 = state.getTopThree();
+						System.out.println(p.name);
 
 						for(int i = 0; i < top3.length; i++) {
 							for(Card c : p.getWinnings()) {
 								if(c.getArtist() == top3[i]) {
+									System.out.println(c + " : " + state.getArtistValue(top3[i]));
 									p.recive(state.getArtistValue(top3[i]));
 								}
 							}
