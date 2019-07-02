@@ -102,7 +102,7 @@ public class ReactiveAIPlayer extends Player{
 		return getBid(highestBid, getValue()/2);
 	}
 
-	public int getBid(int highestBid, int highestValue) {
+	protected int getBid(int highestBid, int highestValue) {
 
 		//if it a once around return the max value this AI will pay
 		if((biddingCard.getAuctionType() == AuctionType.ONCE_AROUND || biddingCard.getAuctionType() == AuctionType.SEALED) && highestValue > highestBid) {

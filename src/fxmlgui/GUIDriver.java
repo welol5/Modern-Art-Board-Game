@@ -27,6 +27,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import player.BasicPredictiveAIPlayer;
 import player.BasicPredictiveAIPlayerV2;
+import player.HighRoller;
 import player.HumanPlayer;
 import player.MemoryAIPlayer;
 import player.Player;
@@ -194,6 +195,8 @@ public class GUIDriver implements Initializable, Observer{
 				players[i] = new BasicPredictiveAIPlayer(names.get(i),OGS, players.length,i);
 			} else if(types.get(i) == PlayerType.BASIC_PREDICTIVE_AI_V2) {
 				players[i] = new BasicPredictiveAIPlayerV2(names.get(i),OGS, players.length,i);
+			} else if(types.get(i) == PlayerType.HIGH_ROLLER) {
+				players[i] = new HighRoller(names.get(i),OGS, players.length,i);
 			} else {
 				players[i] = new RandomPlayer(names.get(i));
 			}

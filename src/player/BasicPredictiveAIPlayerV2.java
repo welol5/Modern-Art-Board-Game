@@ -100,7 +100,7 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 	}
 	
 	@Override
-	public int getBid(int highestBid, int highestValue) {
+	protected int getBid(int highestBid, int highestValue) {
 
 		//if it a once around return the max value this AI will pay
 		if((biddingCard.getAuctionType() == AuctionType.ONCE_AROUND || biddingCard.getAuctionType() == AuctionType.SEALED) && highestValue > highestBid) {
