@@ -8,7 +8,6 @@ import core.AuctionType;
 import core.Card;
 import core.ObservableGameState;
 import core.ArtistCount;
-import io.BasicIO;
 
 /**
  * This AI is has very solid rules for bidding and it will try to end the season as quickly as possible.

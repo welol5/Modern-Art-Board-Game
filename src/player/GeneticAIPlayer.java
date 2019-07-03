@@ -11,7 +11,6 @@ import core.AuctionType;
 import core.Card;
 import core.ObservableGameState;
 import core.ArtistCount;
-import io.BasicIO;
 
 /**
  * This player keeps a record of values for every state of the game. It uses a version of Temporal

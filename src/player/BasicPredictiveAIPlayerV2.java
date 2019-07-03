@@ -9,7 +9,6 @@ import core.AuctionType;
 import core.Card;
 import core.ObservableGameState;
 import core.ArtistCount;
-import io.BasicIO;
 
 /**
  * TODO rewrite this

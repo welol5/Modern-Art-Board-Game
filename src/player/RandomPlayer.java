@@ -6,7 +6,6 @@ import core.Artist;
 import core.AuctionType;
 import core.Card;
 import core.ObservableGameState;
-import io.BasicIO;
 
 /**
  * This is a player that makes all of its decisions randomly

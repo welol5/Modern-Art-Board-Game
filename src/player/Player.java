@@ -9,7 +9,6 @@ import core.Artist;
 import core.Card;
 import core.ObservableGameState;
 import fxmlgui.PlayerView;
-import io.BasicIO;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

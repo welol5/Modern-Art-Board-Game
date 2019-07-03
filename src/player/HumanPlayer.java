@@ -1,19 +1,9 @@
 package player;
 
 import core.Artist;
-import core.AuctionType;
 import core.Card;
 import core.ObservableGameState;
-import fxmlgui.GUICard;
 import fxmlgui.PlayerView;
-import io.BasicIO;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 
 /**
  * The class that allows human players to play by asking an IO object for all the humans decisions.
@@ -25,8 +15,8 @@ import javafx.stage.Stage;
  */
 public class HumanPlayer extends Player{
 
-	private Card biddingCard = null;
-	private boolean isDouble = false;
+//	private Card biddingCard = null;
+//	private boolean isDouble = false;
 
 	public HumanPlayer(String name, PlayerView view, ObservableGameState OGS) {
 		super(name,view, OGS);
@@ -83,8 +73,8 @@ public class HumanPlayer extends Player{
 
 	@Override
 	public void announceCard(Card card, boolean isDouble) {
-		biddingCard = card;
-		this.isDouble = isDouble;
+//		biddingCard = card;
+//		this.isDouble = isDouble;
 
 		playerView.announceCard(card, isDouble);
 	}
@@ -97,8 +87,8 @@ public class HumanPlayer extends Player{
 
 	@Override
 	public void announceAuctionWinner(int turn, String name, int price) {
-		biddingCard = null;
-		isDouble = false;
+//		biddingCard = null;
+//		isDouble = false;
 		
 		playerView.announceAuctionWinner(name, price);
 	}

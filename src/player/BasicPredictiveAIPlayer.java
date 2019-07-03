@@ -9,8 +9,6 @@ import core.AuctionType;
 import core.Card;
 import core.ObservableGameState;
 import core.ArtistCount;
-import io.BasicIO;
-
 /**
  * This player takes advantage of keeping track of the major actions made in the game. It keeps track of who
  * won what card and how much they bid on it. It then uses that infomation to calculate how much it can bid
