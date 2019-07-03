@@ -47,11 +47,7 @@ public class HumanPlayer extends Player{
 			return false;
 		}
 		
-		if(playerView.getBid(price) > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return playerView.askPlayerToBuy(price);
 	}
 
 	@Override

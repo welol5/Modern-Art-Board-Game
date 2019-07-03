@@ -162,6 +162,7 @@ public class PlayerView implements Initializable{
 			public void run() {
 				// TODO Auto-generated method stub
 				announcementText.setText("Whould you like to buy the card(s) for $" + price);
+				System.out.println("set");
 			}
 		});
 		
@@ -298,7 +299,7 @@ public class PlayerView implements Initializable{
 			centerText.setOpacity(1);
 			centerText.setText("FP");
 		} else if(card.getAuctionType() == AuctionType.STANDARD) {
-			centerText.setText("");
+			centerText.setText("  ");
 			centerText.setOpacity(1);
 		}
 		
@@ -321,11 +322,11 @@ public class PlayerView implements Initializable{
 				biddingCardArtist1.setOpacity(1);
 				biddingCardArtist2.setOpacity(1);
 
-				if(isDouble) {
-					centerText.setOpacity(1);
-				} else {
-					centerText.setOpacity(0);
-				}
+//				if(isDouble) {
+//					centerText.setOpacity(1);
+//				} else {
+//					centerText.setOpacity(0);
+//				}
 
 				biddingCardBox.setStyle("-fx-background-color: " + colorText + "; -fx-background-radius: 25");
 			}
