@@ -241,20 +241,22 @@ public class PlayerView implements Initializable{
 		//update hand
 		handBox.getChildren().clear();
 		handCards.clear();
-		for(Card c : player.getHand()) {
-			try {
-				FXMLLoader cardLoader = new FXMLLoader(getClass().getResource("Card.fxml"));
-				VBox card = cardLoader.load();
-				handCards.add(cardLoader.getController());
-				GUICard controller = cardLoader.getController();
-				controller.setCard(c, false);
-				handBox.getChildren().add(card);
+		synchronized (player.getHand()) {
+			for(Card c : player.getHand()) {
+				try {
+					FXMLLoader cardLoader = new FXMLLoader(getClass().getResource("Card.fxml"));
+					VBox card = cardLoader.load();
+					handCards.add(cardLoader.getController());
+					GUICard controller = cardLoader.getController();
+					controller.setCard(c, false);
+					handBox.getChildren().add(card);
 
-				//System.out.println(handCards.size());
+					//System.out.println(handCards.size());
 
-			} catch (IOException e) {
-				e.printStackTrace();
-				//dont know what happens here
+				} catch (IOException e) {
+					e.printStackTrace();
+					//dont know what happens here
+				}
 			}
 		}
 	}

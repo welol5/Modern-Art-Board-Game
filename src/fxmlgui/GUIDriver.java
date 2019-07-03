@@ -30,6 +30,7 @@ import player.BasicPredictiveAIPlayerV2;
 import player.HighRoller;
 import player.HumanPlayer;
 import player.MemoryAIPlayer;
+import player.Merchant;
 import player.Player;
 import player.PlayerType;
 import player.RandomPlayer;
@@ -197,6 +198,8 @@ public class GUIDriver implements Initializable, Observer{
 				players[i] = new BasicPredictiveAIPlayerV2(names.get(i),OGS, players.length,i);
 			} else if(types.get(i) == PlayerType.HIGH_ROLLER) {
 				players[i] = new HighRoller(names.get(i),OGS, players.length,i);
+			} else if(types.get(i) == PlayerType.MERCHANT) {
+				players[i] = new Merchant(names.get(i),OGS, players.length,i);
 			} else {
 				players[i] = new RandomPlayer(names.get(i));
 			}

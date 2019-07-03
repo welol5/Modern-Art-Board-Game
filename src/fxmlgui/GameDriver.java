@@ -32,7 +32,8 @@ public class GameDriver {
 				}
 			}
 			
-			//show money ammounts
+			//debug
+			//show money amounts
 			for(Player p : players) {
 				System.out.println(p.name + " : " + p.getMoney());
 			}
@@ -69,18 +70,19 @@ public class GameDriver {
 				state.sell(card.getArtist(), second != null);
 
 				//check to see if the season has ended
+				System.out.println(state.seasonEnded());
 				if(state.seasonEnded()) {
 					//state.updateTopThree(state.getTopThree());
 
 					//give players what they have won
 					for(Player p : players) {
 						Artist[] top3 = state.getTopThree();
-						System.out.println(p.name);
+						//System.out.println(p.name);
 
 						for(int i = 0; i < top3.length; i++) {
 							for(Card c : p.getWinnings()) {
 								if(c.getArtist() == top3[i]) {
-									System.out.println(c + " : " + state.getArtistValue(top3[i]));
+									//System.out.println(c + " : " + state.getArtistValue(top3[i]));
 									p.recive(state.getArtistValue(top3[i]));
 								}
 							}

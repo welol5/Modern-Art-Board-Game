@@ -120,6 +120,10 @@ public class GameState extends Observable{
 			}
 		}
 		seasonCounts.sort(valuesComparitor);
+		
+//		for(ArtistCount ac : seasonCounts) {
+//			System.out.println(ac);
+//		}
 
 		if(seasonCounts.get(0).getCount() >= 5) {
 			updateTopThree(getTopThree());
