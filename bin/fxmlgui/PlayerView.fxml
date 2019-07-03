@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxmlgui.PlayerView">
+   <children>
+      <VBox alignment="BOTTOM_CENTER" prefHeight="800.0" prefWidth="1300.0">
+         <children>
+            <Text fx:id="announcementText" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
+               <children>
+                  <VBox fx:id="biddingCardBox" alignment="CENTER" style="-fx-background-radius: 10.0;">
+                     <children>
+                        <Text fx:id="biddingCardArtist1" strokeType="OUTSIDE" strokeWidth="0.0" text="Artist">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="centerText" strokeType="OUTSIDE" strokeWidth="0.0" text="x2" textAlignment="CENTER">
+                           <font>
+                              <Font size="112.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets left="20.0" right="20.0" />
+                           </VBox.margin>
+                        </Text>
+                        <Text fx:id="biddingCardArtist2" rotate="180.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Artist">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" spacing="5.0">
+                     <children>
+                        <HBox alignment="CENTER">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Bid: " />
+                              <TextField fx:id="bidBox" />
+                           </children>
+                        </HBox>
+                        <Button fx:id="bidButton" mnemonicParsing="false" onAction="#setBidSet" text="Make Bid" />
+                     </children>
+                  </VBox>
+               </children></HBox>
+            <HBox fx:id="handBox" maxWidth="1300.0" prefHeight="200.0" />
+         </children>
+      </VBox>
+      <VBox alignment="CENTER" spacing="10.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Info Panel">
+               <font>
+                  <Font name="Impact" size="36.0" />
+               </font>
+            </Text>
+            <VBox alignment="TOP_CENTER">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Painting Values">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Text>
+                  <HBox alignment="CENTER" spacing="5.0" style="-fx-background-color: #c6c35b;">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="LM">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="LMPrice" strokeType="OUTSIDE" strokeWidth="0.0" text="Price">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" spacing="5.0" style="-fx-background-color: #6da861;">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Y">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="YPrice" strokeType="OUTSIDE" strokeWidth="0.0" text="Price">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" spacing="5.0" style="-fx-background-color: #b26f5c;">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="CP">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="CPPrice" strokeType="OUTSIDE" strokeWidth="0.0" text="Price">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" spacing="5.0" style="-fx-background-color: #6196aa;">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="KG">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="KGPrice" strokeType="OUTSIDE" strokeWidth="0.0" text="Price">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" spacing="5.0" style="-fx-background-color: #917145;">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="K">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="KPrice" strokeType="OUTSIDE" strokeWidth="0.0" text="Price">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox alignment="TOP_CENTER">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Season Counts">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Text>
+                  <HBox alignment="CENTER" spacing="5.0" style="-fx-background-color: #c6c35b;">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="LM">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="LMCount" strokeType="OUTSIDE" strokeWidth="0.0" text="Count">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" spacing="5.0" style="-fx-background-color: #6da861;">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Y">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="YCount" strokeType="OUTSIDE" strokeWidth="0.0" text="Count">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" spacing="5.0" style="-fx-background-color: #b26f5c;">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="CP">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="CPCount" strokeType="OUTSIDE" strokeWidth="0.0" text="Count">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" spacing="5.0" style="-fx-background-color: #6196aa;">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="KG">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="KGCount" strokeType="OUTSIDE" strokeWidth="0.0" text="Count">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" spacing="5.0" style="-fx-background-color: #917145;">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="K">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="KCount" strokeType="OUTSIDE" strokeWidth="0.0" text="Count">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox alignment="TOP_CENTER">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Winnings">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Text>
+                  <HBox alignment="CENTER" spacing="5.0" style="-fx-background-color: #c6c35b;">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="LM">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="LMWin" strokeType="OUTSIDE" strokeWidth="0.0" text="Count">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" spacing="5.0" style="-fx-background-color: #6da861;">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Y">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="YWin" strokeType="OUTSIDE" strokeWidth="0.0" text="Count">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" spacing="5.0" style="-fx-background-color: #b26f5c;">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="CP">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="CPWin" strokeType="OUTSIDE" strokeWidth="0.0" text="Count">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" spacing="5.0" style="-fx-background-color: #6196aa;">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="KG">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="KGWin" strokeType="OUTSIDE" strokeWidth="0.0" text="Count">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" spacing="5.0" style="-fx-background-color: #917145;">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="K">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="KWin" strokeType="OUTSIDE" strokeWidth="0.0" text="Count">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <HBox>
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Money:  $">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Text>
+                  <Text fx:id="moneyText" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Text>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</HBox>
