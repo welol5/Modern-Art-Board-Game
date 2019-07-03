@@ -59,6 +59,7 @@ public class PlayerView implements Initializable{
 	@FXML Text moneyText;
 
 	private Player player;
+	private boolean isSet = false;
 
 	private ArrayList<GUICard> handCards;
 	
@@ -70,6 +71,7 @@ public class PlayerView implements Initializable{
 		this.player = player;
 		moneyText.textProperty().bind(player.getMoneyProperty());
 		bindWinnings();
+		isSet = true;
 	}
 
 	@Override
@@ -353,5 +355,9 @@ public class PlayerView implements Initializable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public boolean isSet() {
+		return isSet;
 	}
 }

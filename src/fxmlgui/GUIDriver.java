@@ -133,7 +133,7 @@ public class GUIDriver implements Initializable, Observer{
 		
 		Player[] players = makePlayers(names,types,OGS);
 		
-		playerView.setPlayer(players[0]);
+//		playerView.setPlayer(players[0]);
 		
 		gameThread = new Service<Void>() {
 			
@@ -186,6 +186,9 @@ public class GUIDriver implements Initializable, Observer{
 		for(int i = 0; i < players.length; i++) {
 			if(types.get(i) == PlayerType.HUMAN) {
 				players[i] = new HumanPlayer(names.get(i), playerView, OGS);
+				if(!playerView.isSet()) {
+					playerView.setPlayer(players[i]);
+				}
 			} else if(types.get(i) == PlayerType.RANDOM) {
 				players[i] = new RandomPlayer(names.get(i));
 			} else if(types.get(i) == PlayerType.REACTIVE_AI) {
