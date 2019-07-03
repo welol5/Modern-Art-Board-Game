@@ -22,6 +22,11 @@ public class Merchant extends MemoryAIPlayer{
 	public int getFixedPrice() {
 		return (int) (getValue()*((((double)players.length)-1)/((double)players.length)));
 	}
+	
+	@Override
+	public boolean buy(int price) {
+		return false;
+	}
 
 	public Card chooseCard() {
 
