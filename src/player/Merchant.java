@@ -18,6 +18,10 @@ public class Merchant extends MemoryAIPlayer{
 	public int getBid(int higestBid) {
 		return -1;
 	}
+	
+	public int getBid(int highestBid, int maxVal) {
+		return -1;
+	}
 
 	public int getFixedPrice() {
 		return (int) (getValue()*((((double)players.length)-1)/((double)players.length)));
