@@ -70,7 +70,7 @@ public class GameDriver {
 				state.sell(card.getArtist(), second != null);
 
 				//check to see if the season has ended
-				System.out.println(state.seasonEnded());
+				//System.out.println(state.seasonEnded());
 				if(state.seasonEnded()) {
 					//state.updateTopThree(state.getTopThree());
 
@@ -107,7 +107,7 @@ public class GameDriver {
 				} else if(card.getAuctionType() == AuctionType.ONCE_AROUND) {
 					winningBid = onceAround(turn);
 				} else if(card.getAuctionType() == AuctionType.SEALED) {
-					winningBid = sealed();
+					winningBid = sealed(turn);
 				} else {
 					winningBid = standardBidding(turn);
 				}
@@ -144,6 +144,12 @@ public class GameDriver {
 					}
 				}
 			}
+		}
+		
+		//debug
+		//show money amounts
+		for(Player p : players) {
+			System.out.println(p.name + " : " + p.getMoney());
 		}
 
 	}
@@ -239,14 +245,14 @@ public class GameDriver {
 	 * @param card
 	 * @return the winning bid
 	 */
-	private Bid sealed() {
+	private Bid sealed(int turn) {
 		int highestBidder = -1;
 		int highestPrice = -1;
 		for(int i = 0; i < players.length; i++) {
-			int bid = players[i].getBid(-1);
+			int bid = players[(i+turn)%players.length].getBid(-1);
 			if(bid > highestPrice) {
 				highestPrice = bid;
-				highestBidder = i;
+				highestBidder = (i+turn)%players.length;
 			}
 		}
 		return new Bid(highestBidder,highestPrice);
