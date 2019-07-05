@@ -36,6 +36,12 @@ import player.PlayerType;
 import player.RandomPlayer;
 import player.ReactiveAIPlayer;
 
+/**
+ * This class is used as both the main menu and the class that preps everything for the game to start. It also creates and starts the
+ * game on a new thread.
+ * @author William Ellima
+ *
+ */
 public class GUIDriver implements Initializable, Observer{
 	
 	@FXML Button startGame;
