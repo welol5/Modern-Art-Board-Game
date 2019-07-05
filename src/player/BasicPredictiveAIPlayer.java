@@ -10,33 +10,25 @@ import core.Card;
 import core.ObservableGameState;
 import core.ArtistCount;
 /**
- * This player takes advantage of keeping track of the major actions made in the game. It keeps track of who
- * won what card and how much they bid on it. It then uses that infomation to calculate how much it can bid
- * so that it will make a profit and the best other player will not.
- * 
- * NEW STUFF
- * This AI will try to predict what other players will play based on the cards that they have
+ * This AI now starts to consider what cards other players have won when it determines what card to play.
+ * It predicts by taking the winnings of other players and adding to the current season counts. It will expect
+ * other players to play the artist that they have won the most of.
  * @author William Elliman
  *
  */
 public class BasicPredictiveAIPlayer extends MemoryAIPlayer{
 
 	private Random random = new Random();
-
-	//memory
 	
-	//keep track of other players
-	private int[] playerCardCounts;
-	
+	/**
+	 * See {@link MemoryAIPlayer} for details.
+	 * @param name
+	 * @param state
+	 * @param playerCount
+	 * @param turnIndex
+	 */
 	public BasicPredictiveAIPlayer(String name,ObservableGameState state, int playerCount, int turnIndex) {
 		super(name,state,playerCount,turnIndex);
-		
-		//init playerCardCounts
-		playerCardCounts = new int[playerCount];
-		//init everything to 0 because cards are all delt at the same time
-		for(int i = 0; i < playerCount; i++) {
-			playerCardCounts[i] = 0;
-		}
 	}
 
 	@Override
@@ -80,23 +72,8 @@ public class BasicPredictiveAIPlayer extends MemoryAIPlayer{
 		return hand.remove(random.nextInt(hand.size()));
 	}
 
-	/**
-	 * 
-	 * @param state state of the game
-	 * @param favor if this is 0 it will return the most favored, 1 is second most favored and so on
-	 * @return the favored artist
-	 */
+	@Override
 	protected Artist chooseFavordArtist(int favor) {
-		//TODO replace this method with one that takes into consideration what other players have won
-		//this will be done so that a search problem can start to be formulated
-
-		//the favored artist will be the one with the fewest cards needed to complete the set
-		//this also requires the cards needed to be in hand
-		//if no set can be completed with this it will choose the one with the closest to completing a complete set
-		
-		//this AI will also try to predict what the other players will do
-		//it will do it by just adding 1 to the season values of the other players favored artists
-		//their favored artist will just be what they have won the most of
 
 		ArtistCount[] artistCounts = state.getSeasonValues();
 		
@@ -156,15 +133,5 @@ public class BasicPredictiveAIPlayer extends MemoryAIPlayer{
 		}
 
 		return highestArtist;
-	}
-	
-	//Override superclass implemented method
-	@Override
-	public void deal(Card card) {
-		hand.add(card);
-		//players got delt another card
-		for(int i = 0; i < playerCardCounts.length; i++) {
-			playerCardCounts[i]++;
-		}
 	}
 }
