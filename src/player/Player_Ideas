@@ -1,2 +1,5 @@
 The AIs past V1 make bad guesses on what will win the season
 	-Should probably make card decisions later in the season
+	-The bad decisions may be because the order the AI is trying
+	to enforce is taking too long or the AI is trying to sell as
+	many cards as possible
