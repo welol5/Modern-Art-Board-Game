@@ -6,6 +6,11 @@ import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+/**
+ * This is just here so that the program can start, and so that the name tells users where to start the program.
+ * @author William Elliman
+ *
+ */
 public class Main extends Application{
 
 	@Override
