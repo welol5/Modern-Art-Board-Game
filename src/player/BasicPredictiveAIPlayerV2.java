@@ -11,7 +11,10 @@ import core.ObservableGameState;
 import core.ArtistCount;
 
 /**
- * TODO rewrite this
+ * This AI thinks ahead in a different way than the previous version. It will now choose an
+ * order of artists that it wants to see at the end of the season. This order is what it will play
+ * cards around. It will also use that order to predict what the prices of cards will be at the end
+ * of a season.
  * @author William Elliman
  *
  */
@@ -19,22 +22,20 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 
 	protected Random random = new Random();
 
-	//memory
-	//private Artist[] favoredArtists = new Artist[3];//keeps track of what artists this AI want to win during the season
+	/**
+	 * The order of artists this AI wants to see at the end of the season.
+	 */
 	protected ArrayList<Artist> favoredArtists = new ArrayList<Artist>();
 
-	//keep track of other players
-	protected int[] playerCardCounts;
-
+	/**
+	 * See {@link MemoryAIPlayer} for details
+	 * @param name
+	 * @param state
+	 * @param playerCount
+	 * @param turnIndex
+	 */
 	public BasicPredictiveAIPlayerV2(String name,ObservableGameState state, int playerCount, int turnIndex) {
 		super(name,state,playerCount,turnIndex);
-
-		//init playerCardCounts
-		playerCardCounts = new int[playerCount];
-		//init everything to 0 because cards are all delt at the same time
-		for(int i = 0; i < playerCount; i++) {
-			playerCardCounts[i] = 0;
-		}
 	}
 
 	@Override
@@ -77,6 +78,7 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 		return hand.remove(random.nextInt(hand.size()));
 	}
 	
+	@Override
 	public int getBid(int highestBid) {
 
 		//set the maxValue to the
@@ -303,15 +305,5 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 			return c.getArtist();
 		}
 		return null;
-	}
-
-	//Override superclass implemented method
-	@Override
-	public void deal(Card card) {
-		hand.add(card);
-		//players got delt another card
-		for(int i = 0; i < playerCardCounts.length; i++) {
-			playerCardCounts[i]++;
-		}
 	}
 }
