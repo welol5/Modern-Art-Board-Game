@@ -34,9 +34,9 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 	/**
 	 * 
 	 * @param name of the player
-	 * @param state
-	 * @param playerCount
-	 * @param turnIndex
+	 * @param state the observable game state
+	 * @param playerCount the number of players playing the game
+	 * @param turnIndex where this player is in terms of order (starts counting at 0)
 	 */
 	public MemoryAIPlayer(String name, ObservableGameState state, int playerCount, int turnIndex) {
 		super(name, state);
@@ -95,6 +95,9 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 		getBestOtherPlayer();
 	}
 	
+	/**
+	 * This method finds the other player that has the most money or highest value of all the other players.
+	 */
 	protected void getBestOtherPlayer() {
 		//first it to find the player who is doing the best that is not this AI
 				for(int i = 0; i < players.length; i++) {
