@@ -12,7 +12,7 @@ import core.ArtistCount;
 /**
  * This AI is has very solid rules for bidding and it will try to end the season as quickly as possible.
  * The rule it uses for bidding is to always only bid up to half what the painting is currently worth.
- * The rule it uses for choosing which card to play is it will try to end the season as fast as possible
+ * The rule it uses for choosing which card to play is it will try to end the season as fast as possible.
  * @author William Elliman
  *
  */
@@ -20,11 +20,26 @@ public class ReactiveAIPlayer extends Player{
 
 	private Random random = new Random();
 
+	/**
+	 * The card that is currently being auctioned.
+	 */
 	protected Card biddingCard = null;
+	
+	/**
+	 * True if the current auction is a double auction
+	 */
 	protected boolean isDouble = false;
 
+	/**
+	 * The state of the game.
+	 */
 	protected ObservableGameState state;
 
+	/**
+	 * 
+	 * @param name of the player
+	 * @param state the observable game state
+	 */
 	public ReactiveAIPlayer(String name, ObservableGameState state) {
 		super(name);
 		this.state = state;
@@ -101,6 +116,13 @@ public class ReactiveAIPlayer extends Player{
 		return getBid(highestBid, getValue()/2);
 	}
 
+	/**
+	 * This is here for simplicity. It takes the highest value and the highest bid and determines what to bid.
+	 * It also takes into account what kind of auction it is.
+	 * @param highestBid the highest bid another player has made.
+	 * @param highestValue the highest this AI is willing to pay.
+	 * @return The price this AI will bid on the painting.
+	 */
 	protected int getBid(int highestBid, int highestValue) {
 
 		//if it a once around return the max value this AI will pay
@@ -148,8 +170,7 @@ public class ReactiveAIPlayer extends Player{
 	}
 
 	/**
-	 * This will return the artist that this AI can force to win the fastest
-	 * @param state state of the game
+	 * This will return the artist that this AI will try to play.
 	 * @param favor if this is 0 it will return the most favored, 1 is second most favored and so on
 	 * @return the favored artist
 	 */
