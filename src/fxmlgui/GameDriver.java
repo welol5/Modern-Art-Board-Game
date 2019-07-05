@@ -99,6 +99,7 @@ public class GameDriver {
 				for(Player p : players) {
 					p.announceCard(card, !(second == null));
 				}
+				System.out.println(card + " :: " + second);
 
 				//card(s) are ready for auction
 				Bid winningBid = null;
