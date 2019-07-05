@@ -8,14 +8,17 @@ import core.Card;
 import core.ObservableGameState;
 
 /**
- * This is a player that makes all of its decisions randomly
+ * This is a player that makes all of its decisions randomly.
  * @author William Elliman
- *
  */
 public class RandomPlayer extends Player {
 	
 	Random random = new Random();
 
+	/**
+	 * The only thing a random player needs is a name, because it doesn't care about the rest of the game
+	 * @param name of the player
+	 */
 	public RandomPlayer(String name) {
 		super(name);
 	}
