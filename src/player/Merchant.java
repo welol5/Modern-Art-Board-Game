@@ -8,21 +8,36 @@ import core.AuctionType;
 import core.Card;
 import core.ObservableGameState;
 
+/**
+ * This AI is one that only sells cards. Its goal is to sell the highest valued cards so that other players will pay
+ * and it does not buy other cards so it will not make any money at the end of the season.
+ * @author William Elliman
+ *
+ */
 public class Merchant extends MemoryAIPlayer{
 
+	/**
+	 * See {@link MemoryAIPlayer} constructor for details.
+	 * @param name
+	 * @param state
+	 * @param playerCount
+	 * @param turnIndex
+	 */
 	public Merchant(String name, ObservableGameState state, int playerCount, int turnIndex) {
 		super(name, state, playerCount, turnIndex);
-		// TODO Auto-generated constructor stub
 	}
 
+	@Override
 	public int getBid(int higestBid) {
 		return -1;
 	}
 	
+	@Override
 	public int getBid(int highestBid, int maxVal) {
 		return -1;
 	}
 
+	@Override
 	public int getFixedPrice() {
 		return (int) (getValue()*((((double)players.length)-1)/((double)players.length)));
 	}
@@ -31,7 +46,8 @@ public class Merchant extends MemoryAIPlayer{
 	public boolean buy(int price) {
 		return false;
 	}
-
+	
+	@Override
 	public Card chooseCard() {
 
 		if(hand.size() == 0) {
