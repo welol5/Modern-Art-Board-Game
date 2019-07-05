@@ -1,9 +1,9 @@
 # Modern-Art-Board-Game
 ## Running the game
-The game should be run using the Main class in the fxmlgui package.
+The best way to run the game is by running the Jar file. It will be the most up to date working version, although it will usually have some debugging info printing. If you would like to run the current WIP version of the game, usually the bin files are up to date, but a better idea would be to compile the source yourself and the Main class has the main method.
 
 ## Notes about this project
-This is a reasearch project about devloping AI for a board game that is not as deterministic as a game like chess or connect 4. With that being said, the game may be slightly incomplete and is not ment for human interaction at this time. A little more detail about it being incomplete is that it may not account for all of the edge cases properly, the game itself works well enough where AIs can be tested. Support for genetic AIs has been removed because I dont see where they could go at this point in time.
+This is a research project about devloping AI for a board game that is not as deterministic as a game like chess or connect 4. With that being said, the game may be slightly incomplete and is not ment for human interaction at this time. A little more detail about it being incomplete is that it may not account for all of the edge cases properly, the game itself works well enough where AIs can be tested. Support for genetic AIs has been removed because I don't see where they could go at this point in time.
 
 # About the players
 The players in the player package are snapshots of different ideas. They will be kept around but probably no longer updated. I will be using them to judge how well the future AIs act. The only exceptions to this are the Random and Human players. The AIs themselves are really snapshots of ideas that were implemented over time. That being said, to reduce repeated code, the AIs are children of their previous versions.
@@ -34,8 +34,5 @@ This AI is based off of the Memory AI, but it dosent really use much of its prop
 
 ---
 
-## Other notes
-Files in the bin folder should always have the newest version. Also due to me coding on a windows machine, I am pushing debug updates that I am pulling to a linux teminal, so some updates may not work properly.
-
 ## Currently WIP
-Working on the High Roller's and Merchant's children AIs. JavaDoc should be updated in the near future (hopefully Friday).
+Working on the High Roller's and Merchant's children AIs. JavaDoc is mostly up to date, but the newer AIs are not done and the PlayerView is not complete.
