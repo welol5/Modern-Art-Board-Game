@@ -14,6 +14,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+/**
+ * This class is used as a controller for the Cards seen in the GUI. It does not care about anything else, 
+ * but it has methods so that other classes that know about this card can see if any actions have been preformed on it.
+ * @author William Elliman
+ *
+ */
 public class GUICard{
 
 	private boolean selected = false;
@@ -25,6 +31,13 @@ public class GUICard{
 	@FXML Text centerText;
 	@FXML VBox wholeCard;
 
+	/**
+	 * Sets the GUI part of this card to match the card give. It will set the top and bottom texts to the artist and the center
+	 * to the auction type.
+	 * @param c the card that the GUI will try to match.
+	 * @param isDouble if this card is the one being auctioned, this will determine if an extra "x2" will be added to the
+	 * center text.
+	 */
 	public void setCard(Card c, boolean isDouble) {
 		card = c;
 
@@ -77,18 +90,30 @@ public class GUICard{
 //		((Text)((VBox)this.getCenter()).getChildren().get(2)).setFont(new Font(24*scale));
 //	}
 
+	/**
+	 * @return true if the card has been clicked on.
+	 */
 	public boolean getIsSelected() {
 		return selected;
 	}
 
+	/**
+	 * Resents the selected var to false so that it can be clicked on again.
+	 */
 	public synchronized void resetIsSelected() {
 		selected = false;
 	}
 
+	/**
+	 * @return the artist of the card being shown
+	 */
 	public Artist getArtist() {
 		return card.getArtist();
 	}
 	
+	/**
+	 * Called by the GUI to let whatever is watching this card know it is selected.
+	 */
 	private void setIsSelected() {
 		//System.out.println("Clicked");
 		selected = true;
