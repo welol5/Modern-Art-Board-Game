@@ -298,7 +298,7 @@ public class PlayerView implements Initializable{
 		} else if(card.getAuctionType() == AuctionType.FIXED_PRICE) {
 			centerText.setOpacity(1);
 			centerText.setText("FP");
-		} else if(card.getAuctionType() == AuctionType.STANDARD) {
+		} else {
 			centerText.setText("  ");
 			centerText.setOpacity(1);
 		}
