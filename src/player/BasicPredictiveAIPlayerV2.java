@@ -183,7 +183,11 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 //			System.out.println(c);
 //		}
 
+		//TODO probably should'nt use an array list
 		if(favoredArtists.size() < 3) {
+			
+			//TODO this could be improved
+			//make decisions based off of more than just the winnings
 			if(winnings.size() > 0) {
 				//sort winnings to be able to choose the best order
 				ArrayList<ArtistCount> sortedWinnings = new ArrayList<ArtistCount>();
