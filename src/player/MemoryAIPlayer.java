@@ -33,7 +33,7 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 
 	/**
 	 * 
-	 * @param name
+	 * @param name of the player
 	 * @param state
 	 * @param playerCount
 	 * @param turnIndex
@@ -48,47 +48,6 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 		}
 
 		this.turnIndex = turnIndex;
-	}
-
-	@Override
-	public Card chooseCard() {
-		//go through the artists in terms of most to least favored
-		for(int f = 0; f < Artist.values().length; f++) {
-			Artist favored = chooseFavordArtist(f);
-			Card bestCard = null;
-
-			//if a card that is a double auction of the favored artist can be found, play it
-			//requires a second card to be present
-			for(Card card : hand) {
-				if(card.getArtist() == favored && card.getAuctionType() == AuctionType.DOUBLE) {
-					bestCard = card;
-				}
-			}
-			//bestCard will be null if there are no double or if none exist
-			if(bestCard != null) {
-				hand.remove(hand.indexOf(bestCard));
-				for(Card card : hand) {
-					if(card.getArtist() == bestCard.getArtist()) {
-						return bestCard;
-					}
-				}
-				//no other cards had a matching artist
-			} else {
-				//no doubles exist so return the first one if any exist
-				for(Card card : hand) {
-					if(card.getArtist() == favored) {
-						hand.remove(hand.indexOf(card));
-						return card;
-					}
-				}
-			}
-		}
-
-		//this will be left here until the full method is implemented
-		if(hand.size() == 0) {
-			return null;
-		}
-		return hand.remove(random.nextInt(hand.size()));
 	}
 
 	@Override
