@@ -23,9 +23,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import player.HumanPlayer;
 import player.Player;
 
-
+/**
+ * This class is the main controller of what the user will see. It controls what is shown to the user as the game is being played.
+ * It also provides some methods for a human player to play the game.
+ * @author William Elliman
+ *
+ */
 public class PlayerView implements Initializable{
 
 	@FXML TextField bidBox;
@@ -67,6 +73,10 @@ public class PlayerView implements Initializable{
 	private volatile boolean buySet = false;
 	private volatile boolean fixedPriceBuy = false;
 
+	/**
+	 * Sets the player that this view is going to be watching.
+	 * @param player
+	 */
 	public void setPlayer(Player player) {
 		this.player = player;
 		moneyText.textProperty().bind(player.getMoneyProperty());
@@ -79,6 +89,11 @@ public class PlayerView implements Initializable{
 		handCards = new ArrayList<GUICard>();
 	}
 
+	/**
+	 * Used by {@link HumanPlayer} to get input.
+	 * @param artist that the {@link HumanPlayer} must pick. null if there is not a requirement.
+	 * @return the index of the card int he players hand.
+	 */
 	public int getCard(Artist artist) {
 
 		Platform.runLater(new Runnable() {
@@ -137,6 +152,11 @@ public class PlayerView implements Initializable{
 
 	}
 
+	/**
+	 * A method for {@link HumanPlayer} to get input.
+	 * @param highestBid the highest bid so far. This will be used to update the announcement text.
+	 * @return the bid the {@link HumanPlayer} would like to make.
+	 */
 	public int getBid(int highestBid) {
 		Platform.runLater(new Runnable() {
 			@Override
