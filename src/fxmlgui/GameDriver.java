@@ -9,18 +9,33 @@ import core.GameState;
 import core.ObservableGameState;
 import player.Player;
 
+/**
+ * This is the class that controls the logic of the game. takes in the set of players and the initialized state of the game
+ * and will start going to players and asking them to preform actions.
+ * @author William Elliman
+ *
+ */
 public class GameDriver {
 
 	private Player[] players;
 	private GameState state;
 	private ObservableGameState OGS;
 
+	/**
+	 * 
+	 * @param players The list of players that will be playing the game.
+	 * @param state The state of the game, freshly created.
+	 * @param OGS The observable game state.
+	 */
 	public GameDriver(Player[] players, GameState state, ObservableGameState OGS) {
 		this.players = players;
 		this.state = state;
 		this.OGS = OGS;
 	}
 
+	/**
+	 * This function actually starts running the game.
+	 */
 	public void playGame() {
 
 		for(int season = 0; season < 4; season++) {
@@ -161,8 +176,7 @@ public class GameDriver {
 	/**
 	 * Runs the standard bidding option
 	 * @param turn the index of the player who played the card
-	 * @param card the card being bid on
-	 * @return the index of the winner
+	 * @return a Bid object that hold the index of the winner and the price they will pay.
 	 */
 	private Bid standardBidding(int turn) {
 		boolean[] bidding = new boolean[players.length];//used to tell how many players are still bidding
@@ -206,8 +220,7 @@ public class GameDriver {
 	/**
 	 * Goes to each player once and asks them for a bid, the highest wins
 	 * @param turn the player index who played the card
-	 * @param card the card being played
-	 * @return the best bid
+	 * @return a Bid object that hold the index of the winner and the price they will pay.
 	 */
 	private Bid onceAround(int turn) {
 		int highestBid = 0;
@@ -227,9 +240,8 @@ public class GameDriver {
 	/**
 	 * Asks each player in turn if they would like to buy the card
 	 * @param turn the index of the player selling the card
-	 * @param card the card being sold
 	 * @param price the price the card is being sold at
-	 * @return the winning bidder index and price it was sold for
+	 * @return a Bid object that hold the index of the winner and the price they will pay.
 	 */
 	private Bid fixedPrice(int turn, int price) {
 		for(int i = 0; i < players.length-1; i++) {
@@ -243,8 +255,8 @@ public class GameDriver {
 
 	/**
 	 * Has each player in turn say how much they are willing to pay and keeps track of the highest value
-	 * @param card
-	 * @return the winning bid
+	 * @param turn the index of the player selling the card
+	 * @return a Bid object that hold the index of the winner and the price they will pay.
 	 */
 	private Bid sealed(int turn) {
 		int highestBidder = -1;
@@ -266,6 +278,10 @@ public class GameDriver {
 	 */
 	private class Bid{
 		public final int index,price;
+		/**
+		 * @param index of the player in the players array.
+		 * @param price the player is willing to pay.
+		 */
 		public Bid(int index, int price) {
 			this.index = index;
 			this.price = price;
