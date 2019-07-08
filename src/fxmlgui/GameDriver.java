@@ -262,10 +262,10 @@ public class GameDriver {
 		int highestBidder = -1;
 		int highestPrice = -1;
 		for(int i = 0; i < players.length; i++) {
-			int bid = players[(i+turn)%players.length].getBid(-1);
+			int bid = players[(i+turn+1)%players.length].getBid(-1);
 			if(bid > highestPrice) {
 				highestPrice = bid;
-				highestBidder = (i+turn)%players.length;
+				highestBidder = (i+turn+1)%players.length;
 			}
 		}
 		return new Bid(highestBidder,highestPrice);
