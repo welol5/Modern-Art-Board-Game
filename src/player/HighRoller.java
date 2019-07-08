@@ -25,7 +25,7 @@ public class HighRoller extends BasicPredictiveAIPlayerV2 {
 		
 //		System.out.println("price : " + ((playerMultiplier*expectedValue)-1));
 		
-		int maxValue = (int)((playerMultiplier*expectedValue)-1);
+		int maxValue = Math.abs((int)((playerMultiplier*expectedValue)-1));
 		
 		if(maxValue < money) {
 			return maxValue;

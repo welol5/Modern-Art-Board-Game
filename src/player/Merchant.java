@@ -45,7 +45,7 @@ public class Merchant extends MemoryAIPlayer{
 		
 //		System.out.println("price : " + ((playerMultiplier*expectedValue)-1));
 		
-		int maxValue = (int)((playerMultiplier*expectedValue)-1);
+		int maxValue = Math.abs((int)((playerMultiplier*expectedValue)-1));
 		
 		if(maxValue < money) {
 			return maxValue;
