@@ -182,7 +182,7 @@ public class PlayerView implements Initializable{
 			public void run() {
 				// TODO Auto-generated method stub
 				announcementText.setText("Whould you like to buy the card(s) for $" + price);
-				System.out.println("set");
+				//System.out.println("set");
 			}
 		});
 		
