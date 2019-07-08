@@ -43,7 +43,7 @@ public class Merchant extends MemoryAIPlayer{
 		double expectedValue = getValue();
 		double playerMultiplier = (((double)players.length)-1)/((double)players.length);
 		
-		System.out.println("price : " + ((playerMultiplier*expectedValue)-1));
+//		System.out.println("price : " + ((playerMultiplier*expectedValue)-1));
 		
 		int maxValue = (int)((playerMultiplier*expectedValue)-1);
 		
