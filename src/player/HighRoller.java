@@ -19,7 +19,14 @@ public class HighRoller extends BasicPredictiveAIPlayerV2 {
 	
 	@Override
 	public int getFixedPrice() {
-		int maxValue = getValue()*((players.length-1)/players.length);
+		
+		double expectedValue = getValue();
+		double playerMultiplier = (((double)players.length)-1)/((double)players.length);
+		
+		System.out.println("price : " + ((playerMultiplier*expectedValue)-1));
+		
+		int maxValue = (int)((playerMultiplier*expectedValue)-1);
+		
 		if(maxValue < money) {
 			return maxValue;
 		} else {
