@@ -37,6 +37,7 @@ public class PlayerView implements Initializable{
 	@FXML TextField bidBox;
 	@FXML Button bidButton;
 	@FXML HBox handBox;
+	@FXML HBox OtherPlayersWinningsBox;
 
 	@FXML Text LMPrice;
 	@FXML Text YPrice;
@@ -68,7 +69,7 @@ public class PlayerView implements Initializable{
 	private boolean isSet = false;
 
 	private ArrayList<GUICard> handCards;
-	
+
 	private volatile boolean bidSet = false;
 	private volatile boolean buySet = false;
 	private volatile boolean fixedPriceBuy = false;
@@ -136,11 +137,11 @@ public class PlayerView implements Initializable{
 
 			}
 		} else {
-			
+
 			if(handCards.size() == 0) {
 				return -1;
 			}
-			
+
 			//loop through the hand to see if a card is chosen of the specific artist
 			for(int i = 0; true; i = (i+1)%handBox.getChildren().size()) {
 				GUICard gc = handCards.get(i);
@@ -174,7 +175,7 @@ public class PlayerView implements Initializable{
 		//		System.out.println("Bid recived");
 		return Integer.parseInt(bidBox.getText());
 	}
-	
+
 	public boolean askPlayerToBuy(int price) {
 		fixedPriceBuy = true;
 		Platform.runLater(new Runnable() {
@@ -185,11 +186,11 @@ public class PlayerView implements Initializable{
 				//System.out.println("set");
 			}
 		});
-		
+
 		//wait for the player to decide
 		while(!buySet) {}
 		fixedPriceBuy = false;
-		
+
 		if(bidBox.getText().trim().matches("[yY].*")) {
 			return true;
 		} else {
@@ -210,7 +211,7 @@ public class PlayerView implements Initializable{
 	}
 
 	@FXML private void setBidSet(ActionEvent event) {
-		
+
 		if(fixedPriceBuy) {
 			buySet = true;
 			return;
@@ -250,7 +251,7 @@ public class PlayerView implements Initializable{
 		this.KGCount.textProperty().bind(KGCount);
 		this.KCount.textProperty().bind(KCount);
 	}
-	
+
 	public void bindWinnings() {
 		LMWin.textProperty().bind(player.getWinningProperty(Artist.LITE_METAL));
 		YWin.textProperty().bind(player.getWinningProperty(Artist.YOKO));
@@ -308,7 +309,7 @@ public class PlayerView implements Initializable{
 			artist = "Krypto";
 			color = "#917145";
 		}
-		
+
 		if(card.getAuctionType() == AuctionType.ONCE_AROUND) {
 			centerText.setOpacity(1);
 			centerText.setText("On");
@@ -322,7 +323,7 @@ public class PlayerView implements Initializable{
 			centerText.setText("  ");
 			centerText.setOpacity(1);
 		}
-		
+
 		if(isDouble) {
 			centerText.setText(centerText.getText()+"x2");
 		}
@@ -342,11 +343,11 @@ public class PlayerView implements Initializable{
 				biddingCardArtist1.setOpacity(1);
 				biddingCardArtist2.setOpacity(1);
 
-//				if(isDouble) {
-//					centerText.setOpacity(1);
-//				} else {
-//					centerText.setOpacity(0);
-//				}
+				//				if(isDouble) {
+				//					centerText.setOpacity(1);
+				//				} else {
+				//					centerText.setOpacity(0);
+				//				}
 
 				biddingCardBox.setStyle("-fx-background-color: " + colorText + "; -fx-background-radius: 25");
 			}
@@ -364,11 +365,11 @@ public class PlayerView implements Initializable{
 				centerText.setOpacity(0);
 
 				biddingCardBox.setStyle("-fx-background-color: " + "#777777" + "; -fx-background-radius: 25");
-				
+
 				announcementText.setText(name + " has won the auction for " + price + ".");
 			}
 		});
-		
+
 		//give the player a moment to see who won
 		try {
 			Thread.sleep(1000);
@@ -377,8 +378,27 @@ public class PlayerView implements Initializable{
 			e.printStackTrace();
 		}
 	}
-	
+
 	public boolean isSet() {
 		return isSet;
+	}
+
+	public void addOtherPlayers(Player[] players) {
+//		System.out.println("adding other players");
+		for(Player p : players) {
+			if(p == player) {
+				continue;
+			}
+
+			try {
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("InfoSection.fxml"));
+				OtherPlayersWinningsBox.getChildren().add(loader.load());
+
+				InfoSection section = loader.getController();
+				section.setPlayer(p);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

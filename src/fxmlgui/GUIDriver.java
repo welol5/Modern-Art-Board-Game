@@ -143,7 +143,7 @@ public class GUIDriver implements Initializable, Observer{
 			playerView.setPlayer(players[0]);
 		}
 		
-//		playerView.setPlayer(players[0]);
+		playerView.addOtherPlayers(players);
 		
 		gameThread = new Service<Void>() {
 			
@@ -194,6 +194,7 @@ public class GUIDriver implements Initializable, Observer{
 		Player[] players = new Player[names.size()];
 		
 		for(int i = 0; i < players.length; i++) {
+			boolean add = true;
 			if(types.get(i) == PlayerType.HUMAN) {
 				players[i] = new HumanPlayer(names.get(i), playerView, OGS);
 				if(!playerView.isSet()) {
