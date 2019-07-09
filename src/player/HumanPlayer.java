@@ -87,7 +87,7 @@ public class HumanPlayer extends Player{
 //		isDouble = false;
 		
 		playerView.announceAuctionWinner(name, price);
-		System.out.println(name + " won this auction for " + price);
+//		System.out.println(name + " won this auction for " + price);
 	}
 
 }

@@ -88,16 +88,17 @@ public class GameDriver {
 				//System.out.println(state.seasonEnded());
 				if(state.seasonEnded()) {
 					//state.updateTopThree(state.getTopThree());
+					System.out.println("Season Ended");
 
 					//give players what they have won
 					for(Player p : players) {
 						Artist[] top3 = state.getTopThree();
-						//System.out.println(p.name);
+						System.out.println(p.name);
 
 						for(int i = 0; i < top3.length; i++) {
 							for(Card c : p.getWinnings()) {
 								if(c.getArtist() == top3[i]) {
-									//System.out.println(c + " : " + state.getArtistValue(top3[i]));
+									System.out.println(c + " : " + state.getArtistValue(top3[i]));
 									p.recive(state.getArtistValue(top3[i]));
 								}
 							}
@@ -114,7 +115,7 @@ public class GameDriver {
 				for(Player p : players) {
 					p.announceCard(card, !(second == null));
 				}
-				System.out.println(card + " :: " + second);
+				System.out.println("Player : " + players[turn].name + " :: " + card + " :: " + second);
 
 				//card(s) are ready for auction
 				Bid winningBid = null;
@@ -132,7 +133,7 @@ public class GameDriver {
 				for(Player p : players) {
 					p.announceAuctionWinner(winningBid.index, players[winningBid.index].name, winningBid.price);
 				}
-				
+				System.out.println("Auction winner: " + players[winningBid.index].name + ":: Price : " + winningBid.price);
 
 				//The auction has been won, time to execute the order (66)
 				if(winningBid.index == turn) {

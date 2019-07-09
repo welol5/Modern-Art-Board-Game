@@ -139,6 +139,9 @@ public class GUIDriver implements Initializable, Observer{
 				OGS.getArtistCountString(Artist.KRYPTO));
 		
 		Player[] players = makePlayers(names,types,OGS);
+		if(!playerView.isSet()) {
+			playerView.setPlayer(players[0]);
+		}
 		
 //		playerView.setPlayer(players[0]);
 		
