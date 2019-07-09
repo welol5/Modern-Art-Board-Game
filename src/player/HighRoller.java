@@ -11,20 +11,24 @@ public class HighRoller extends BasicPredictiveAIPlayerV2 {
 
 	protected int getBid(int highestBid, int highestValue) {
 		if(highestValue > highestBid) {
-			return highestValue;
+			if(highestValue > money) {
+				return highestValue;
+			} else {
+				return money;
+			}
 		} else {
 			return -1;
 		}
 	}
-	
+
 	@Override
 	public int getFixedPrice() {
-		
+
 		double expectedValue = getValue();
 		double playerMultiplier = (((double)players.length)-1)/((double)players.length);		
-		
+
 		int maxValue = Math.abs((int)((playerMultiplier*expectedValue)-1));
-		
+
 		if(maxValue < money) {
 			return maxValue;
 		} else {
