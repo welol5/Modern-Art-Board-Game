@@ -256,6 +256,10 @@ public abstract class Player{
 	 * @return the StringProperty version of the money value.
 	 */
 	public StringProperty getMoneyProperty() {
+		if(moneyText == null) {
+			moneyText = new SimpleStringProperty();
+			moneyText.setValue("" + money);
+		}
 		return moneyText;
 	}
 
@@ -264,6 +268,14 @@ public abstract class Player{
 	 * @return the StringProperty of the winnings of a certain artist.
 	 */
 	public StringProperty getWinningProperty(Artist a) {
+		if(winningsStrings == null) {
+			winningsStrings = new HashMap<Artist, SimpleStringProperty>();
+
+			for(Artist ar : Artist.values()) {
+				winningsStrings.put(ar, new SimpleStringProperty());
+				winningsStrings.get(ar).set("" + 0);
+			}
+		}
 		return winningsStrings.get(a);
 	}
 }
