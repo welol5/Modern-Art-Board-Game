@@ -193,6 +193,7 @@ public class HandStateCardPicker extends HighRoller {
 		return hand.remove(0);
 	}
 	
+	@Override
 	public void announceSeasonEnd(int season) {
 		super.announceSeasonEnd(season);
 		artistOrder = null;
@@ -212,10 +213,42 @@ public class HandStateCardPicker extends HighRoller {
 			//if there is no order bid based off of the current values
 			for(int i = 0; i < 3; i++) {
 				if(state.getTopSeasonValues()[i] == biddingCard.getArtist()) {
-					return state.getArtistValue(artistOrder[i]) + 30-(i*10);
+					return state.getArtistValue(state.getTopSeasonValues()[i]) + 30-(i*10);
 				}
 			}
 			return 0;
+		}
+	}
+	
+	@Override
+	public int getBid(int highestBid) {
+		double playerMultiplier = (((double)players.length)-1)/((double)players.length);
+		double value = getValue();
+		
+		if(isDouble) {
+			value *= 2;
+		}
+		
+		value *= playerMultiplier;
+		
+		if(highestBid < value) {
+			return (int)value;
+		} else {
+			return -1;
+		}
+	}
+	
+	public int getFixedPrice() {
+		
+		double expectedValue = getValue();
+		double playerMultiplier = (((double)players.length)-1)/((double)players.length);		
+		
+		int maxValue = Math.abs((int)((playerMultiplier*expectedValue)-1));
+		
+		if(maxValue < money) {
+			return maxValue;
+		} else {
+			return money;
 		}
 	}
 }
