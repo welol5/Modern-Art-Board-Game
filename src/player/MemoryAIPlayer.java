@@ -79,7 +79,7 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 	@Override
 	public boolean buy(int price) {
 
-		if(price < (int)(((double)price)*(((double)players.length)-1)/((double)players.length)) && money > price) {
+		if(price <= (int)(((double)price)*(((double)players.length)-1)/((double)players.length)) && money > price) {
 			return true;
 		} else {
 			return false;
