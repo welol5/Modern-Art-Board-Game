@@ -36,7 +36,7 @@ public class GameDriver {
 	/**
 	 * This function actually starts running the game.
 	 */
-	public void playGame() {
+	public Player playGame() {
 
 		for(int season = 0; season < 4; season++) {
 
@@ -168,7 +168,15 @@ public class GameDriver {
 		for(Player p : players) {
 			System.out.println(p.name + " : " + p.getMoney());
 		}
-
+		
+		Player winner = null;
+		for(Player p : players) {
+			if(winner == null || winner.getMoney() < p.getMoney()) {
+				winner = p;
+			}
+		}
+		
+		return winner;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////
