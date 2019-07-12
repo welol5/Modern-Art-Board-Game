@@ -20,6 +20,7 @@ public class GameDriver {
 	private Player[] players;
 	private GameState state;
 	private ObservableGameState OGS;
+	private boolean debugPrinting = true;
 
 	/**
 	 * 
@@ -31,6 +32,13 @@ public class GameDriver {
 		this.players = players;
 		this.state = state;
 		this.OGS = OGS;
+	}
+	
+	public GameDriver(Player[] players, GameState state, ObservableGameState OGS, boolean debugPrinting) {
+		this.players = players;
+		this.state = state;
+		this.OGS = OGS;
+		this.debugPrinting = debugPrinting;
 	}
 
 	/**
@@ -50,6 +58,7 @@ public class GameDriver {
 			//debug
 			//show money amounts
 			for(Player p : players) {
+				if(debugPrinting)
 				System.out.println(p.name + " : " + p.getMoney());
 			}
 
@@ -59,6 +68,11 @@ public class GameDriver {
 				//have a player play a card
 				Card card = players[turn].chooseCard();
 				Card second = null;
+				
+				//TODO this should be fixed to include if no players have cards
+				if(card == null) {
+					continue;
+				}
 
 				int secondPlayer = -1;
 
@@ -88,16 +102,19 @@ public class GameDriver {
 				//System.out.println(state.seasonEnded());
 				if(state.seasonEnded()) {
 					//state.updateTopThree(state.getTopThree());
+					if(debugPrinting)
 					System.out.println("Season Ended");
 
 					//give players what they have won
 					for(Player p : players) {
 						Artist[] top3 = state.getTopThree();
+						if(debugPrinting)
 						System.out.println(p.name);
 
 						for(int i = 0; i < top3.length; i++) {
 							for(Card c : p.getWinnings()) {
 								if(c.getArtist() == top3[i]) {
+									if(debugPrinting)
 									System.out.println(c + " : " + state.getArtistValue(top3[i]));
 									p.recive(state.getArtistValue(top3[i]));
 								}
@@ -115,6 +132,7 @@ public class GameDriver {
 				for(Player p : players) {
 					p.announceCard(card, !(second == null));
 				}
+				if(debugPrinting)
 				System.out.println("Player : " + players[turn].name + " :: " + card + " :: " + second);
 
 				//card(s) are ready for auction
@@ -133,6 +151,7 @@ public class GameDriver {
 				for(Player p : players) {
 					p.announceAuctionWinner(winningBid.index, players[winningBid.index].name, winningBid.price);
 				}
+				if(debugPrinting)
 				System.out.println("Auction winner: " + players[winningBid.index].name + ":: Price : " + winningBid.price);
 
 				//The auction has been won, time to execute the order (66)
@@ -166,6 +185,7 @@ public class GameDriver {
 		//debug
 		//show money amounts
 		for(Player p : players) {
+			if(debugPrinting)
 			System.out.println(p.name + " : " + p.getMoney());
 		}
 		
