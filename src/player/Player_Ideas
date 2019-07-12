@@ -1,5 +1,6 @@
-The AIs past V1 make bad guesses on what will win the season
-	-Should probably make card decisions later in the season
-	-The bad decisions may be because the order the AI is trying
-	to enforce is taking too long or the AI is trying to sell as
-	many cards as possible
+Heuristic on how to predict what cards other players will play
+	-assume that the player will play the artist that will make them the most money at the end of the season
+	and assume that the season will end there even if no artist is at 5.
+	-This leaves the question of who buys the cards?
+With this also add in a confidence percentage = highest artist count * 0.25
+	-use this as a multiplier for the price a player is willing to bid.
