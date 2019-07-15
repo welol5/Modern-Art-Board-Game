@@ -193,7 +193,14 @@ public class PlayerView implements Initializable{
 
 		if(bidBox.getText().trim().matches("[yY].*")) {
 			return true;
-		} else {
+		}
+		try {
+			if (Integer.parseInt(bidBox.getText()) >= price){
+				return true;
+			} else {
+				return false;
+			}
+		} catch (NumberFormatException e) {
 			return false;
 		}
 	}
@@ -384,7 +391,7 @@ public class PlayerView implements Initializable{
 	}
 
 	public void addOtherPlayers(Player[] players) {
-//		System.out.println("adding other players");
+		//		System.out.println("adding other players");
 		for(Player p : players) {
 			if(p == player) {
 				continue;
