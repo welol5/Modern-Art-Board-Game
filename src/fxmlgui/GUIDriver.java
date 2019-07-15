@@ -190,6 +190,9 @@ public class GUIDriver implements Initializable, Observer{
 
 		Random random = new Random();
 		int playerCount = random.nextInt(4);//can have up to 4 other players
+		if(playerCount < 2) {
+			playerCount = 2;//this is 2 because a human will be added
+		}
 
 		ArrayList<String> names = new ArrayList<String>();
 		ArrayList<PlayerType> types = new ArrayList<PlayerType>();
