@@ -40,6 +40,13 @@ public class GameDriver {
 		this.OGS = OGS;
 		this.debugPrinting = debugPrinting;
 	}
+	
+	public void resetGame() {
+		for(Player p : players) {
+			p.reset();
+		}
+		state.reset();
+	}
 
 	/**
 	 * This function actually starts running the game.
@@ -71,6 +78,17 @@ public class GameDriver {
 				
 				//TODO this should be fixed to include if no players have cards
 				if(card == null) {
+					int hasHands = 0;
+					for(Player p : players) {
+						if(p.getHand().size() != 0) {
+							hasHands++;
+						}
+					}
+					//if no players have anything in their hand
+					if(hasHands == 0) {
+						endSeason();
+						break;//break out of the season
+					}
 					continue;
 				}
 
@@ -101,30 +119,7 @@ public class GameDriver {
 				//check to see if the season has ended
 				//System.out.println(state.seasonEnded());
 				if(state.seasonEnded()) {
-					//state.updateTopThree(state.getTopThree());
-					if(debugPrinting)
-					System.out.println("Season Ended");
-
-					//give players what they have won
-					for(Player p : players) {
-						Artist[] top3 = state.getTopThree();
-						if(debugPrinting)
-						System.out.println(p.name);
-
-						for(int i = 0; i < top3.length; i++) {
-							for(Card c : p.getWinnings()) {
-								if(c.getArtist() == top3[i]) {
-									if(debugPrinting)
-									System.out.println(c + " : " + state.getArtistValue(top3[i]));
-									p.recive(state.getArtistValue(top3[i]));
-								}
-							}
-						}
-
-						//clear the players winnings
-						p.clearWinnings();
-					}
-
+					endSeason();
 					break;//this break will break out of the season
 				}
 
@@ -197,6 +192,33 @@ public class GameDriver {
 		}
 		
 		return winner;
+	}
+	
+	private void endSeason() {
+		//state.updateTopThree(state.getTopThree());
+		if(debugPrinting)
+		System.out.println("Season Ended");
+
+		//give players what they have won
+		for(Player p : players) {
+			Artist[] top3 = state.getTopThree();
+			if(debugPrinting)
+			System.out.println(p.name);
+
+			for(int i = 0; i < top3.length; i++) {
+				for(Card c : p.getWinnings()) {
+					if(c.getArtist() == top3[i]) {
+						if(debugPrinting)
+						System.out.println(c + " : " + state.getArtistValue(top3[i]));
+						p.recive(state.getArtistValue(top3[i]));
+					}
+				}
+			}
+
+			//clear the players winnings
+			p.clearWinnings();
+		}
+
 	}
 
 	////////////////////////////////////////////////////////////////////////////////
@@ -288,8 +310,8 @@ public class GameDriver {
 	 * @return a Bid object that hold the index of the winner and the price they will pay.
 	 */
 	private Bid sealed(int turn) {
-		int highestBidder = -1;
-		int highestPrice = -1;
+		int highestBidder = turn;
+		int highestPrice = 0;
 		for(int i = 0; i < players.length; i++) {
 			int bid = players[(i+turn+1)%players.length].getBid(-1);
 			if(bid > highestPrice) {

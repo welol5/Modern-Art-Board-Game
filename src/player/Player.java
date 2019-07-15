@@ -190,6 +190,16 @@ public abstract class Player{
 			moneyText.set("" + money);
 		}
 	}
+	
+	public void reset() {
+		hand.clear();
+		winnings.clear();
+		money = 100;
+		if(moneyText != null) {
+			moneyText.set("" + money);
+		}
+		updateGUI();
+	}
 
 	/**
 	 * Have the player choose a card they would like to bid on.

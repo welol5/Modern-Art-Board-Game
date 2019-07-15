@@ -48,6 +48,22 @@ public class GameState extends Observable{
 	public GameState(int playerCount) {
 		this.playerCount = playerCount;
 
+		reset();
+
+		//set the deal amounts
+		if(playerCount == 3) {
+			dealAmounts = DEAL_3_PLAYERS;
+		} else if(playerCount == 4) {
+			dealAmounts = DEAL_4_PLAYERS;
+		} else {
+			dealAmounts = DEAL_5_PLAYERS;
+		}
+
+		//update the strings for observers
+		updateStrings();
+	}
+
+	public void reset() {
 		//now the deck needs to be created and shuffled
 		makeDeck();
 		shuffleDeck();
@@ -58,7 +74,7 @@ public class GameState extends Observable{
 		for(Artist artist: Artist.values()) {
 			artistValues.put(artist, 0);
 		}
-		
+
 		//setup for observers
 		artistValuesStrings = new HashMap<Artist, StringProperty>();
 		for(Artist a : Artist.values()) {
@@ -72,22 +88,10 @@ public class GameState extends Observable{
 			seasonCounts.add(new ArtistCount(artist));
 		}
 		seasonCounts.sort(valuesComparitor);
-		
+
 		seasonCountsStrings = new HashMap<Artist, StringProperty>();
 		for(Artist a : Artist.values()) {
 			seasonCountsStrings.put(a, new SimpleStringProperty());
-		}
-
-		//update the strings for observers
-		updateStrings();
-
-		//set the deal amounts
-		if(playerCount == 3) {
-			dealAmounts = DEAL_3_PLAYERS;
-		} else if(playerCount == 4) {
-			dealAmounts = DEAL_4_PLAYERS;
-		} else {
-			dealAmounts = DEAL_5_PLAYERS;
 		}
 
 		//update the strings for observers
@@ -120,10 +124,10 @@ public class GameState extends Observable{
 			}
 		}
 		seasonCounts.sort(valuesComparitor);
-		
-//		for(ArtistCount ac : seasonCounts) {
-//			System.out.println(ac);
-//		}
+
+		//		for(ArtistCount ac : seasonCounts) {
+		//			System.out.println(ac);
+		//		}
 
 		if(seasonCounts.get(0).getCount() >= 5) {
 			updateTopThree(getTopThree());
@@ -136,7 +140,7 @@ public class GameState extends Observable{
 			return false;
 		}
 	}
-	
+
 	public boolean seasonEnded() {
 		if(seasonCounts.get(0).getCount() >= 5) {
 			return true;
@@ -334,7 +338,7 @@ public class GameState extends Observable{
 				}
 			}
 		}
-		
+
 		//this is here so that the GUI thread is not spammed
 		try {
 			Thread.sleep(10);
@@ -351,21 +355,21 @@ public class GameState extends Observable{
 	public ReadOnlyStringProperty getArtistValueString(Artist artist) {
 		return artistValuesStrings.get(artist);
 	}
-	
+
 	//this works as a test
-//	//debug
-//	public void count() {
-//		for(int i = 0; i < 10; i++) {
-//			artistValues.put(Artist.LITE_METAL, artistValues.get(Artist.LITE_METAL)+1);
-//			updateStrings();
-//			
-//			//TODO slow it down
-//			try {
-//				Thread.sleep(1000);
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
-//	}
+	//	//debug
+	//	public void count() {
+	//		for(int i = 0; i < 10; i++) {
+	//			artistValues.put(Artist.LITE_METAL, artistValues.get(Artist.LITE_METAL)+1);
+	//			updateStrings();
+	//			
+	//			//TODO slow it down
+	//			try {
+	//				Thread.sleep(1000);
+	//			} catch (InterruptedException e) {
+	//				// TODO Auto-generated catch block
+	//				e.printStackTrace();
+	//			}
+	//		}
+	//	}
 }
