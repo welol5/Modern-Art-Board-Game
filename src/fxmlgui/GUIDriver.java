@@ -198,7 +198,7 @@ public class GUIDriver implements Initializable, Observer{
 			names.add("p" + i);
 			//get a random playerType
 			//the "+- 1" excludes human and genetic
-			types.add(PlayerType.values()[random.nextInt(1+PlayerType.values().length-2)]);
+			types.add(PlayerType.values()[1+random.nextInt(PlayerType.values().length-2)]);
 		}
 
 		int playerIndex = random.nextInt(playerCount);
