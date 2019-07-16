@@ -28,6 +28,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import player.BasicPredictiveAIPlayer;
 import player.BasicPredictiveAIPlayerV2;
+import player.BasicPredictiveAIPlayerV3;
 import player.HandStateCardPicker;
 import player.HighRoller;
 import player.HumanPlayer;
@@ -306,6 +307,8 @@ public class GUIDriver implements Initializable, Observer{
 				players[i] = new Merchant(names.get(i),OGS, players.length,i);
 			} else if(types.get(i) == PlayerType.HAND_STATE_CARD_PICKER) {
 				players[i] = new HandStateCardPicker(names.get(i),OGS, players.length,i);
+			} else if(types.get(i) == PlayerType.BASIC_PREDICTIVE_AI_V3) {
+				players[i] = new BasicPredictiveAIPlayerV3(names.get(i),OGS, players.length,i);
 			} else {
 				players[i] = new RandomPlayer(names.get(i));
 			}
