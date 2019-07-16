@@ -6,9 +6,9 @@ import player.PlayerType;
 
 public class TournamentGame {
 
-	private static final int trials = 500;
+	private static final int trials = 100;
 	private static final int timeout = 10000;
-	
+
 	private static final int threadCount = 8;
 
 	private static ArrayList<ArrayList<PlayerType>> allGames = new ArrayList<ArrayList<PlayerType>>();
@@ -38,17 +38,20 @@ public class TournamentGame {
 		for(int playerOneSlot = 0; playerOneSlot < playerTypeList.size(); playerOneSlot++) {
 			for(int playerTwoSlot = 0; playerTwoSlot < playerTypeList.size(); playerTwoSlot++) {
 				for(int playerThreeSlot = 0; playerThreeSlot < playerTypeList.size(); playerThreeSlot++) {
+					for(int playerFourSlot = 0; playerFourSlot < playerTypeList.size(); playerFourSlot++) {
 
-					//run each order for (trials) iterations
-					for(int i = 0; i < trials; i++) {
-						
-						ArrayList<PlayerType> currentPlayerTypes = new ArrayList<PlayerType>();
-						currentPlayerTypes.add(playerTypeList.get(playerOneSlot));
-						currentPlayerTypes.add(playerTypeList.get(playerTwoSlot));
-						currentPlayerTypes.add(playerTypeList.get(playerThreeSlot));
+						//run each order for (trials) iterations
+						for(int i = 0; i < trials; i++) {
 
-						allGames.add(currentPlayerTypes);
+							ArrayList<PlayerType> currentPlayerTypes = new ArrayList<PlayerType>();
+							currentPlayerTypes.add(playerTypeList.get(playerOneSlot));
+							currentPlayerTypes.add(playerTypeList.get(playerTwoSlot));
+							currentPlayerTypes.add(playerTypeList.get(playerThreeSlot));
+							currentPlayerTypes.add(playerTypeList.get(playerFourSlot));
 
+							allGames.add(currentPlayerTypes);
+
+						}
 					}
 				}
 			}
@@ -62,13 +65,13 @@ public class TournamentGame {
 			runnerPool[i] = new GameRunner(timeout);
 			runnerPool[i].start();
 		}
-//		System.out.println("Threads statred");
+		//		System.out.println("Threads statred");
 
 		//wait for all games to be taken
 		while(allGames.size() > 0) {
 			//print remaing games
 			System.out.println(allGames.size());
-			
+
 			try {
 				Thread.sleep(5000);
 			} catch (InterruptedException e) {
@@ -76,7 +79,7 @@ public class TournamentGame {
 				e.printStackTrace();
 			}
 		}
-		
+
 		//wait for all threads to finish
 		for(GameRunner gr : runnerPool) {
 			gr.stopRunner();
@@ -87,7 +90,7 @@ public class TournamentGame {
 				e.printStackTrace();
 			}
 		}
-		
+
 		//print results
 		for(PlayerType type : playerTypeList) {
 			System.out.println(type + " :: " + wins.get(type.toString()));
@@ -99,7 +102,7 @@ public class TournamentGame {
 			wins.put(winner.name, wins.get(winner.name) + 1);
 		}
 	}
-	
+
 	public static ArrayList<PlayerType> getPlayerList() {
 		synchronized(allGames) {
 			try {
