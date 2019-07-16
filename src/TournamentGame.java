@@ -6,10 +6,10 @@ import player.PlayerType;
 
 public class TournamentGame {
 
-	private static final int trials = 100;
+	private static final int trials = 500;
 	private static final int timeout = 10000;
 
-	private static final int threadCount = 8;
+	private static final int threadCount = 1024;
 
 	private static ArrayList<ArrayList<PlayerType>> allGames = new ArrayList<ArrayList<PlayerType>>();
 	private static HashMap<String,Integer> wins;
