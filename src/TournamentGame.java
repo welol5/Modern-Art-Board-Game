@@ -18,7 +18,7 @@ import player.ReactiveAIPlayer;
 
 public class TournamentGame {
 
-	private static final int trials = 100;
+	private static final int trials = 500;
 	private static final int timeout = 10000;
 	
 	private static final int threadCount = 8;
