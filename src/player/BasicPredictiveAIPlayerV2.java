@@ -77,7 +77,7 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 		}
 		return hand.remove(random.nextInt(hand.size()));
 	}
-	
+
 	@Override
 	public int getBid(int highestBid) {
 
@@ -96,10 +96,10 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 			maxValue = (int)(((double)maxValue)*(((double)players.length)-1)/((double)players.length));
 			//System.out.println("ValueAfter : " + maxValue);
 		}
-		
+
 		return getBid(highestBid,maxValue);
 	}
-	
+
 	@Override
 	protected int getBid(int highestBid, int highestValue) {
 
@@ -118,9 +118,9 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 			while (highestValue-players.length*t-highestBid > 0) {
 				t++;
 			}
-//			System.out.println("Highest bid : " + highestBid);
-//			System.out.println("Bid         : " + (highestBid + highestValue-players.length*(t-1)-highestBid));
-//			System.out.println("Value       : " + highestValue);
+			//			System.out.println("Highest bid : " + highestBid);
+			//			System.out.println("Bid         : " + (highestBid + highestValue-players.length*(t-1)-highestBid));
+			//			System.out.println("Value       : " + highestValue);
 			return highestBid + highestValue-players.length*(t-1)-highestBid;
 		} else {
 			return -1;
@@ -154,7 +154,7 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 			favoredArtists.clear();
 		}
 	}
-	
+
 	@Override
 	public void announceAuctionWinner(int turn, String name, int price) {
 		//System.out.println("Here");
@@ -165,65 +165,64 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 		//System.out.println(name + " : " + price);
 	}
 
+	protected boolean setNextFavoredArtist() {
+		//TODO this could be improved
+		//make decisions based off of more than just the winnings
+		if(winnings.size() > 0) {
+			//sort winnings to be able to choose the best order
+			ArrayList<ArtistCount> sortedWinnings = new ArrayList<ArtistCount>();
+			for(Artist a : Artist.values()) {
+				int count = 0;
+				for(Card c : winnings) {
+					if(c.getArtist() == a) {
+						count++;
+					}
+				}
+				sortedWinnings.add(new ArtistCount(a,count));
+			}
+			sortedWinnings.sort((ArtistCount a, ArtistCount b) -> a.compareTo(b));//love this
+
+			//add these in as needed
+			if(favoredArtists.size() == 0) {
+				favoredArtists.add(sortedWinnings.get(0).getArtist());
+			} else if(favoredArtists.size() == 1) {
+				for(ArtistCount c : sortedWinnings) {
+					//add if the artist is not already added and if the AI has won at least 1
+					if(c.getArtist() != favoredArtists.get(0) && c.getCount() > 0) {
+						favoredArtists.add(c.getArtist());
+						break;
+					}
+				}
+			} else if(favoredArtists.size() == 2) {
+				for(ArtistCount c : sortedWinnings) {
+					//add if the artist is not already added and if the AI has won at least 1
+					if(c.getArtist() != favoredArtists.get(0) && c.getArtist() != favoredArtists.get(0) && c.getCount() > 0) {
+						favoredArtists.add(c.getArtist());
+						break;
+					}
+				}
+			}
+			return true;
+		} else {
+
+			return false;
+		}
+	}
+
 	/**
 	 * 
 	 * @return the favored artist
 	 */
 	protected Artist chooseFavordArtist() {
 
-		//print all values considered for favored artist
-//		System.out.println("Hand");
-//		for(Card c : hand) {
-//			System.out.println(c);
-//		}
-//		System.out.println("Season values");
-//		for(ArtistCount c : state.getSeasonValues()) {
-//			System.out.println(c);
-//		}
-//		System.out.println("Winnings");
-//		for(Card c : winnings) {
-//			System.out.println(c);
-//		}
 
 		//TODO probably should'nt use an array list
 		if(favoredArtists.size() < 3) {
-			
+
 			//TODO this could be improved
 			//make decisions based off of more than just the winnings
-			if(winnings.size() > 0) {
-				//sort winnings to be able to choose the best order
-				ArrayList<ArtistCount> sortedWinnings = new ArrayList<ArtistCount>();
-				for(Artist a : Artist.values()) {
-					int count = 0;
-					for(Card c : winnings) {
-						if(c.getArtist() == a) {
-							count++;
-						}
-					}
-					sortedWinnings.add(new ArtistCount(a,count));
-				}
-				sortedWinnings.sort((ArtistCount a, ArtistCount b) -> a.compareTo(b));//love this
-
-				//add these in as needed
-				if(favoredArtists.size() == 0) {
-					favoredArtists.add(sortedWinnings.get(0).getArtist());
-				} else if(favoredArtists.size() == 1) {
-					for(ArtistCount c : sortedWinnings) {
-						//add if the artist is not already added and if the AI has won at least 1
-						if(c.getArtist() != favoredArtists.get(0) && c.getCount() > 0) {
-							favoredArtists.add(c.getArtist());
-							break;
-						}
-					}
-				} else if(favoredArtists.size() == 2) {
-					for(ArtistCount c : sortedWinnings) {
-						//add if the artist is not already added and if the AI has won at least 1
-						if(c.getArtist() != favoredArtists.get(0) && c.getArtist() != favoredArtists.get(0) && c.getCount() > 0) {
-							favoredArtists.add(c.getArtist());
-							break;
-						}
-					}
-				}
+			if(setNextFavoredArtist()) {
+				
 			} else {
 				//nothing has been won yet, play the most common artist in hand
 				Artist bestArtist = null;
@@ -241,15 +240,15 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 					}
 				}
 				//bestArtist here is the most common one in hand
-//				System.out.println("Best " + bestArtist);
+				//				System.out.println("Best " + bestArtist);
 				return bestArtist;
 			}
 		}
-		
-//		System.out.println("Favored Artists");
-//		for(Artist a : favoredArtists) {
-//			System.out.println(a);
-//		}
+
+		//		System.out.println("Favored Artists");
+		//		for(Artist a : favoredArtists) {
+		//			System.out.println(a);
+		//		}
 
 		//here the favored artist list is good, so an artist should be chosen from that
 		//the artist that should be chosen as favored is one that would make the season values get closer to favored artist list
@@ -260,9 +259,9 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 					return c.getArtist();//return the good artist
 				}
 			}
-			
+
 		}
-		
+
 		if(favoredArtists.size() > 1 && !(favoredArtists.get(1) == state.getSeasonValues()[1].getArtist())) {
 			//need to check if the hand has a card
 			for(Card c : hand) {
@@ -271,7 +270,7 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 				}
 			}
 		}
-		
+
 		if( favoredArtists.size() > 2 && !(favoredArtists.get(2) == state.getSeasonValues()[2].getArtist())) {
 			//need to check if the hand has a card
 			for(Card c : hand) {
@@ -281,7 +280,7 @@ public class BasicPredictiveAIPlayerV2 extends MemoryAIPlayer{
 			}
 		}
 		//the above only returns something if something is out of place
-		
+
 		//return the most favored artist that is in hand (not double)
 		for(int i = 0; i < favoredArtists.size(); i++) {
 			for(Card c : hand) {

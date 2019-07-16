@@ -81,6 +81,7 @@ public class TournamentGame {
 		}
 
 		//wait for all threads to finish
+		int threadsRemaining = threadCount;
 		for(GameRunner gr : runnerPool) {
 			gr.stopRunner();
 			try {
@@ -89,6 +90,8 @@ public class TournamentGame {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			threadsRemaining--;
+			System.out.println("Threads remaining : " + threadsRemaining);
 		}
 
 		//print results
