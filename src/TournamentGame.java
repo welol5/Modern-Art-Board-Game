@@ -1,20 +1,8 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import core.GameState;
-import core.ObservableGameState;
-import fxmlgui.GameDriver;
-import player.BasicPredictiveAIPlayer;
-import player.BasicPredictiveAIPlayerV2;
-import player.HandStateCardPicker;
-import player.HighRoller;
-import player.HumanPlayer;
-import player.MemoryAIPlayer;
-import player.Merchant;
 import player.Player;
 import player.PlayerType;
-import player.RandomPlayer;
-import player.ReactiveAIPlayer;
 
 public class TournamentGame {
 
