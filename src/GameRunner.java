@@ -67,9 +67,13 @@ public class GameRunner extends Thread{
 
 					@Override
 					public void run() {
+						try {
 						winner = driver.playGame();
 //						System.out.println("done");
 						done = true;
+						} catch (Exception e){
+							e.printStackTrace();
+						}
 					}
 				});
 				
