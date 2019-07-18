@@ -4,9 +4,30 @@ import java.util.HashMap;
 import player.Player;
 import player.PlayerType;
 
+/**
+ * This main class is used to run a tournament with all of the
+ * AIs that are specified in the {@link PlayerType} ArrayList.
+ * The main method works by creating all of the different lists
+ * of players that will be in the games, then it creates {@link GameRunner}
+ * Threads in a pool to take the games and run them as fast as they can.
+ * 
+ * @author William Elliman
+ *
+ */
 public class TournamentGame {
 
+	/**
+	 * The amount of times an ordering of the AIs will be played.
+	 * Multiple games are run here so that the best AI will prove
+	 * it by winning most of the games.
+	 */
 	private static final int trials = 100;
+	
+	/**
+	 * The time a {@link GameRunner} Thread will allow for a game to be
+	 * played. This exists because sometimes the games do not finish.
+	 * It is rarely used but the {@link Random} AIs will trigger it.
+	 */
 	private static final int timeout = 10000;
 
 	private static final int threadCount = 1024;
