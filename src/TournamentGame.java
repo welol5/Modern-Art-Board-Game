@@ -6,7 +6,7 @@ import player.PlayerType;
 
 public class TournamentGame {
 
-	private static final int trials = 500;
+	private static final int trials = 100;
 	private static final int timeout = 10000;
 
 	private static final int threadCount = 1024;
@@ -25,6 +25,7 @@ public class TournamentGame {
 		playerTypeList.add(PlayerType.HIGH_ROLLER);
 		playerTypeList.add(PlayerType.MERCHANT);
 		playerTypeList.add(PlayerType.HAND_STATE_CARD_PICKER);
+		playerTypeList.add(PlayerType.BASIC_PREDICTIVE_AI_V3);
 
 		wins = new HashMap<String,Integer>();
 		//init to 0s

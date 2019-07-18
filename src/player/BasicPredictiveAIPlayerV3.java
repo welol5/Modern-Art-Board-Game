@@ -18,6 +18,7 @@ public class BasicPredictiveAIPlayerV3 extends BasicPredictiveAIPlayerV2 {
 		deckSize = 70;
 		
 		//init artistRemaining
+		artistRemaining = new HashMap<Artist,Integer>();
 		artistRemaining.put(Artist.LITE_METAL, 12);
 		artistRemaining.put(Artist.YOKO, 13);
 		artistRemaining.put(Artist.CHRISTIN_P, 14);
