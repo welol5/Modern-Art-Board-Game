@@ -15,17 +15,54 @@ import player.Player;
 import player.PlayerType;
 import player.RandomPlayer;
 import player.ReactiveAIPlayer;
-
+/**
+ * This object is the thread that is used in the TournamentGame 
+ * main program to run an automated game of Modern Art. It works
+ * as part of a thread pool in TournamentGame, getting a list of
+ * AI players that will play a game of Modern art. After the game
+ * it goes back to TournamentGame and updates the score of the
+ * player that won.
+ * 
+ * @author William Elliman
+ *
+ */
 public class GameRunner extends Thread{
 
+	/**
+	 * The player that won the game.
+	 */
 	private Player winner;
+
+	/**
+	 * This is used to tell this thread if the game was completed
+	 * or if there was an issue and the game should be replayed.
+	 */
 	private boolean done = false;
+
+	/**
+	 * The time in mills that this thread should wait before canceling
+	 * because it thinks there was a logical error (infinite loop type
+	 * thing).
+	 */
 	private final int timeout;
-	private GameDriver driver;
-	
+
+	/**
+	 * The list of {@link PlayerType} that will be playing in this game
+	 * in the order that they will be during the game.
+	 */
 	private ArrayList<PlayerType> types = null;
+
+	/**
+	 * The list of names the players will be using. This list should be
+	 * in the same order as the {@link PlayerType} list.
+	 */
 	private ArrayList<String> names;
-	
+
+	/**
+	 * The var used to tell this thread to stop trying to get new games.
+	 * This should be changed to false by calling the {@link #stopRunner()}
+	 * function.
+	 */
 	private boolean stop = false;
 
 	public GameRunner(int timeout) {
@@ -36,69 +73,89 @@ public class GameRunner extends Thread{
 	@Override
 	public void run() {
 
+		//while the program is not done
 		while(!stop) {
+			//reset the done var
 			done = false;
-			
+
 			//get a list of players
 			types = TournamentGame.getPlayerList();
 
+			//if the list is null, try again
 			if(types == null) {
 				continue;
 			}
 
+			//while a game has not been completed
 			while(!done) {
-				
+
 				//make the game
 				GameState state = new GameState(types.size());
 				ObservableGameState OGS = new ObservableGameState(state);
-				
+
 				//make the players
 				names = new ArrayList<String>();
 				for(PlayerType type : types) {
 					names.add(type.toString());
 				}
 				Player[] players = makePlayers(names, types, OGS);
-				
+
 				//make the driver
 				GameDriver driver = new GameDriver(players, state, OGS, false);
-				
+
 				//make the thread to run the game
 				Thread runner = new Thread(new Runnable() {
 
 					@Override
 					public void run() {
 						try {
-						winner = driver.playGame();
-//						System.out.println("done");
-						done = true;
+							//run the game
+							winner = driver.playGame();
+							//set this to true if the game finished
+							done = true;
 						} catch (Exception e){
 							e.printStackTrace();
 						}
 					}
 				});
-				
+
+				//Start the thread that actually runs the game
 				runner.start();
 
 				try {
+					//wait for the game to be either done or to fail
 					runner.join(timeout);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
+			//update the wins in the tournament
 			TournamentGame.addWin(winner);
 		}
 	}
-	
+
+	/**
+	 * Call this method to stop this thread. This should be
+	 * called once all of the games in the tournament have either
+	 * been competed or taken by other threads.
+	 */
 	public void stopRunner() {
 		stop = true;
 	}
-	
+
+	/**
+	 * Helper method to take a list of player properties and make
+	 * the actual players from them.
+	 * @param names of the players that will be playing in the game.
+	 * @param types of the players that will be playing in the game.
+	 * @param OGS The observable game state. See the class for details.
+	 * @return The list of players that will be playing in the game.
+	 */
 	private static Player[] makePlayers(ArrayList<String> names, ArrayList<PlayerType> types, ObservableGameState OGS) {
 		Player[] players = new Player[names.size()];
 
 		for(int i = 0; i < players.length; i++) {
-			boolean add = true;
 			if(types.get(i) == PlayerType.RANDOM) {
 				players[i] = new RandomPlayer(names.get(i));
 			} else if(types.get(i) == PlayerType.REACTIVE_AI) {
