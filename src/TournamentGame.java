@@ -30,13 +30,29 @@ public class TournamentGame {
 	 */
 	private static final int timeout = 10000;
 
+	/**
+	 * This is the amount of threads that will be in the tread pool.
+	 * I found that this should be far larger than the actual amount of
+	 * threads that a computer has.
+	 */
 	private static final int threadCount = 1024;
 
+	/**
+	 * The set of lists of AIs that will play the games.
+	 */
 	private static ArrayList<ArrayList<PlayerType>> allGames = new ArrayList<ArrayList<PlayerType>>();
+	
+	/**
+	 * This keeps the counts of how many games each player has won.
+	 */
 	private static HashMap<String,Integer> wins;
 
 	public static void main(String[] args) {
 
+		/**
+		 * The list of players.
+		 * This is what should be changed when testing AIs.
+		 */
 		ArrayList<PlayerType> playerTypeList = new ArrayList<PlayerType>();
 		playerTypeList.add(PlayerType.RANDOM);
 		playerTypeList.add(PlayerType.REACTIVE_AI);
@@ -48,15 +64,18 @@ public class TournamentGame {
 		playerTypeList.add(PlayerType.HAND_STATE_CARD_PICKER);
 		playerTypeList.add(PlayerType.BASIC_PREDICTIVE_AI_V3);
 
+		//init
 		wins = new HashMap<String,Integer>();
 		//init to 0s
 		for(PlayerType type : playerTypeList) {
 			wins.put(type.toString(), 0);
 		}
 
-		int iterationIndex = 0;
-		int totalIterations = playerTypeList.size()*playerTypeList.size()*playerTypeList.size()*trials;
-
+		/**
+		 * This block creates all of the lists of players that will play in the games.
+		 * It creates copies of the same order so that the best AI has many chances to win.
+		 * Right now it is set up for 4 player games
+		 */
 		for(int playerOneSlot = 0; playerOneSlot < playerTypeList.size(); playerOneSlot++) {
 			for(int playerTwoSlot = 0; playerTwoSlot < playerTypeList.size(); playerTwoSlot++) {
 				for(int playerThreeSlot = 0; playerThreeSlot < playerTypeList.size(); playerThreeSlot++) {
@@ -65,12 +84,15 @@ public class TournamentGame {
 						//run each order for (trials) iterations
 						for(int i = 0; i < trials; i++) {
 
+							//create a new list to use
 							ArrayList<PlayerType> currentPlayerTypes = new ArrayList<PlayerType>();
+							//add the players to the list
 							currentPlayerTypes.add(playerTypeList.get(playerOneSlot));
 							currentPlayerTypes.add(playerTypeList.get(playerTwoSlot));
 							currentPlayerTypes.add(playerTypeList.get(playerThreeSlot));
 							currentPlayerTypes.add(playerTypeList.get(playerFourSlot));
 
+							//add the list to the set of lists
 							allGames.add(currentPlayerTypes);
 
 						}
@@ -87,11 +109,11 @@ public class TournamentGame {
 			runnerPool[i] = new GameRunner(timeout);
 			runnerPool[i].start();
 		}
-		//		System.out.println("Threads statred");
 
 		//wait for all games to be taken
+		//this prints out the remaining games after every 5-ish seconds
 		while(allGames.size() > 0) {
-			//print remaing games
+			//print remaining games
 			System.out.println(allGames.size());
 
 			try {
@@ -105,13 +127,15 @@ public class TournamentGame {
 		//wait for all threads to finish
 		int threadsRemaining = threadCount;
 		for(GameRunner gr : runnerPool) {
+			//set the thread to stop
 			gr.stopRunner();
 			try {
+				//wait for the thread to stop
 				gr.join();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			//keeping track of the remaining threads
 			threadsRemaining--;
 			System.out.println("Threads remaining : " + threadsRemaining);
 		}
@@ -122,12 +146,20 @@ public class TournamentGame {
 		}
 	}
 
+	/**
+	 * Add one win to the win counts for a player.
+	 * @param winner the winner of the game.
+	 */
 	public static void addWin(Player winner) {
 		synchronized(wins) {
 			wins.put(winner.name, wins.get(winner.name) + 1);
 		}
 	}
 
+	/**
+	 * Retrieves a list of players for a {@link GameRunner} to use.
+	 * @return a list of {@link PlayerType} that should play a game.
+	 */
 	public static ArrayList<PlayerType> getPlayerList() {
 		synchronized(allGames) {
 			try {
