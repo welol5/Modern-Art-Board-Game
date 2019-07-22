@@ -19,19 +19,54 @@ import javafx.beans.property.StringProperty;
  */
 public class GameState extends Observable{
 
+	/**
+	 * Holds the deal amounts for 3 player games.
+	 */
 	private static final int[] DEAL_3_PLAYERS = {10,6,6,0};
+	
+	/**
+	 * Holds the deal amounts for 4 player games.
+	 */
 	private static final int[] DEAL_4_PLAYERS = {9,4,4,0};
+	
+	/**
+	 * Holds the deal amounts for 5 player games.
+	 */
 	private static final int[] DEAL_5_PLAYERS = {8,3,3,0};
+	
+	/**
+	 * The var used to hold the deal amounts.
+	 */
 	public final int[] dealAmounts;
 
+	/**
+	 * The amount of players in the game.
+	 */
 	public final int playerCount;
 
-	private ArrayList<Card> deck = new ArrayList<Card>();//the deck of cards that no palyer can see
+	/**
+	 * The deck of painting cards.
+	 */
+	private ArrayList<Card> deck = new ArrayList<Card>();
 
-	private HashMap<Artist, Integer> artistValues;//contains the values for each artists paintings
+	/**
+	 * The list of artist and the prices their paintings will sell for
+	 */
+	private HashMap<Artist, Integer> artistValues;
+	
+	/**
+	 * String values for the artistValues. This is used by the GUI by binding {@link Text} objects to them
+	 */
 	private HashMap<Artist, StringProperty> artistValuesStrings;
 
-	private ArrayList<ArtistCount> seasonCounts;//keeps track of how many of each painting has been sold and is sorted
+	/**
+	 * Keeps track of how many of each artist has been sold during the season.
+	 */
+	private ArrayList<ArtistCount> seasonCounts;
+	
+	/**
+	 * String values for the seasonCounts. This is used by the GUI by binding {@link Text} objects to them
+	 */
 	private static Comparator<ArtistCount> valuesComparitor = new Comparator<ArtistCount>() {
 		@Override
 		public int compare(ArtistCount o1, ArtistCount o2) {
@@ -329,6 +364,9 @@ public class GameState extends Observable{
 	///////////////////////////////////////////////////////
 	//update strings
 
+	/**
+	 * Updates the string values to match their numerical counterparts.
+	 */
 	private void updateStrings() {
 		for(Artist artist : Artist.values()) {
 			artistValuesStrings.get(artist).set(artistValues.get(artist).toString());
@@ -348,28 +386,19 @@ public class GameState extends Observable{
 		}
 	}
 
-	//be able to give the observable strings
+	/**
+	 * @param artist that the string will be for.
+	 * @return the {@link ReadOnlyStringProperty} for the amount of the artists paintings have been sold that season.
+	 */
 	public ReadOnlyStringProperty getArtistCountString(Artist artist) {
 		return seasonCountsStrings.get(artist);
 	}
+	
+	/**
+	 * @param artist that the string will be for.
+	 * @return the {@link ReadOnlyStringProperty} for the current value of an artits paintings.
+	 */
 	public ReadOnlyStringProperty getArtistValueString(Artist artist) {
 		return artistValuesStrings.get(artist);
 	}
-
-	//this works as a test
-	//	//debug
-	//	public void count() {
-	//		for(int i = 0; i < 10; i++) {
-	//			artistValues.put(Artist.LITE_METAL, artistValues.get(Artist.LITE_METAL)+1);
-	//			updateStrings();
-	//			
-	//			//TODO slow it down
-	//			try {
-	//				Thread.sleep(1000);
-	//			} catch (InterruptedException e) {
-	//				// TODO Auto-generated catch block
-	//				e.printStackTrace();
-	//			}
-	//		}
-	//	}
 }
