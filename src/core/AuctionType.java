@@ -1,6 +1,6 @@
 package core;
 /**
- * Hold all of the different types of auction
+ * Hold all of the different types of auction.
  * @author William Elliman
  *
  */
