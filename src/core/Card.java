@@ -33,6 +33,7 @@ public class Card {
 		return auctionType;
 	}
 
+	@Override
 	public String toString() {
 		String string = "";
 		
