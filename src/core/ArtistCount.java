@@ -2,25 +2,47 @@ package core;
 
 import java.io.Serializable;
 
-public class ArtistCount implements Comparable<ArtistCount>, Serializable {
+/**
+ * This class is here because there are many instances where having an {@link Artist} and a number linked is useful.
+ * @author William Elliman
+ *
+ */
+public class ArtistCount implements Comparable<ArtistCount> {
+	
 	/**
-	 * 
+	 * The artist.
 	 */
-	private static final long serialVersionUID = -8235301809371821812L;
-	
-	
 	private final Artist artist;
+	
+	/**
+	 * The value.
+	 */
 	private int count = 0;
 	
+	/**
+	 * Initializes a new ArtistCount with a count of 0.
+	 * 
+	 * @param artist
+	 */
 	public ArtistCount(Artist artist) {
 		this.artist = artist;
 	}
 	
+	/**
+	 * Initializes a new ArtistCount with count that is specified
+	 * 
+	 * @param artist
+	 * @param count
+	 */
 	public ArtistCount(Artist artist, int count) {
 		this.artist = artist;
 		this.count = count;
 	}
 	
+	/**
+	 * Use this to increment the count.
+	 * @param isDouble will increment by 2 if true.
+	 */
 	public void auction(boolean isDouble) {
 		count++;
 		if(isDouble) {
@@ -28,14 +50,23 @@ public class ArtistCount implements Comparable<ArtistCount>, Serializable {
 		}
 	}
 	
+	/**
+	 * @return the count value.
+	 */
 	public int getCount() {
 		return count;
 	}
 	
+	/**
+	 * @return the {@link Artist}.
+	 */
 	public Artist getArtist() {
 		return artist;
 	}
 	
+	/**
+	 * Decrements count.
+	 */
 	public void removeCard() {
 		count--;
 	}
@@ -68,6 +99,9 @@ public class ArtistCount implements Comparable<ArtistCount>, Serializable {
 		return 0;
 	}
 	
+	/**
+	 * @return a copy of this ArtistCount.
+	 */
 	public ArtistCount copy() {
 		return new ArtistCount(artist,count);
 	}
