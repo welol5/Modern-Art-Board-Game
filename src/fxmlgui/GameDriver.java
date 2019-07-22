@@ -34,6 +34,13 @@ public class GameDriver {
 		this.OGS = OGS;
 	}
 	
+	/**
+	 * 
+	 * @param players The list of players that will be playing the game.
+	 * @param state The state of the game, freshly created.
+	 * @param OGS The observable game state.
+	 * @param debugPrinting Should be set to true if the debug statements should be printed.
+	 */
 	public GameDriver(Player[] players, GameState state, ObservableGameState OGS, boolean debugPrinting) {
 		this.players = players;
 		this.state = state;
@@ -41,6 +48,10 @@ public class GameDriver {
 		this.debugPrinting = debugPrinting;
 	}
 	
+	/**
+	 * Resets game to be like it never happened.
+	 * This does not seem to work.
+	 */
 	public void resetGame() {
 		for(Player p : players) {
 			p.reset();
