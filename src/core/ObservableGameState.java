@@ -12,27 +12,51 @@ import javafx.beans.property.ReadOnlyStringProperty;
  */
 public class ObservableGameState{
 
+	/**
+	 * The array that keeps track of the players still bidding.
+	 */
 	public boolean[] stillBidding;
 
+	/**
+	 * The actual state of the game.
+	 */
 	private final GameState state;
 
+	/**
+	 * @param state of the game
+	 */
 	public ObservableGameState(GameState state) {
 		this.state = state;
 		stillBidding = null;
 	}
 
+	/**
+	 * Gests the season value for a specific artist
+	 * @param artist
+	 * @return the int version of the season value.
+	 */
 	public int getSeasonValue(Artist artist) {
 		return state.getSeasonValue(artist);
 	}
 
+	/**
+	 * @return the current top 3 artists.
+	 */
 	public Artist[] getTopSeasonValues() {
 		return state.getTopThree();
 	}
 
+	/**
+	 * @param artist
+	 * @return the current value of an artists paintings.
+	 */
 	public int getArtistValue(Artist artist) {
 		return state.getArtistValue(artist);
 	}
 
+	/**
+	 * @return a copy of the seasonValues array.
+	 */
 	public ArtistCount[] getSeasonValues() {
 		ArtistCount[] copyArray = new ArtistCount[state.getSeasonValues().length];
 		for(int i = 0; i < copyArray.length; i++) {
@@ -41,10 +65,22 @@ public class ObservableGameState{
 		return copyArray;
 	}
 
-	//be able to give the observable strings
+	/**
+	 * This is here jsut to pass the ReadOnlyStringProperty through to the object that wants them.
+	 * See {@link GameState}
+	 * @param artist
+	 * @return
+	 */
 	public ReadOnlyStringProperty getArtistCountString(Artist artist) {
 		return state.getArtistCountString(artist);
 	}
+	
+	/**
+	 * This is here jsut to pass the ReadOnlyStringProperty through to the object that wants them.
+	 * See {@link GameState}
+	 * @param artist
+	 * @return
+	 */
 	public ReadOnlyStringProperty getArtistValueString(Artist artist) {
 		return state.getArtistValueString(artist);
 	}
