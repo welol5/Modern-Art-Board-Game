@@ -14,7 +14,7 @@ import core.ArtistCount;
  * This AI thinks ahead in a different way than the previous version. It will now choose an
  * order of artists that it wants to see at the end of the season. This order is what it will play
  * cards around. It will also use that order to predict what the prices of cards will be at the end
- * of a season.
+ * of a season. The order comes from the cards it has won in the early season auctions.
  * @author William Elliman
  *
  */

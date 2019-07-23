@@ -16,13 +16,20 @@ import javafx.scene.text.Text;
 
 /**
  * This class is used as a controller for the Cards seen in the GUI. It does not care about anything else, 
- * but it has methods so that other classes that know about this card can see if any actions have been preformed on it.
+ * but it has methods so that other classes that know about this card can see if any actions have been performed on it.
  * @author William Elliman
  *
  */
 public class GUICard{
 
+	/**
+	 * Tells if the player has clicked don the card
+	 */
 	private boolean selected = false;
+	
+	/**
+	 * The card this GUICard is based on.
+	 */
 	private Card card;
 	
 	@FXML Text artistText1;
@@ -83,12 +90,6 @@ public class GUICard{
 		wholeCard.setStyle("-fx-background-color: " + color + "; -fx-background-radius: 25");
 		wholeCard.setOnMouseClicked((e) -> setIsSelected());
 	}
-
-//	public void resize(double scale) {
-//		((Text)((VBox)this.getCenter()).getChildren().get(0)).setFont(new Font(24*scale));
-//		((Text)((VBox)this.getCenter()).getChildren().get(1)).setFont(new Font(112*scale));
-//		((Text)((VBox)this.getCenter()).getChildren().get(2)).setFont(new Font(24*scale));
-//	}
 
 	/**
 	 * @return true if the card has been clicked on.

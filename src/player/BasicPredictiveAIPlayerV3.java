@@ -8,6 +8,13 @@ import core.ArtistCount;
 import core.Card;
 import core.ObservableGameState;
 
+/**
+ * See {@link BasicPredictiveAIPlayerV2} for details. This version is starting
+ * to cleanup the V2 by accounting for the edge case of running out of cards.
+ * This is also the best and most recent AI.
+ * @author William Elliman
+ *
+ */
 public class BasicPredictiveAIPlayerV3 extends BasicPredictiveAIPlayerV2 {
 	
 	protected int deckSize;

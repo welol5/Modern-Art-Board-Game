@@ -10,6 +10,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.text.Text;
 import player.Player;
 
+/**
+ * This is just a section of the GUI that is used for showing other players winnings.
+ * @author William Elliman
+ *
+ */
 public class InfoSection implements Initializable{
 	@FXML Text title;
 	

@@ -8,6 +8,11 @@ import core.Artist;
 import core.ArtistCount;
 import core.Card;
 
+/**
+ * This is the DataBase for this {@link GeneticAIPlayer}.
+ * @author William Elliman
+ *
+ */
 public class GeneticAIPlayerDB implements Serializable{
 	
 	/**

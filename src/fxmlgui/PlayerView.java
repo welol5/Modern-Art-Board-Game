@@ -176,12 +176,16 @@ public class PlayerView implements Initializable{
 		return Integer.parseInt(bidBox.getText());
 	}
 
+	/**
+	 * Asks the player if they would like to buy a card for a specific price.
+	 * @param price
+	 * @return the players answer.
+	 */
 	public boolean askPlayerToBuy(int price) {
 		fixedPriceBuy = true;
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
 				announcementText.setText("Whould you like to buy the card(s) for $" + price);
 				//System.out.println("set");
 			}
@@ -205,6 +209,9 @@ public class PlayerView implements Initializable{
 		}
 	}
 
+	/**
+	 * @return the price the player is asking for a card.
+	 */
 	public int getFixedPrice() {
 		Platform.runLater(new Runnable() {
 			@Override
@@ -233,6 +240,14 @@ public class PlayerView implements Initializable{
 		}
 	}
 
+	/**
+	 * Binds value strings to their {@link Text} counterparts.
+	 * @param LMPrice
+	 * @param YPrice
+	 * @param CPPrice
+	 * @param KGPrice
+	 * @param KPrice
+	 */
 	public void bindPrices(
 			ReadOnlyStringProperty LMPrice,
 			ReadOnlyStringProperty YPrice,
@@ -246,6 +261,14 @@ public class PlayerView implements Initializable{
 		this.KPrice.textProperty().bind(KPrice);
 	}
 
+	/**
+	 * Binds count strings to their {@link Text} counterparts.
+	 * @param LMCount
+	 * @param YCount
+	 * @param CPCount
+	 * @param KGCount
+	 * @param KCount
+	 */
 	public void bindCounts(
 			ReadOnlyStringProperty LMCount,
 			ReadOnlyStringProperty YCount,
@@ -259,6 +282,9 @@ public class PlayerView implements Initializable{
 		this.KCount.textProperty().bind(KCount);
 	}
 
+	/**
+	 * Binds winnings strings to their {@link Text} counterparts.
+	 */
 	public void bindWinnings() {
 		LMWin.textProperty().bind(player.getWinningProperty(Artist.LITE_METAL));
 		YWin.textProperty().bind(player.getWinningProperty(Artist.YOKO));
@@ -267,6 +293,9 @@ public class PlayerView implements Initializable{
 		KWin.textProperty().bind(player.getWinningProperty(Artist.KRYPTO));
 	}
 
+	/**
+	 * Updates GUI to what the player currently has in their hand.
+	 */
 	public synchronized void updateGUI() {
 
 		//update hand
@@ -361,6 +390,11 @@ public class PlayerView implements Initializable{
 		});
 	}
 
+	/**
+	 * Tells the player who won the auction.
+	 * @param name of the winner.
+	 * @param price that they paid.
+	 */
 	public void announceAuctionWinner(String name, int price) {
 		Platform.runLater(new Runnable() {
 
@@ -386,6 +420,9 @@ public class PlayerView implements Initializable{
 		}
 	}
 
+	/**
+	 * @return true if this view has a player to follow.
+	 */
 	public boolean isSet() {
 		return isSet;
 	}

@@ -41,8 +41,8 @@ import player.ReactiveAIPlayer;
 
 /**
  * This class is used as both the main menu and the class that preps everything for the game to start. It also creates and starts the
- * game on a new thread.
- * @author William Ellima
+ * game on a new thread so that the GUI does not freeze.
+ * @author William Elliman
  *
  */
 public class GUIDriver implements Initializable, Observer{
@@ -262,25 +262,13 @@ public class GUIDriver implements Initializable, Observer{
 	/////////////////////////////////////////////
 	//helper stuff
 
-	private PlayerType getPlayerType(String type) {
-		if(type == null || type.equalsIgnoreCase("Random")) {
-			return PlayerType.RANDOM;
-		} else if(type.equalsIgnoreCase("Human")) {
-			return PlayerType.HUMAN;
-		} else if(type.equalsIgnoreCase("Reactive")) {
-			return PlayerType.REACTIVE_AI;
-		} else if(type.equalsIgnoreCase("Memory")) {
-			return PlayerType.MEMORY_AI;
-		} else if(type.equalsIgnoreCase("Basic Predictive V1")) {
-			return PlayerType.BASIC_PREDICTIVE_AI;
-		} else if(type.equalsIgnoreCase("Basic Predictive V2")) {
-			return PlayerType.BASIC_PREDICTIVE_AI_V2;
-		}
-
-		//if all else fails, return random
-		return PlayerType.RANDOM;
-	}
-
+	/**
+	 * Initializes a list of players.
+	 * @param names of the players.
+	 * @param types of the players.
+	 * @param OGS
+	 * @return the list of players.
+	 */
 	private Player[] makePlayers(ArrayList<String> names, ArrayList<PlayerType> types, ObservableGameState OGS) {
 		Player[] players = new Player[names.size()];
 

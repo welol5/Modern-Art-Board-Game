@@ -2,6 +2,12 @@ package player;
 
 import core.ObservableGameState;
 
+/**
+ * This AI makes a change to how the {@link BasicPredictiveAIV2} bids during standard auctions.
+ * It will always bid the highest amount.
+ * @author William Elliman
+ *
+ */
 public class HighRoller extends BasicPredictiveAIPlayerV2 {
 
 	public HighRoller(String name, ObservableGameState state, int playerCount, int turnIndex) {
@@ -9,6 +15,7 @@ public class HighRoller extends BasicPredictiveAIPlayerV2 {
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
 	protected int getBid(int highestBid, int highestValue) {
 		if(highestValue > highestBid) {
 			if(highestValue > money) {
