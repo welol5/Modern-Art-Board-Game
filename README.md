@@ -5,6 +5,9 @@ The best way to run the game is by running the Jar file. It will be the most up 
 ## Notes about this project
 This is a research project about devloping AI for a board game that is not as deterministic as a game like chess or connect 4. With that being said, the game may be slightly incomplete and is not ment for human interaction at this time. A little more detail about it being incomplete is that it may not account for all of the edge cases properly, the game itself works well enough where AIs can be tested. Support for genetic AIs has been removed because I don't see where they could go at this point in time.
 
+## Design of the Game Program
+The main design idea here is that a GameDriver asks players to preform actions and the GameState hold all of the info about the stare of the game. The Observable Game State (OGS) allows for the players to see that info. I would not recomend doing anything to the HumanPlayer or PlayerView, they use fxml which is really annoying although it is currently buggy with the sizing of the view.
+
 # About the players
 The players in the player package are snapshots of different ideas. They will be kept around but probably no longer updated. I will be using them to judge how well the future AIs act. The only exceptions to this are the Random and Human players. The AIs themselves are really snapshots of ideas that were implemented over time. That being said, to reduce repeated code, the AIs are children of their previous versions.
 
@@ -35,4 +38,7 @@ This AI is based off of the Memory AI, but it dosent really use much of its prop
 ---
 
 ## Currently WIP
-Working on the High Roller's and Merchant's children AIs. JavaDoc is mostly up to date, but the newer AIs are not done and the PlayerView is not complete.
+The research project is over so nothing is being worked on.
+
+## Unknown Bugs
+There are definitly some bugs in this game and the AIs. I dont know what they all are but the game worked well enough for the AIs to be tested. If anyone were to continue this project, they should look for bugs before making new AIs. That will probably get them more fimilar with the design of this program. 
