@@ -1,13 +1,16 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import core.GameState;
 import core.ObservableGameState;
 import fxmlgui.GameDriver;
+import mlaiplayers.GeneticAIPlayer;
+import mlaiplayers.GeneticAIPlayerDB;
 import mlaiplayers.LearningAI;
 import player.BasicPredictiveAIPlayer;
 import player.BasicPredictiveAIPlayerV2;
 import player.BasicPredictiveAIPlayerV3;
-import player.GeneticAIPlayer;
 import player.HandStateCardPicker;
 import player.HighRoller;
 import player.MemoryAIPlayer;
@@ -44,13 +47,15 @@ public class TrainingTournament {
 	/**
 	 * The MLAI being trained.
 	 */
-	private LearningAI MLAI; 
-	private PlayerType MLAIType = PlayerType.GENETIC_AI;
+	private static PlayerType MLAIType = PlayerType.GENETIC_AI;
+	private static String MLAIFileName = "GeneticDatabase.txt";
 
 	public static void main(String[] args) {
 		
+		File MLAIFile = new File(MLAIFileName);
+		
 		types = new ArrayList<PlayerType>();
-		types.add(PlayerType.GENETIC_AI);
+		types.add(MLAIType);//add the MLAI
 		types.add(PlayerType.MERCHANT);
 		types.add(PlayerType.BASIC_PREDICTIVE_AI_V2);
 		
@@ -64,7 +69,14 @@ public class TrainingTournament {
 			for(PlayerType type : types) {
 				names.add(type.toString());
 			}
-			Player[] players = makePlayers(names, types, OGS);
+			Player[] players = null;
+			try {
+				players = makePlayers(names, types, OGS, MLAIFile);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				System.out.println("The file was not found, check file path.");
+				System.exit(0);
+			}
 
 			//make the driver
 			GameDriver driver = new GameDriver(players, state, OGS, false);
@@ -79,7 +91,7 @@ public class TrainingTournament {
 	 * @param OGS The observable game state. See the class for details.
 	 * @return The list of players that will be playing in the game.
 	 */
-	private static Player[] makePlayers(ArrayList<String> names, ArrayList<PlayerType> types, ObservableGameState OGS) {
+	private static Player[] makePlayers(ArrayList<String> names, ArrayList<PlayerType> types, ObservableGameState OGS, File MLAIFile) throws FileNotFoundException{
 		Player[] players = new Player[names.size()];
 
 		for(int i = 0; i < players.length; i++) {
@@ -102,7 +114,8 @@ public class TrainingTournament {
 			} else if(types.get(i) == PlayerType.BASIC_PREDICTIVE_AI_V3) {
 				players[i] = new BasicPredictiveAIPlayerV3(names.get(i),OGS, players.length,i);
 			} else if(types.get(i) == PlayerType.GENETIC_AI) {
-				//players[i] = new GeneticAIPlayer("MLAI", OGS, players.length, i, dataBase, 0.01, 0.5)
+				GeneticAIPlayerDB database = new GeneticAIPlayerDB(MLAIFile);
+				players[i] = new GeneticAIPlayer("MLAI", OGS, players.length, i, database, 0.01, 0.5);
 			} else {
 				players[i] = new RandomPlayer(names.get(i));
 			}

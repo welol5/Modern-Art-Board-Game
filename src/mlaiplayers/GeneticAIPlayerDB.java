@@ -20,18 +20,20 @@ import core.Card;
  *
  */
 public class GeneticAIPlayerDB{
-	
+
 	private HashMap<StateData,Double> states;
-	
+
 	public GeneticAIPlayerDB() {
 		states = new HashMap<StateData,Double>();
 	}
-	
+
 	public GeneticAIPlayerDB(File database) throws FileNotFoundException{
 		states = new HashMap<StateData,Double>();
-		loadData(database);
+		if(database.exists()) {
+			loadData(database);
+		}
 	}
-	
+
 	public double getValue(StateData state) {
 		double value = 0;
 		try {
@@ -41,20 +43,20 @@ public class GeneticAIPlayerDB{
 		}
 		return value;
 	}
-	
+
 	public void putValue(StateData state, double value) {
 		states.put(state, value);
 	}
 
 	public class StateData{
-		
+
 		private ArtistCount[] hand;
 		private ArtistCount[] seasonValues;
-		
+
 		public StateData(ArrayList<Card> hand, ArtistCount[] seasonValues) {
 			ArrayList<ArtistCount> handValues = new ArrayList<ArtistCount>();
 			for(Artist artist : Artist.values()) {
-				
+
 				//count the number of cards by a given artist.
 				int count = 0;
 				for(Card card : hand) {
@@ -62,7 +64,7 @@ public class GeneticAIPlayerDB{
 						count++;
 					}
 				}
-				
+
 				handValues.add(new ArtistCount(artist, count));
 			}
 			//sort the list
@@ -73,12 +75,12 @@ public class GeneticAIPlayerDB{
 			this.hand = handValues.toArray(this.hand);
 			this.seasonValues = seasonValues;
 		}
-		
+
 		public StateData(ArtistCount[] hand, ArtistCount[] seasonValues) {
 			this.hand = hand;
 			this.seasonValues = seasonValues;
 		}
-		
+
 		public String toString() {
 			String retVal = "@start\n";
 			for(int i = 0; i < hand.length; i++) {
@@ -90,7 +92,7 @@ public class GeneticAIPlayerDB{
 			return retVal;
 		}
 	}
-	
+
 	public void saveData(String fileName) {
 		String fileString = "";
 		for(StateData sd : states.keySet()) {
@@ -108,9 +110,9 @@ public class GeneticAIPlayerDB{
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void loadData(File dataFile) throws FileNotFoundException {
-		
+
 		//read the state data
 		Scanner reader = new Scanner(dataFile);
 		while(reader.hasNextLine()) {
@@ -119,7 +121,7 @@ public class GeneticAIPlayerDB{
 			if(line.equals("@start")) {
 				ArtistCount[] hand = new ArtistCount[Artist.values().length];
 				ArtistCount[] seasonValues = new ArtistCount[Artist.values().length];
-				
+
 				//read in hand state
 				for(int i = 0; i < Artist.values().length; i++) {
 					if(!reader.hasNextLine()) {
@@ -145,7 +147,7 @@ public class GeneticAIPlayerDB{
 					}
 				}
 				StateData state = new StateData(hand,seasonValues);
-				
+
 				//read in the state value if the state is complete
 				if(!reader.hasNextLine() || incomplete) {
 					break;
