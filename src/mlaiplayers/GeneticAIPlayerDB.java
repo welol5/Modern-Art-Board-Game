@@ -125,8 +125,7 @@ public class GeneticAIPlayerDB{
 				//read in hand state
 				for(int i = 0; i < Artist.values().length; i++) {
 					if(!reader.hasNextLine()) {
-						incomplete = true;
-						break;
+						return;//exit if something is incomplete
 					} else {
 						line = reader.nextLine();
 						String artist = line.split(":")[0];
@@ -137,8 +136,7 @@ public class GeneticAIPlayerDB{
 				//read in artist values
 				for(int i = 0; i < Artist.values().length; i++) {
 					if(!reader.hasNextLine()) {
-						incomplete = true;
-						break;
+						return;//exit if something is incomplete
 					} else {
 						line = reader.nextLine();
 						String artist = line.split(":")[0];
@@ -150,7 +148,7 @@ public class GeneticAIPlayerDB{
 
 				//read in the state value if the state is complete
 				if(!reader.hasNextLine() || incomplete) {
-					break;
+					return;//exit if something is incomplete
 				} else {
 					double value = Double.parseDouble(reader.nextLine());
 					states.put(state, value);
@@ -159,5 +157,6 @@ public class GeneticAIPlayerDB{
 		}
 		//Loading is done
 		reader.close();
+		System.out.println("data loaded");
 	}
 }

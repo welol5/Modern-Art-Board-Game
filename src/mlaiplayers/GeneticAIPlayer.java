@@ -23,7 +23,7 @@ import core.ArtistCount;
  * @author William Elliman
  *
  */
-public class GeneticAIPlayer extends MemoryAIPlayer{
+public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI{
 
 	private Random random = new Random();
 
@@ -233,7 +233,7 @@ public class GeneticAIPlayer extends MemoryAIPlayer{
 	 * @param win did this player win?
 	 * @param difference in money between this player and the best other player
 	 */
-	public void learn(boolean win, int difference) {
+	public void learn(boolean win) {
 		GeneticAIPlayerDB.StateData prevState;//the new state is updated based on the previous
 
 		//give a value to the final state

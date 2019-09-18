@@ -25,19 +25,19 @@ public class TrainingTournament {
 	/**
 	 * The amount of games that the MLAI will play.
 	 */
-	private static int games = 10000;
+	private static int games = 1000;
 
 	/**
 	 * This array holds the list of players the MLAI player will be training with.
 	 */
 	private ArrayList<Player> players = new ArrayList<Player>();
-	
+
 	/**
 	 * The list of names the players will be using. This list should be
 	 * in the same order as the {@link PlayerType} list.
 	 */
 	private static ArrayList<String> names;
-	
+
 	/**
 	 * The list of {@link PlayerType} that will be playing in this game
 	 * in the order that they will be during the game.
@@ -47,18 +47,33 @@ public class TrainingTournament {
 	/**
 	 * The MLAI being trained.
 	 */
+	private static LearningAI MLAIPlayer;
 	private static PlayerType MLAIType = PlayerType.GENETIC_AI;
-	private static String MLAIFileName = "GeneticDatabase.txt";
+	private static String MLAIFileName = "MemoizerDatabase.txt";
+	private static File MLAIFile = new File(MLAIFileName);
+
+	private static GeneticAIPlayerDB database;
 
 	public static void main(String[] args) {
-		
-		File MLAIFile = new File(MLAIFileName);
-		
+
+		//load MLAI data
+		try {
+			database = new GeneticAIPlayerDB(MLAIFile);
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			System.out.println("an error occured with the file.");
+			System.exit(0);
+		}
+
 		types = new ArrayList<PlayerType>();
 		types.add(MLAIType);//add the MLAI
 		types.add(PlayerType.MERCHANT);
 		types.add(PlayerType.BASIC_PREDICTIVE_AI_V2);
-		
+		types = randomizePlayerOrder(types);
+
+		int MLAIWins = 0;
+
 		for(int i = 0; i < games; i++) {
 			//make the game
 			GameState state = new GameState(types.size());
@@ -70,17 +85,36 @@ public class TrainingTournament {
 				names.add(type.toString());
 			}
 			Player[] players = null;
-			try {
-				players = makePlayers(names, types, OGS, MLAIFile);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-				System.out.println("The file was not found, check file path.");
-				System.exit(0);
-			}
+
+			players = makePlayers(names, types, OGS);
+
 
 			//make the driver
 			GameDriver driver = new GameDriver(players, state, OGS, false);
+
+			//start the game
+			Player winner = driver.playGame();
+			System.out.println("Game " + i + " winner : " + winner.name);
+			if(winner.name == MLAIType.toString()) {
+				MLAIWins++;
+			}
+
+			//update the MLAI
+			if(winner.name == MLAIType.toString()) {
+				MLAIPlayer.learn(true);
+			} else {
+				MLAIPlayer.learn(false);
+			}
+
+
 		}
+
+		System.out.println(MLAIWins);
+
+		//save the database
+		database.saveData(MLAIFileName);
+		System.out.println("MLAI data saved");
+
 	}
 
 	/**
@@ -91,7 +125,7 @@ public class TrainingTournament {
 	 * @param OGS The observable game state. See the class for details.
 	 * @return The list of players that will be playing in the game.
 	 */
-	private static Player[] makePlayers(ArrayList<String> names, ArrayList<PlayerType> types, ObservableGameState OGS, File MLAIFile) throws FileNotFoundException{
+	private static Player[] makePlayers(ArrayList<String> names, ArrayList<PlayerType> types, ObservableGameState OGS) {
 		Player[] players = new Player[names.size()];
 
 		for(int i = 0; i < players.length; i++) {
@@ -114,22 +148,22 @@ public class TrainingTournament {
 			} else if(types.get(i) == PlayerType.BASIC_PREDICTIVE_AI_V3) {
 				players[i] = new BasicPredictiveAIPlayerV3(names.get(i),OGS, players.length,i);
 			} else if(types.get(i) == PlayerType.GENETIC_AI) {
-				GeneticAIPlayerDB database = new GeneticAIPlayerDB(MLAIFile);
-				players[i] = new GeneticAIPlayer("MLAI", OGS, players.length, i, database, 0.01, 0.5);
+				MLAIPlayer = new GeneticAIPlayer(names.get(i), OGS, players.length, i, database, 0.01, 0.5);
+				players[i] = (Player) MLAIPlayer;
 			} else {
 				players[i] = new RandomPlayer(names.get(i));
 			}
 		}
 		return players;
 	}
-	
+
 	private static ArrayList<PlayerType> randomizePlayerOrder(ArrayList<PlayerType> players){
-		
+
 		for(int i = 0; i < 100; i++) {
 			PlayerType player = players.remove((int) Math.random()*players.size());
 			players.add(player);
 		}
-		
+
 		return players;
 	}
 }
