@@ -122,4 +122,14 @@ public class TrainingTournament {
 		}
 		return players;
 	}
+	
+	private static ArrayList<PlayerType> randomizePlayerOrder(ArrayList<PlayerType> players){
+		
+		for(int i = 0; i < 100; i++) {
+			PlayerType player = players.remove((int) Math.random()*players.size());
+			players.add(player);
+		}
+		
+		return players;
+	}
 }
