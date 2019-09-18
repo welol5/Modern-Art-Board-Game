@@ -29,7 +29,7 @@ public class GeneticAIPlayerDB{
 
 	public GeneticAIPlayerDB(File database) throws FileNotFoundException{
 		states = new HashMap<StateData,Double>();
-		if(database.exists()) {
+		if(database == null || database.exists()) {
 			loadData(database);
 		}
 	}
