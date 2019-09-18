@@ -15,12 +15,6 @@ import core.Card;
  */
 public class GeneticAIPlayerDB implements Serializable{
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 932945626748081232L;
-	
-	
 	private HashMap<StateData,Double> states;
 	
 	public GeneticAIPlayerDB() {
@@ -42,11 +36,6 @@ public class GeneticAIPlayerDB implements Serializable{
 	}
 
 	public class StateData implements Serializable{
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 567866005917936560L;
-		
 		
 		private ArtistCount[] hand;
 		private ArtistCount[] seasonValues;
