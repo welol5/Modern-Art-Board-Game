@@ -1,4 +1,4 @@
-package player;
+package mlaiplayers;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -10,6 +10,7 @@ import core.Artist;
 import core.AuctionType;
 import core.Card;
 import core.ObservableGameState;
+import player.MemoryAIPlayer;
 import core.ArtistCount;
 
 /**

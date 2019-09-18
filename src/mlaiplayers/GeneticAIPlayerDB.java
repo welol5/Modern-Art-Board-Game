@@ -1,4 +1,4 @@
-package player;
+package mlaiplayers;
 
 import java.io.Serializable;
 import java.util.ArrayList;

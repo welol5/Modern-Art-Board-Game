@@ -14,14 +14,14 @@ import player.PlayerType;
  * @author William Elliman
  *
  */
-public class TournamentGame {
+public class TrainingTornament {
 
 	/**
 	 * The amount of times an ordering of the AIs will be played.
 	 * Multiple games are run here so that the best AI will prove
 	 * it by winning most of the games.
 	 */
-	private static final int trials = 1;
+	private static final int trials = 10;
 	
 	/**
 	 * The time a {@link GameRunner} Thread will allow for a game to be
@@ -35,7 +35,7 @@ public class TournamentGame {
 	 * I found that this should be far larger than the actual amount of
 	 * threads that a computer has.
 	 */
-	private static final int threadCount = 1024;
+	private static final int threadCount = 64;
 
 	/**
 	 * The set of lists of AIs that will play the games.
