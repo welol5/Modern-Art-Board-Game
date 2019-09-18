@@ -79,7 +79,7 @@ public class ArtistCount implements Comparable<ArtistCount> {
 	}
 	
 	public String toString() {
-		return artist + " : " + count;
+		return artist + ":" + count;
 	}
 
 	@Override
