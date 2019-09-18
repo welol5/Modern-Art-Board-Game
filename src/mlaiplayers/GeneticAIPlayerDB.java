@@ -1,5 +1,10 @@
 package mlaiplayers;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +18,7 @@ import core.Card;
  * @author William Elliman
  *
  */
-public class GeneticAIPlayerDB implements Serializable{
+public class GeneticAIPlayerDB{
 	
 	private HashMap<StateData,Double> states;
 	
@@ -35,7 +40,7 @@ public class GeneticAIPlayerDB implements Serializable{
 		states.put(state, value);
 	}
 
-	public class StateData implements Serializable{
+	public class StateData{
 		
 		private ArtistCount[] hand;
 		private ArtistCount[] seasonValues;
@@ -62,5 +67,39 @@ public class GeneticAIPlayerDB implements Serializable{
 			this.hand = handValues.toArray(this.hand);
 			this.seasonValues = seasonValues;
 		}
+		
+		public String toString() {
+			String retVal = "@start\n";
+			for(int i = 0; i < hand.length; i++) {
+				retVal += hand[i].toString() + "\n";
+			}
+			for(int i = 0; i < seasonValues.length; i++) {
+				retVal += seasonValues[i].toString() + "\n";
+			}
+			retVal += "@end\n";
+			return retVal;
+		}
+	}
+	
+	public void saveData(String fileName) {
+		String fileString = "";
+		for(StateData sd : states.keySet()) {
+			fileString += sd.toString();
+			fileString += states.get(sd).toString() + "\n";
+		}
+		File dataFile = new File(fileName);
+		try {
+			PrintWriter writer = new PrintWriter(dataFile);
+			writer.write(fileString);
+			writer.flush();
+			writer.flush();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void labData(File dataFile) {
+//		BufferedReader reader = new BufferedReader(new FileInputStream(dataFile));
 	}
 }
