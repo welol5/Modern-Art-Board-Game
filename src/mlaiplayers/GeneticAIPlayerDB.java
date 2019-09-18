@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 
 import core.Artist;
 import core.ArtistCount;
@@ -68,6 +69,11 @@ public class GeneticAIPlayerDB{
 			this.seasonValues = seasonValues;
 		}
 		
+		public StateData(ArtistCount[] hand, ArtistCount[] seasonValues) {
+			this.hand = hand;
+			this.seasonValues = seasonValues;
+		}
+		
 		public String toString() {
 			String retVal = "@start\n";
 			for(int i = 0; i < hand.length; i++) {
@@ -76,7 +82,6 @@ public class GeneticAIPlayerDB{
 			for(int i = 0; i < seasonValues.length; i++) {
 				retVal += seasonValues[i].toString() + "\n";
 			}
-			retVal += "@end\n";
 			return retVal;
 		}
 	}
@@ -99,7 +104,55 @@ public class GeneticAIPlayerDB{
 		}
 	}
 	
-	public void labData(File dataFile) {
-//		BufferedReader reader = new BufferedReader(new FileInputStream(dataFile));
+	public void loadData(File dataFile) throws FileNotFoundException {
+		//get ready for the state data
+		states = new HashMap<StateData, Double>();
+		
+		//read the state data
+		Scanner reader = new Scanner(dataFile);
+		while(reader.hasNextLine()) {
+			String line = reader.nextLine();
+			boolean incomplete = false;
+			if(line.equals("@start")) {
+				ArtistCount[] hand = new ArtistCount[Artist.values().length];
+				ArtistCount[] seasonValues = new ArtistCount[Artist.values().length];
+				
+				//read in hand state
+				for(int i = 0; i < Artist.values().length; i++) {
+					if(!reader.hasNextLine()) {
+						incomplete = true;
+						break;
+					} else {
+						line = reader.nextLine();
+						String artist = line.split(":")[0];
+						int value = Integer.parseInt(line.split(":")[1]);
+						hand[i] = new ArtistCount(Artist.valueOf(artist), value);
+					}
+				}
+				//read in artist values
+				for(int i = 0; i < Artist.values().length; i++) {
+					if(!reader.hasNextLine()) {
+						incomplete = true;
+						break;
+					} else {
+						line = reader.nextLine();
+						String artist = line.split(":")[0];
+						int value = Integer.parseInt(line.split(":")[1]);
+						seasonValues[i] = new ArtistCount(Artist.valueOf(artist), value);
+					}
+				}
+				StateData state = new StateData(hand,seasonValues);
+				
+				//read in the state value if the state is complete
+				if(!reader.hasNextLine() || incomplete) {
+					break;
+				} else {
+					double value = Double.parseDouble(reader.nextLine());
+					states.put(state, value);
+				}
+			}
+		}
+		//Loading is done
+		reader.close();
 	}
 }
