@@ -27,6 +27,11 @@ public class GeneticAIPlayerDB{
 		states = new HashMap<StateData,Double>();
 	}
 	
+	public GeneticAIPlayerDB(File database) throws FileNotFoundException{
+		states = new HashMap<StateData,Double>();
+		loadData(database);
+	}
+	
 	public double getValue(StateData state) {
 		double value = 0;
 		try {
@@ -105,8 +110,6 @@ public class GeneticAIPlayerDB{
 	}
 	
 	public void loadData(File dataFile) throws FileNotFoundException {
-		//get ready for the state data
-		states = new HashMap<StateData, Double>();
 		
 		//read the state data
 		Scanner reader = new Scanner(dataFile);
