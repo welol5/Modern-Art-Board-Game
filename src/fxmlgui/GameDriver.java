@@ -64,7 +64,7 @@ public class GameDriver {
 	 */
 	public Player playGame() {
 
-		for(int season = 0; season < 4; season++) {
+		for(int season = 0; season < 1; season++) {
 
 			//deal out cards
 			for(int i = 0; i < state.dealAmounts[season]; i++) {
