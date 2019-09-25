@@ -52,11 +52,11 @@ public class GameDriver {
 	 * Resets game to be like it never happened.
 	 * This does not seem to work.
 	 */
-	public void resetGame() {
+	public void resetGame(boolean sealedOnly) {
 		for(Player p : players) {
 			p.reset();
 		}
-		state.reset();
+		state.reset(sealedOnly);
 	}
 
 	/**

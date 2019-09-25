@@ -79,11 +79,34 @@ public class GameState extends Observable{
 	/**
 	 * This is used to setup a new game. It resets and shuffles the deck, resets players and painting values.
 	 * @param players
+	 * @param sealedOnly This is used to make the deck contain only sealed auction cards.
+	 */
+	public GameState(int playerCount, boolean sealedOnly) {
+		this.playerCount = playerCount;
+
+		reset(sealedOnly);
+
+		//set the deal amounts
+		if(playerCount == 3) {
+			dealAmounts = DEAL_3_PLAYERS;
+		} else if(playerCount == 4) {
+			dealAmounts = DEAL_4_PLAYERS;
+		} else {
+			dealAmounts = DEAL_5_PLAYERS;
+		}
+
+		//update the strings for observers
+		updateStrings();
+	}
+	
+	/**
+	 * This is used to setup a new game. It resets and shuffles the deck, resets players and painting values.
+	 * @param players
 	 */
 	public GameState(int playerCount) {
 		this.playerCount = playerCount;
 
-		reset();
+		reset(false);
 
 		//set the deal amounts
 		if(playerCount == 3) {
@@ -98,9 +121,9 @@ public class GameState extends Observable{
 		updateStrings();
 	}
 
-	public void reset() {
+	public void reset(boolean sealedOnly) {
 		//now the deck needs to be created and shuffled
-		makeDeck();
+		makeDeck(sealedOnly);
 		shuffleDeck();
 		//printDeck();//debug
 		//System.out.println("Deck sixe : " + deck.size());
