@@ -76,7 +76,7 @@ public class TrainingTournament {
 
 		for(int i = 0; i < games; i++) {
 			//make the game
-			GameState state = new GameState(types.size());
+			GameState state = new GameState(types.size(), true);
 			ObservableGameState OGS = new ObservableGameState(state);
 
 			//make the players
