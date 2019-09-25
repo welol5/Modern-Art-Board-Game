@@ -277,6 +277,32 @@ public class GameState extends Observable{
 	/**
 	 * This clears and adds all of the default cards to the deck
 	 */
+	private void makeDeck(boolean sealedOnly) {
+		deck.clear();
+
+		if(!sealedOnly) {
+			makeDeck();
+			return;
+		} else {
+			for(int i = 0; i < 12; i++) {
+				deck.add(new Card(Artist.LITE_METAL, AuctionType.SEALED));
+			}
+			for(int i = 0; i < 13; i++) {
+				deck.add(new Card(Artist.YOKO, AuctionType.SEALED));
+			}
+			for(int i = 0; i < 14; i++) {
+				deck.add(new Card(Artist.CHRISTIN_P, AuctionType.SEALED));
+			}
+			for(int i = 0; i < 15; i++) {
+				deck.add(new Card(Artist.KARL_GITTER, AuctionType.SEALED));
+			}
+			for(int i = 0; i < 16; i++) {
+				deck.add(new Card(Artist.KRYPTO, AuctionType.SEALED));
+			}
+		}
+		
+	}
+	
 	private void makeDeck() {
 		deck.clear();
 
