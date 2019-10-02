@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import core.GameState;
 import core.ObservableGameState;
 import fxmlgui.GameDriver;
-import mlaiplayers.GeneticAIPlayer;
-import mlaiplayers.GeneticAIPlayerDB;
 import mlaiplayers.LearningAI;
+import mlaiplayers.MemoizerAIPlayer;
+import mlaiplayers.MemoizerAIPlayerDB;
 import player.BasicPredictiveAIPlayer;
 import player.BasicPredictiveAIPlayerV2;
 import player.BasicPredictiveAIPlayerV3;
@@ -52,13 +52,13 @@ public class TrainingTournament {
 	private static String MLAIFileName = "MemoizerDatabase.txt";
 	private static File MLAIFile = new File(MLAIFileName);
 
-	private static GeneticAIPlayerDB database;
+	private static MemoizerAIPlayerDB database;
 
 	public static void main(String[] args) {
 
 		//load MLAI data
 		try {
-			database = new GeneticAIPlayerDB(MLAIFile);
+			database = new MemoizerAIPlayerDB(MLAIFile);
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -148,7 +148,7 @@ public class TrainingTournament {
 			} else if(types.get(i) == PlayerType.BASIC_PREDICTIVE_AI_V3) {
 				players[i] = new BasicPredictiveAIPlayerV3(names.get(i),OGS, players.length,i);
 			} else if(types.get(i) == PlayerType.GENETIC_AI) {
-				MLAIPlayer = new GeneticAIPlayer(names.get(i), OGS, players.length, i, database, 0.01, 0.5);
+				MLAIPlayer = new MemoizerAIPlayer(names.get(i), OGS, players.length, i, database, 0.01, 0.5);
 				players[i] = (Player) MLAIPlayer;
 			} else {
 				players[i] = new RandomPlayer(names.get(i));

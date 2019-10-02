@@ -23,19 +23,19 @@ import core.ArtistCount;
  * @author William Elliman
  *
  */
-public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI{
+public class MemoizerAIPlayer extends MemoryAIPlayer implements LearningAI{
 
 	private Random random = new Random();
 
 	//memory
-	private GeneticAIPlayerDB dataBase;
+	private MemoizerAIPlayerDB dataBase;
 	private final double exploreChance;
-	private Stack<GeneticAIPlayerDB.StateData> stateHistory = new Stack<GeneticAIPlayerDB.StateData>();
+	private Stack<MemoizerAIPlayerDB.StateData> stateHistory = new Stack<MemoizerAIPlayerDB.StateData>();
 	private final double alpha;//rate at which new info replaces old info
 
 	//memory during bidding
 
-	public GeneticAIPlayer(String name,ObservableGameState state, int playerCount, int turnIndex, GeneticAIPlayerDB dataBase, double exploreChance, double alpha) {
+	public MemoizerAIPlayer(String name,ObservableGameState state, int playerCount, int turnIndex, MemoizerAIPlayerDB dataBase, double exploreChance, double alpha) {
 		super(name,state,playerCount,turnIndex);
 
 		this.exploreChance = exploreChance;
@@ -234,7 +234,7 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI{
 	 * @param difference in money between this player and the best other player
 	 */
 	public void learn(boolean win) {
-		GeneticAIPlayerDB.StateData prevState;//the new state is updated based on the previous
+		MemoizerAIPlayerDB.StateData prevState;//the new state is updated based on the previous
 
 		//give a value to the final state
 		prevState = stateHistory.pop();
@@ -246,14 +246,14 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI{
 
 		//propagate backwards
 		while(!stateHistory.isEmpty()) {
-			GeneticAIPlayerDB.StateData state = stateHistory.pop();
+			MemoizerAIPlayerDB.StateData state = stateHistory.pop();
 			double stateValue = dataBase.getValue(state) + alpha*(dataBase.getValue(prevState)-dataBase.getValue(state));
 			dataBase.putValue(state, stateValue);
 			prevState = state;//prep for next iteration
 		}
 	}
 
-	public GeneticAIPlayerDB getDB() {
+	public MemoizerAIPlayerDB getDB() {
 		return dataBase;
 	}
 }

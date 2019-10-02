@@ -19,15 +19,15 @@ import core.Card;
  * @author William Elliman
  *
  */
-public class GeneticAIPlayerDB{
+public class MemoizerAIPlayerDB{
 
 	private HashMap<StateData,Double> states;
 
-	public GeneticAIPlayerDB() {
+	public MemoizerAIPlayerDB() {
 		states = new HashMap<StateData,Double>();
 	}
 
-	public GeneticAIPlayerDB(File database) throws FileNotFoundException{
+	public MemoizerAIPlayerDB(File database) throws FileNotFoundException{
 		states = new HashMap<StateData,Double>();
 		if(database == null || database.exists()) {
 			loadData(database);
