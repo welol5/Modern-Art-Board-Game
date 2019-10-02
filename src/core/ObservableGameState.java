@@ -55,6 +55,11 @@ public class ObservableGameState{
 	}
 
 	/**
+	 * returns a copy of the season values array. This is an array that holds
+	 * instances of {@link ArtistCount} that have the different artists and the
+	 * value is the amount of paintings of that artist that have been played
+	 * so far in the season. The array is sorted from most played at index 0 to
+	 * least.
 	 * @return a copy of the seasonValues array.
 	 */
 	public ArtistCount[] getSeasonValues() {
