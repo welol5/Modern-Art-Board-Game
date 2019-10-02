@@ -31,7 +31,7 @@ public class ObservableGameState{
 	}
 
 	/**
-	 * Gests the season value for a specific artist
+	 * Gets the season value for a specific artist
 	 * @param artist
 	 * @return the int version of the season value.
 	 */
