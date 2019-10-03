@@ -80,6 +80,14 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 			this.weights[i] = weights[i];
 		}
 	}
+	
+	public GeneticAIPlayer(String name, ObservableGameState OGS, int playerCount, int turnIndex) {
+		super(name, OGS, playerCount, turnIndex);
+		
+		for(int i = 0; i < EVAL_VALUE_COUNT; i++) {
+			weights[i] = Math.random()*2.0-1.0; 
+		}
+	}
 
 	@Override
 	public void learn(boolean win) {
