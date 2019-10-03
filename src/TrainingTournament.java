@@ -147,7 +147,7 @@ public class TrainingTournament {
 				players[i] = new HandStateCardPicker(names.get(i),OGS, players.length,i);
 			} else if(types.get(i) == PlayerType.BASIC_PREDICTIVE_AI_V3) {
 				players[i] = new BasicPredictiveAIPlayerV3(names.get(i),OGS, players.length,i);
-			} else if(types.get(i) == PlayerType.GENETIC_AI) {
+			} else if(types.get(i) == PlayerType.MEMOIZER_AI) {
 				MLAIPlayer = new MemoizerAIPlayer(names.get(i), OGS, players.length, i, database, 0.01, 0.5);
 				players[i] = (Player) MLAIPlayer;
 			} else {
