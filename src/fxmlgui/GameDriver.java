@@ -82,19 +82,35 @@ public class GameDriver {
 
 			state.resetSeason();
 
+			int turnCount = 0;
 			for(int turn = 0; true; turn = (turn+1)%players.length) {
+				
+				turnCount++;
+				if(turnCount > 1000) {
+					System.exit(0);
+				}
+				
 				//have a player play a card
 				Card card = players[turn].chooseCard();
 				Card second = null;
 				
-				//TODO this should be fixed to include if no players have cards
 				if(card == null) {
 					int hasHands = 0;
 					for(Player p : players) {
-						if(p.getHand().size() != 0) {
+						if(p.getHand().size() <= 0) {
 							hasHands++;
 						}
 					}
+					//debug
+//					System.out.println("hasHands = " + hasHands);
+//					if(hasHands == 1) {
+//						for(int i = 0; i < players.length; i++) {
+//							if(players[i].getHand().size() > 0) {
+//								System.out.println(players[i].name);
+//								System.out.println(players[i].getHand());
+//							}
+//						}
+//					}
 					//if no players have anything in their hand
 					if(hasHands == 0) {
 						endSeason();

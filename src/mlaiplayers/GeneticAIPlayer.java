@@ -21,11 +21,9 @@ import player.Player;
  */
 public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 	
-	private static final int EVAL_VALUE_COUNT = 6;
+	public static final int EVAL_VALUE_COUNT = 6;
 	
 	private double[] weights = new double[EVAL_VALUE_COUNT];
-	
-	private Card biddingCard;
 
 	/**
 	 * 
@@ -160,7 +158,8 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 	@Override
 	public void announceCard(Card card, boolean isDouble) {
 		// TODO Auto-generated method stub
-
+		//System.out.println("here");
+		super.announceCard(card, isDouble);
 	}
 
 	@Override

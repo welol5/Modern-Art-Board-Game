@@ -43,6 +43,7 @@ public class ReactiveAIPlayer extends Player{
 	public ReactiveAIPlayer(String name, ObservableGameState state) {
 		super(name);
 		this.state = state;
+		OGS = this.state;
 	}
 
 	@Override
