@@ -1,6 +1,10 @@
-/mlaiplayers/
-/core/
-/GeneticTrainingTournament.class
-/player/
+/GameRunner$1.class
+/GameRunner.class
 /GeneticTrainingTournament$IWEV.class
+/GeneticTrainingTournament.class
+/TournamentGame.class
+/TrainingTournament.class
+/core/
 /fxmlgui/
+/mlaiplayers/
+/player/
