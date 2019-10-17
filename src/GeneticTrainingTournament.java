@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import core.GameState;
@@ -59,6 +60,16 @@ public class GeneticTrainingTournament {
 	private static double[][] allPlayersWeights = new double[100][GeneticAIPlayer.EVAL_VALUE_COUNT];
 
 	public static void main(String[] args) {
+		
+		File trackingFile = new File("trackingFile");
+		PrintWriter writer = null;
+		try {
+			writer = new PrintWriter(trackingFile);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.exit(0);
+		}
 
 		//generate a set of random weights
 		for(int i = 0; i < POPULATION_SIZE; i++) {
@@ -125,6 +136,16 @@ public class GeneticTrainingTournament {
 			sortedPop.sort((IWEV a, IWEV b) -> a.compareTo(b));
 			System.out.println("Generation : " + gen);
 			System.out.println("Highest winrate = " + sortedPop.get(0).evalValue);
+			
+			//write output to a file
+			writer.println("Gen:" + gen);
+			for(int i = 0; i < POPULATION_SIZE; i++) {
+				writer.print("Weights:" + i + ":" + sortedPop.get(i).evalValue);
+				for(int w = 0; w < GeneticAIPlayer.EVAL_VALUE_COUNT; w++) {
+					writer.print(":" + sortedPop.get(i).getWeight(w));
+				}
+				writer.println();
+			}
 			
 			//make the next generation
 			double[][] newGenWeights = new double[POPULATION_SIZE][GeneticAIPlayer.EVAL_VALUE_COUNT];
