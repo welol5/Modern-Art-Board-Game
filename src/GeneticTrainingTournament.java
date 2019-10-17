@@ -138,7 +138,7 @@ public class GeneticTrainingTournament {
 			System.out.println("Highest winrate = " + sortedPop.get(0).evalValue);
 			
 			//write output to a file
-			writer.println("Gen:" + gen);
+			//writer.println("Gen:" + gen);
 			for(int i = 0; i < POPULATION_SIZE; i++) {
 				writer.print("Weights:" + i + ":" + sortedPop.get(i).evalValue);
 				for(int w = 0; w < GeneticAIPlayer.EVAL_VALUE_COUNT; w++) {
