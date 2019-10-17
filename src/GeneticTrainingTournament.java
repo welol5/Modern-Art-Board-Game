@@ -53,7 +53,7 @@ public class GeneticTrainingTournament {
 	 */
 	private static LearningAI MLAIPlayer;
 	private static PlayerType MLAIType = PlayerType.GENETIC_AI;
-	private static String MLAIFileName = "GeneticAIWeights.txt";
+	//private static String MLAIFileName = "GeneticAIWeights.txt";
 
 	private static final int POPULATION_SIZE = 100;
 	private static final int GENERATIONS = 100;
@@ -61,7 +61,7 @@ public class GeneticTrainingTournament {
 
 	public static void main(String[] args) {
 		
-		File trackingFile = new File("trackingFile");
+		File trackingFile = new File("trackingFile.txt");
 		PrintWriter writer = null;
 		try {
 			writer = new PrintWriter(trackingFile);
