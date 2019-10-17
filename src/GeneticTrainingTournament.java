@@ -26,9 +26,9 @@ public class GeneticTrainingTournament {
 	/**
 	 * The amount of games that the MLAI will play.
 	 */
-	private static int games = 100;
+	private static int games = 10;
 	
-	private static double mutationChance = 0.001;
+	private static double mutationChance = 0.01;
 
 	/**
 	 * This array holds the list of players the MLAI player will be training with.
@@ -125,7 +125,6 @@ public class GeneticTrainingTournament {
 			sortedPop.sort((IWEV a, IWEV b) -> a.compareTo(b));
 			System.out.println("Generation : " + gen);
 			System.out.println("Highest winrate = " + sortedPop.get(0).evalValue);
-			System.out.println("Highest winrate 2 = " + sortedPop.get(sortedPop.size()-1).evalValue);
 			
 			//make the next generation
 			double[][] newGenWeights = new double[POPULATION_SIZE][GeneticAIPlayer.EVAL_VALUE_COUNT];
@@ -143,10 +142,30 @@ public class GeneticTrainingTournament {
 					}
 					
 					if(Math.random() < mutationChance) {
-						newWeightSet1[w] = (Math.random()*2.0)-1.0;
+						double mutation = Math.pow(2.0, 10*(Math.random()-1));//favors smaller mutations
+						if(Math.random() > 0.5) {//chance to be negative
+							mutation *=-1;
+						}
+						if(newWeightSet1[w]+mutation > 1) {
+							newWeightSet1[w] = newWeightSet1[w] - mutation;
+						} else if(newWeightSet1[w]+mutation < -1) {
+							newWeightSet1[w] = newWeightSet1[w] - mutation;
+						} else {
+							newWeightSet1[w] = newWeightSet1[w] + mutation;
+						}
 					}
 					if(Math.random() < mutationChance) {
-						newWeightSet2[w] = (Math.random()*2.0)-1.0;
+						double mutation = Math.pow(2.0, 10*(Math.random()-1));//favors smaller mutations
+						if(Math.random() > 0.5) {//chance to be negative
+							mutation *=-1;
+						}
+						if(newWeightSet2[w]+mutation > 1) {
+							newWeightSet2[w] = newWeightSet2[w] - mutation;
+						} else if(newWeightSet2[w]+mutation < -1) {
+							newWeightSet2[w] = newWeightSet2[w] - mutation;
+						} else {
+							newWeightSet2[w] = newWeightSet2[w] + mutation;
+						}
 					}
 				}
 				newGenWeights[i] = newWeightSet1;
