@@ -168,12 +168,6 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 
 	}
 
-	@Override
-	public void announceAuctionWinner(int turn, String name, int price) {
-		// TODO Auto-generated method stub
-
-	}
-
 	private double getEvaluationValue(Artist artist) {
 
 
