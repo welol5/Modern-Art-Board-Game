@@ -27,9 +27,9 @@ public class GeneticTrainingTournament {
 	/**
 	 * The amount of games that the MLAI will play.
 	 */
-	private static int games = 10;
+	private static int games = 5;
 	
-	private static double mutationChance = 0.01;
+	private static double mutationChance = 0.1;
 
 	/**
 	 * This array holds the list of players the MLAI player will be training with.
@@ -55,8 +55,8 @@ public class GeneticTrainingTournament {
 	private static PlayerType MLAIType = PlayerType.GENETIC_AI;
 	//private static String MLAIFileName = "GeneticAIWeights.txt";
 
-	private static final int POPULATION_SIZE = 100;
-	private static final int GENERATIONS = 100;
+	private static final int POPULATION_SIZE = 1;
+	private static final int GENERATIONS = 1;
 	private static double[][] allPlayersWeights = new double[100][GeneticAIPlayer.EVAL_VALUE_COUNT];
 
 	public static void main(String[] args) {
@@ -84,54 +84,79 @@ public class GeneticTrainingTournament {
 			for(int i = 0; i < MLAIWins.length; i++) {
 				MLAIWins[i] = 0;
 			}
+			
+			GameRunnerTrainer[] trainers = new GameRunnerTrainer[POPULATION_SIZE];
 
 			for(int popIndex = 0; popIndex < POPULATION_SIZE; popIndex++) {
+				
+				
+				
 				types = new ArrayList<PlayerType>();
 				types.add(MLAIType);//add the MLAI
 				types.add(PlayerType.MERCHANT);
 				types.add(PlayerType.BASIC_PREDICTIVE_AI_V2);
 				types = randomizePlayerOrder(types);
+				
+				trainers[popIndex] = new GameRunnerTrainer(300000,games,types,allPlayersWeights[popIndex]);
+						
+				//below this is old
 
-				for(int i = 0; i < games; i++) {
-					//make the game
-					GameState state = new GameState(types.size(), true);
-					ObservableGameState OGS = new ObservableGameState(state);
-
-					//make the players
-					names = new ArrayList<String>();
-					for(PlayerType type : types) {
-						names.add(type.toString());
-					}
-					Player[] players = null;
-
-					players = makePlayers(names, types, OGS, popIndex);
-
-
-					//make the driver
-					GameDriver driver = new GameDriver(players, state, OGS, false);
-					
-					//start the game
-					Player winner = driver.playGame();
-//					System.out.println("Game " + i + " winner : " + winner.name);
-					if(winner.name == MLAIType.toString()) {
-						MLAIWins[popIndex]++;
-					}
-
-					//update the MLAI
-					if(winner.name == MLAIType.toString()) {
-						MLAIPlayer.learn(true);
-					} else {
-						MLAIPlayer.learn(false);
-					}
+//				for(int i = 0; i < games; i++) {
+//					//make the game
+//					GameState state = new GameState(types.size(), true);
+//					ObservableGameState OGS = new ObservableGameState(state);
+//
+//					//make the players
+//					names = new ArrayList<String>();
+//					for(PlayerType type : types) {
+//						names.add(type.toString());
+//					}
+//					Player[] players = null;
+//
+//					players = makePlayers(names, types, OGS, allPlayersWeights[popIndex]);
+//
+//
+//					//make the driver
+//					GameDriver driver = new GameDriver(players, state, OGS, false);
+//					
+//					//start the game
+//					Player winner = driver.playGame();
+////					System.out.println("Game " + i + " winner : " + winner.name);
+//					if(winner.name == MLAIType.toString()) {
+//						MLAIWins[popIndex]++;
+//					}
+//
+//					//update the MLAI
+//					if(winner.name == MLAIType.toString()) {
+//						MLAIPlayer.learn(true);
+//					} else {
+//						MLAIPlayer.learn(false);
+//					}
+//				}
+//				System.out.println("Pop " + popIndex + " complete");
+			}
+			
+			//start the training
+			for(GameRunnerTrainer trainer : trainers) {
+				trainer.start();
+			}
+			
+			//wait for the training to complete
+			for(int i = 0; i < trainers.length; i++) {
+				try {
+					trainers[i].join();
+					System.out.println("trainer[" + i + "] stopped.");
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				System.out.println("Pop " + popIndex + " complete");
 			}
 			
 			//this generation is compete
 			//sort the AIs
 			ArrayList<IWEV> sortedPop = new ArrayList<IWEV>();
 			for(int i = 0; i < POPULATION_SIZE; i++) {
-				sortedPop.add(new IWEV(allPlayersWeights[i],((double)MLAIWins[i])/((double)games)));
+				sortedPop.add(new IWEV(trainers[i].getGeneticPlayerWeights(),trainers[i].getScore()));
 			}
 			sortedPop.sort((IWEV a, IWEV b) -> a.compareTo(b));
 			System.out.println("Generation : " + gen);
@@ -150,7 +175,7 @@ public class GeneticTrainingTournament {
 			//make the next generation
 			double[][] newGenWeights = new double[POPULATION_SIZE][GeneticAIPlayer.EVAL_VALUE_COUNT];
 			//replace the bottom half of the population
-			for(int i = 0; i < POPULATION_SIZE/2; i++) {
+			for(int i = 0; i < POPULATION_SIZE/10; i++) {
 				double[] newWeightSet1 = new double[GeneticAIPlayer.EVAL_VALUE_COUNT];
 				double[] newWeightSet2 = new double[GeneticAIPlayer.EVAL_VALUE_COUNT];
 				for(int w = 0; w < GeneticAIPlayer.EVAL_VALUE_COUNT; w++) {
@@ -195,8 +220,8 @@ public class GeneticTrainingTournament {
 			
 			//copy over the best of the last gen
 			//copies the old pop into the second half of the array
-			for(int i = 0; i < POPULATION_SIZE/2; i++) {
-				newGenWeights[i+POPULATION_SIZE/2] = sortedPop.get(i).weights;
+			for(int i = 0; i < (POPULATION_SIZE*9)/10; i++) {
+				newGenWeights[i+(POPULATION_SIZE/10)] = sortedPop.get(i).weights;
 			}
 			
 			//replace the old array
@@ -219,7 +244,7 @@ public class GeneticTrainingTournament {
 	 * @param OGS The observable game state. See the class for details.
 	 * @return The list of players that will be playing in the game.
 	 */
-	private static Player[] makePlayers(ArrayList<String> names, ArrayList<PlayerType> types, ObservableGameState OGS, int weightsIndex) {
+	public static Player[] makePlayers(ArrayList<String> names, ArrayList<PlayerType> types, ObservableGameState OGS, double[] geneticPlayerWeights) {
 		Player[] players = new Player[names.size()];
 
 		for(int i = 0; i < players.length; i++) {
@@ -245,7 +270,7 @@ public class GeneticTrainingTournament {
 				//MLAIPlayer = new MemoizerAIPlayer(names.get(i), OGS, players.length, i, database, 0.01, 0.5);
 				players[i] = (Player) MLAIPlayer;
 			} else if(types.get(i) == PlayerType.GENETIC_AI) {
-				MLAIPlayer = new GeneticAIPlayer(names.get(i), OGS, players.length, i, allPlayersWeights[weightsIndex]);
+				MLAIPlayer = new GeneticAIPlayer(names.get(i), OGS, players.length, i, geneticPlayerWeights);
 				players[i] = (Player) MLAIPlayer;
 			} else {
 				players[i] = new RandomPlayer(names.get(i));
@@ -254,7 +279,7 @@ public class GeneticTrainingTournament {
 		return players;
 	}
 
-	private static ArrayList<PlayerType> randomizePlayerOrder(ArrayList<PlayerType> players){
+	public static ArrayList<PlayerType> randomizePlayerOrder(ArrayList<PlayerType> players){
 
 		for(int i = 0; i < 100; i++) {
 			PlayerType player = players.remove((int) Math.random()*players.size());
