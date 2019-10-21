@@ -20,9 +20,9 @@ import player.Player;
  *
  */
 public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
-	
+
 	public static final int EVAL_VALUE_COUNT = 6;
-	
+
 	private double[] weights = new double[EVAL_VALUE_COUNT];
 
 	/**
@@ -35,7 +35,7 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 	 */
 	public GeneticAIPlayer(String name, ObservableGameState OGS, int playerCount, int turnIndex, File dataFile) {
 		super(name, OGS, playerCount, turnIndex);
-		
+
 		boolean random = false;
 		try {
 			Scanner input = new Scanner(dataFile);
@@ -46,7 +46,7 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 					currupt = false;//The file was successfully read without errors
 				}
 			}
-			
+
 			if(currupt) {
 				System.out.println("File currupt. defaulting to random values");
 				random = true;
@@ -55,14 +55,14 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 			System.out.println("No data file found. Using new random values");
 			random = true;
 		}
-		
+
 		if(random) {
 			for(int i = 0; i < EVAL_VALUE_COUNT; i++) {
 				weights[i] = Math.random()*2.0-1.0;
 			}
 		}
 	}
-	
+
 	/**
 	 * Creates a new GeneticAIPlayer.
 	 * @param name See {@link Player} for details.
@@ -73,15 +73,15 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 	 */
 	public GeneticAIPlayer(String name, ObservableGameState OGS, int playerCount, int turnIndex, double[] weights) {
 		super(name, OGS, playerCount, turnIndex);
-		
+
 		for(int i = 0; i < EVAL_VALUE_COUNT; i++) {
 			this.weights[i] = weights[i];
 		}
 	}
-	
+
 	public GeneticAIPlayer(String name, ObservableGameState OGS, int playerCount, int turnIndex) {
 		super(name, OGS, playerCount, turnIndex);
-		
+
 		for(int i = 0; i < EVAL_VALUE_COUNT; i++) {
 			weights[i] = Math.random()*2.0-1.0; 
 		}
@@ -94,12 +94,12 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 
 	@Override
 	public Card chooseCard() {
-		
+
 		double[] artistEvals = new double[Artist.values().length];
 		for(int i = 0; i < Artist.values().length; i++) {
 			artistEvals[i] = getEvaluationValue(Artist.values()[i]);
 		}
-		
+
 		//find the best artist in hand
 		for(int i = 0; i < artistEvals.length; i++) {
 			//get the best Artist
@@ -111,18 +111,18 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 					bestIndex = k;
 				}
 			}
-			
+
 			//check if that artist is in hand
 			for(Card c : hand) {
 				if(c.getArtist() == Artist.values()[bestIndex]) {
 					return c;
 				}
 			}
-			
+
 			//the best artist was not there so its value is useless
 			artistEvals[bestIndex] = Double.NEGATIVE_INFINITY;
 		}
-		
+
 		return null;
 	}
 
@@ -135,7 +135,7 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 	@Override
 	public int getBid(int highestBid) {
 		double eval = getEvaluationValue(biddingCard.getArtist());
-		
+
 		if(money > (int)(((double)money)*eval)) {
 			return (int)(((double)money)*eval);
 		} else {
@@ -158,7 +158,7 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 	@Override
 	public void announceCard(Card card, boolean isDouble) {
 		// TODO Auto-generated method stub
-		//System.out.println("here");
+		//		System.out.println("here");
 		super.announceCard(card, isDouble);
 	}
 
@@ -173,11 +173,11 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	private double getEvaluationValue(Artist artist) {
-		
-		
-		
+
+
+
 		//Raw vars are ones without the weight applied yet
 		double handScoreRaw = 0;
 		double winningsScoreRaw = 0;
@@ -185,19 +185,21 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 		double normalizedMoneyRaw = 0;
 		double normalizedArtistValueCTMoneyRaw = 0;
 		double normalizedArtistValueCTOthersRaw = 0;
-		
+
 		//TODO incorporate other players winnings into this
-		
+
 		double totalScore = 0;
-		
+
 		//get hand score
-		for(Card c : hand) {
-			if(c.getArtist() == biddingCard.getArtist()) {
-				handScoreRaw++;
+		if(biddingCard != null) {
+			for(Card c : hand) {
+				if(c.getArtist() == biddingCard.getArtist()) {
+					handScoreRaw++;
+				}
 			}
+			handScoreRaw /= hand.size();
 		}
-		handScoreRaw /= hand.size();
-		
+
 		//get the winnings score
 		ArrayList<ArtistCount> sortedWinnings = new ArrayList<ArtistCount>();
 		for(int i = 0; i < Artist.values().length; i++) {
@@ -215,14 +217,14 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 				winningsScoreRaw = 1.0-((double)i)/Artist.values().length;
 			}
 		}
-		
+
 		//get season values score
 		for(int i = 0; i < OGS.getSeasonValues().length; i++) {
 			if(OGS.getSeasonValues()[i].getArtist() == artist) {
 				winningsScoreRaw = 1.0 - ((double)i)/5.0;
 			}
 		}
-		
+
 		//get normalized money value (compared to other players)
 		getBestOtherPlayer();
 		if(bestPlayerMoney > money) {
@@ -230,11 +232,11 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 		} else {
 			normalizedMoneyRaw = 1.0;
 		}
-		
+
 		//get the normalized artist value (compared to money)
 		double artistValue = OGS.getArtistValue(artist);
 		normalizedArtistValueCTMoneyRaw = artistValue/((double)money);
-		
+
 		//get the normalized artist value (compared to best other artist)
 		double bestArtistValue = -1;
 		for(int i = 0; i < Artist.values().length; i++) {
@@ -243,24 +245,24 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 			}
 		}
 		normalizedArtistValueCTOthersRaw = artistValue/bestArtistValue;
-		
+
 		totalScore += handScoreRaw * weights[0];
 		totalScore += winningsScoreRaw * weights[1];
 		totalScore += seasonScoreRaw * weights[2];
 		totalScore += normalizedMoneyRaw * weights[3];
 		totalScore += normalizedArtistValueCTMoneyRaw * weights[4];
 		totalScore += normalizedArtistValueCTOthersRaw * weights[5];
-		
+
 		return totalScore;
 	}
 
 	//not sure if I will use this yet
-//	/**
-//	 * Sometimes it is useful to only have a positive value returned from the evaluation function.
-//	 * @param value
-//	 * @return
-//	 */
-//	private double mapEvalFuncValue(double value) {
-//		return (value+(EVAL_VALUE_COUNT))/2;
-//	}
+	//	/**
+	//	 * Sometimes it is useful to only have a positive value returned from the evaluation function.
+	//	 * @param value
+	//	 * @return
+	//	 */
+	//	private double mapEvalFuncValue(double value) {
+	//		return (value+(EVAL_VALUE_COUNT))/2;
+	//	}
 }
