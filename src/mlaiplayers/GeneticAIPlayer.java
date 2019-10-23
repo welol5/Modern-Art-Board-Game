@@ -220,10 +220,14 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 		}
 
 		//get normalized money value (compared to other players)
-		getBestOtherPlayer();
-		if(bestPlayerMoney > money) {
-			normalizedMoneyRaw = ((double)money)/((double)bestPlayerMoney);
-		} else {
+		try {
+			getBestOtherPlayer();
+			if(bestPlayerMoney > money) {
+				normalizedMoneyRaw = ((double)money)/((double)bestPlayerMoney);
+			} else {
+				normalizedMoneyRaw = 1.0;
+			}
+		} catch (NullPointerException e) {
 			normalizedMoneyRaw = 1.0;
 		}
 

@@ -92,7 +92,7 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 		biddingCard = card;
 		this.isDouble = isDouble;
 
-		getBestOtherPlayer();
+		//getBestOtherPlayer();
 	}
 	
 	/**

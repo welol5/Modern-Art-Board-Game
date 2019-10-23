@@ -93,10 +93,10 @@ public class GameRunnerTrainer extends Thread{
 			done = false;
 
 			for(int game = 0; game < gameCount; game++) {
-				System.out.println(game);
+//				System.out.println(game);
 
 				//make the game
-				GameState state = new GameState(playerTypes.size());
+				GameState state = new GameState(playerTypes.size(), true);
 				ObservableGameState OGS = new ObservableGameState(state);
 
 				//randomize the list
@@ -119,7 +119,7 @@ public class GameRunnerTrainer extends Thread{
 					public void run() {
 						try {
 							//run the game
-							System.out.println("playing game");
+//							System.out.println("playing game");
 							winner = driver.playGame();
 						} catch (Exception e){
 							e.printStackTrace();

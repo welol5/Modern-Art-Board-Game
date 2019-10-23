@@ -27,7 +27,7 @@ public class GeneticTrainingTournament {
 	/**
 	 * The amount of games that the MLAI will play.
 	 */
-	private static int games = 5;
+	private static int games = 1000;
 	
 	private static double mutationChance = 0.1;
 
@@ -55,8 +55,8 @@ public class GeneticTrainingTournament {
 	private static PlayerType MLAIType = PlayerType.GENETIC_AI;
 	//private static String MLAIFileName = "GeneticAIWeights.txt";
 
-	private static final int POPULATION_SIZE = 1;
-	private static final int GENERATIONS = 1;
+	private static final int POPULATION_SIZE = 100;
+	private static final int GENERATIONS = 100;
 	private static double[][] allPlayersWeights = new double[100][GeneticAIPlayer.EVAL_VALUE_COUNT];
 
 	public static void main(String[] args) {
