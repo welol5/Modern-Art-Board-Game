@@ -1,5 +1,7 @@
 /GameRunner$1.class
 /GameRunner.class
+/GameRunnerTrainer$1.class
+/GameRunnerTrainer.class
 /GeneticTrainingTournament$IWEV.class
 /GeneticTrainingTournament.class
 /TournamentGame.class
@@ -8,5 +10,3 @@
 /fxmlgui/
 /mlaiplayers/
 /player/
-/GameRunnerTrainer$1.class
-/GameRunnerTrainer.class
