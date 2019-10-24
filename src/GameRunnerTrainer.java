@@ -121,6 +121,7 @@ public class GameRunnerTrainer extends Thread{
 							//run the game
 //							System.out.println("playing game");
 							winner = driver.playGame();
+//							System.out.println(winner);
 						} catch (Exception e){
 							e.printStackTrace();
 						}

@@ -94,6 +94,9 @@ public class GameDriver {
 				Card card = players[turn].chooseCard();
 				Card second = null;
 				
+				//debug
+//				System.out.println(players[turn].name + " played " + card);
+				
 				if(card == null) {
 					int hasHands = 0;
 					for(Player p : players) {
@@ -173,8 +176,8 @@ public class GameDriver {
 				for(Player p : players) {
 					p.announceAuctionWinner(winningBid.index, players[winningBid.index].name, winningBid.price);
 				}
-				if(debugPrinting)
-				System.out.println("Auction winner: " + players[winningBid.index].name + ":: Price : " + winningBid.price);
+
+				//System.out.println("Auction winner: " + players[winningBid.index].name + ":: Price : " + winningBid.price);
 
 				//The auction has been won, time to execute the order (66)
 				if(winningBid.index == turn) {

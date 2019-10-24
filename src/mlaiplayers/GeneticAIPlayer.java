@@ -98,6 +98,7 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 		double[] artistEvals = new double[Artist.values().length];
 		for(int i = 0; i < Artist.values().length; i++) {
 			artistEvals[i] = getEvaluationValue(Artist.values()[i]);
+			//System.out.println(artistEvals[i]);
 		}
 
 		//find the best artist in hand
@@ -187,6 +188,8 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 		//get hand score
 		if(biddingCard != null) {
 			for(Card c : hand) {
+//				System.out.println(c);
+//				System.out.println(biddingCard);
 				if(c.getArtist() == biddingCard.getArtist()) {
 					handScoreRaw++;
 				}
@@ -242,7 +245,16 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 				bestArtistValue = OGS.getArtistValue(Artist.values()[i]);
 			}
 		}
-		normalizedArtistValueCTOthersRaw = artistValue/bestArtistValue;
+		if(bestArtistValue != 0.0) {
+			normalizedArtistValueCTOthersRaw = artistValue/bestArtistValue;
+		}
+
+//		System.out.println(handScoreRaw);
+//		System.out.println(winningsScoreRaw);
+//		System.out.println(seasonScoreRaw);
+//		System.out.println(normalizedMoneyRaw);
+//		System.out.println(normalizedArtistValueCTMoneyRaw);
+//		System.out.println(normalizedArtistValueCTOthersRaw);
 
 		totalScore += handScoreRaw * weights[0];
 		totalScore += winningsScoreRaw * weights[1];
@@ -251,6 +263,10 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 		totalScore += normalizedArtistValueCTMoneyRaw * weights[4];
 		totalScore += normalizedArtistValueCTOthersRaw * weights[5];
 
+//		System.out.println("weight " + weights[5]);
+//		System.out.println(normalizedArtistValueCTOthersRaw);
+//		System.out.println();
+//		System.out.println("score " + totalScore);
 		return totalScore;
 	}
 
