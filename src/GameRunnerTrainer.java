@@ -96,7 +96,7 @@ public class GameRunnerTrainer extends Thread{
 //				System.out.println(game);
 
 				//make the game
-				GameState state = new GameState(playerTypes.size(), true);
+				GameState state = new GameState(playerTypes.size(), false);
 				ObservableGameState OGS = new ObservableGameState(state);
 
 				//randomize the list
@@ -121,7 +121,7 @@ public class GameRunnerTrainer extends Thread{
 							//run the game
 //							System.out.println("playing game");
 							winner = driver.playGame();
-//							System.out.println(winner);
+							//System.out.println(winner);
 						} catch (Exception e){
 							e.printStackTrace();
 						}
@@ -147,6 +147,7 @@ public class GameRunnerTrainer extends Thread{
 			}
 
 			//all games have been played
+			System.out.println("games done");
 			score = score/((double)gameCount);
 			stop = true;
 		}

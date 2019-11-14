@@ -23,7 +23,10 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 
 	public static final int EVAL_VALUE_COUNT = 6;
 
-	private double[] weights = new double[EVAL_VALUE_COUNT];
+	private double[] allWeights = new double[EVAL_VALUE_COUNT*2];
+	
+	private double[] pickingWeights = new double[EVAL_VALUE_COUNT];
+	private double[] biddingWeights = new double[EVAL_VALUE_COUNT];
 
 	/**
 	 * 
@@ -40,8 +43,8 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 		try {
 			Scanner input = new Scanner(dataFile);
 			boolean currupt = true;
-			for(int i = 0; i < EVAL_VALUE_COUNT && input.hasNextLine(); i++) {
-				weights[i] = input.nextDouble();
+			for(int i = 0; i < EVAL_VALUE_COUNT*2 && input.hasNextLine(); i++) {
+				allWeights[i] = input.nextDouble();
 				if(i == EVAL_VALUE_COUNT-1) {
 					currupt = false;//The file was successfully read without errors
 				}
@@ -57,8 +60,8 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 		}
 
 		if(random) {
-			for(int i = 0; i < EVAL_VALUE_COUNT; i++) {
-				weights[i] = Math.random()*2.0-1.0;
+			for(int i = 0; i < EVAL_VALUE_COUNT*2; i++) {
+				allWeights[i] = Math.random()*2.0-1.0;
 			}
 		}
 	}
@@ -71,19 +74,24 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 	 * @param turnIndex See {@link MemoryAIPlayer} for details.
 	 * @param weights This is the set of weights that will be used to weigh different parts of the evaluation function.
 	 */
-	public GeneticAIPlayer(String name, ObservableGameState OGS, int playerCount, int turnIndex, double[] weights) {
+	public GeneticAIPlayer(String name, ObservableGameState OGS, int playerCount, int turnIndex, double[] allWeights) {
 		super(name, OGS, playerCount, turnIndex);
 
+		for(int i = 0; i < EVAL_VALUE_COUNT*2; i++) {
+			this.allWeights[i] = allWeights[i];
+		}
+		
 		for(int i = 0; i < EVAL_VALUE_COUNT; i++) {
-			this.weights[i] = weights[i];
+			pickingWeights[i] = this.allWeights[i];
+			biddingWeights[i] = this.allWeights[i+EVAL_VALUE_COUNT];
 		}
 	}
 
 	public GeneticAIPlayer(String name, ObservableGameState OGS, int playerCount, int turnIndex) {
 		super(name, OGS, playerCount, turnIndex);
 
-		for(int i = 0; i < EVAL_VALUE_COUNT; i++) {
-			weights[i] = Math.random()*2.0-1.0; 
+		for(int i = 0; i < EVAL_VALUE_COUNT*2; i++) {
+			allWeights[i] = Math.random()*2.0-1.0; 
 		}
 	}
 
@@ -97,7 +105,7 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 
 		double[] artistEvals = new double[Artist.values().length];
 		for(int i = 0; i < Artist.values().length; i++) {
-			artistEvals[i] = getEvaluationValue(Artist.values()[i]);
+			artistEvals[i] = getEvaluationValue(Artist.values()[i], pickingWeights);
 			//System.out.println(artistEvals[i]);
 		}
 
@@ -135,7 +143,9 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 
 	@Override
 	public int getBid(int highestBid) {
-		double eval = getEvaluationValue(biddingCard.getArtist());
+		if(biddingCard == null)
+		System.out.println(biddingCard);
+		double eval = getEvaluationValue(biddingCard.getArtist(), biddingWeights);
 
 		if(money > (int)(((double)money)*eval)) {
 			return (int)(((double)money)*eval);
@@ -169,7 +179,7 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 
 	}
 
-	private double getEvaluationValue(Artist artist) {
+	private double getEvaluationValue(Artist artist, double[] weights) {
 
 
 
@@ -180,6 +190,8 @@ public class GeneticAIPlayer extends MemoryAIPlayer implements LearningAI {
 		double normalizedMoneyRaw = 0;
 		double normalizedArtistValueCTMoneyRaw = 0;
 		double normalizedArtistValueCTOthersRaw = 0;
+		
+		
 
 		//TODO incorporate other players winnings into this
 

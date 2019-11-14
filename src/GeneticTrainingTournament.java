@@ -58,9 +58,9 @@ public class GeneticTrainingTournament {
 	/**
 	 * Ammount of players in a generation
 	 */
-	private static final int POPULATION_SIZE = 100;
+	private static final int POPULATION_SIZE = 1000;
 	private static final int GENERATIONS = 100;
-	private static double[][] allPlayersWeights = new double[100][GeneticAIPlayer.EVAL_VALUE_COUNT];
+	private static double[][] allPlayersWeights = new double[POPULATION_SIZE][GeneticAIPlayer.EVAL_VALUE_COUNT*2];
 
 	public static void main(String[] args) {
 		
@@ -76,12 +76,19 @@ public class GeneticTrainingTournament {
 
 		//generate a set of random weights
 		for(int i = 0; i < POPULATION_SIZE; i++) {
-			for(int k = 0; k < GeneticAIPlayer.EVAL_VALUE_COUNT; k++) {
+			for(int k = 0; k < GeneticAIPlayer.EVAL_VALUE_COUNT*2; k++) {
 				allPlayersWeights[i][k] = Math.random()*2.0-1.0;
 			}
 		}
 
 		for(int gen = 0; gen < GENERATIONS; gen++) {
+			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 
 			int[] MLAIWins = new int[POPULATION_SIZE];
 			for(int i = 0; i < MLAIWins.length; i++) {
@@ -101,52 +108,18 @@ public class GeneticTrainingTournament {
 				types = randomizePlayerOrder(types);
 				
 				trainers[popIndex] = new GameRunnerTrainer(300000,games,types,allPlayersWeights[popIndex]);
-						
-				//below this is old
-
-//				for(int i = 0; i < games; i++) {
-//					//make the game
-//					GameState state = new GameState(types.size(), true);
-//					ObservableGameState OGS = new ObservableGameState(state);
-//
-//					//make the players
-//					names = new ArrayList<String>();
-//					for(PlayerType type : types) {
-//						names.add(type.toString());
-//					}
-//					Player[] players = null;
-//
-//					players = makePlayers(names, types, OGS, allPlayersWeights[popIndex]);
-//
-//
-//					//make the driver
-//					GameDriver driver = new GameDriver(players, state, OGS, false);
-//					
-//					//start the game
-//					Player winner = driver.playGame();
-////					System.out.println("Game " + i + " winner : " + winner.name);
-//					if(winner.name == MLAIType.toString()) {
-//						MLAIWins[popIndex]++;
-//					}
-//
-//					//update the MLAI
-//					if(winner.name == MLAIType.toString()) {
-//						MLAIPlayer.learn(true);
-//					} else {
-//						MLAIPlayer.learn(false);
-//					}
-//				}
-//				System.out.println("Pop " + popIndex + " complete");
 			}
 			
 			//start the training
-			for(GameRunnerTrainer trainer : trainers) {
-				trainer.start();
+			for(int i = 0; i < trainers.length; i++) {
+				trainers[i].start();
+				System.out.println("trainer[" + i + "] started");
 			}
 			
 			//wait for the training to complete
 			for(int i = 0; i < trainers.length; i++) {
 				try {
+					//System.out.println("waiting");
 					trainers[i].join();
 					System.out.println("trainer[" + i + "] stopped.");
 				} catch (InterruptedException e) {
@@ -169,19 +142,19 @@ public class GeneticTrainingTournament {
 			//writer.println("Gen:" + gen);
 			for(int i = 0; i < POPULATION_SIZE; i++) {
 				writer.print("Weights:" + i + ":" + sortedPop.get(i).evalValue);
-				for(int w = 0; w < GeneticAIPlayer.EVAL_VALUE_COUNT; w++) {
+				for(int w = 0; w < GeneticAIPlayer.EVAL_VALUE_COUNT*2; w++) {
 					writer.print(":" + sortedPop.get(i).getWeight(w));
 				}
 				writer.println();
 			}
 			
 			//make the next generation
-			double[][] newGenWeights = new double[POPULATION_SIZE][GeneticAIPlayer.EVAL_VALUE_COUNT];
+			double[][] newGenWeights = new double[POPULATION_SIZE][GeneticAIPlayer.EVAL_VALUE_COUNT*2];
 			//replace the bottom half of the population
 			for(int i = 0; i < POPULATION_SIZE/10; i++) {
-				double[] newWeightSet1 = new double[GeneticAIPlayer.EVAL_VALUE_COUNT];
-				double[] newWeightSet2 = new double[GeneticAIPlayer.EVAL_VALUE_COUNT];
-				for(int w = 0; w < GeneticAIPlayer.EVAL_VALUE_COUNT; w++) {
+				double[] newWeightSet1 = new double[GeneticAIPlayer.EVAL_VALUE_COUNT*2];
+				double[] newWeightSet2 = new double[GeneticAIPlayer.EVAL_VALUE_COUNT*2];
+				for(int w = 0; w < GeneticAIPlayer.EVAL_VALUE_COUNT*2; w++) {
 					if(Math.random() > 0.5) {
 						newWeightSet1[w] = sortedPop.get(2*i).getWeight(w);
 						newWeightSet2[w] = sortedPop.get(2*i+1).getWeight(w);
