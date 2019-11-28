@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import core.GameState;
 import core.ObservableGameState;
@@ -8,6 +9,7 @@ import fxmlgui.GameDriver;
 import mlaiplayers.LearningAI;
 import mlaiplayers.MemoizerAIPlayer;
 import mlaiplayers.MemoizerAIPlayerDB;
+import mlaiplayers.NNPlayer;
 import player.BasicPredictiveAIPlayer;
 import player.BasicPredictiveAIPlayerV2;
 import player.BasicPredictiveAIPlayerV3;
@@ -20,7 +22,7 @@ import player.PlayerType;
 import player.RandomPlayer;
 import player.ReactiveAIPlayer;
 
-public class TrainingTournament {
+public class NNTrainingTournament {
 
 	/**
 	 * The amount of games that the MLAI will play.
@@ -44,77 +46,71 @@ public class TrainingTournament {
 	 */
 	private static ArrayList<PlayerType> types = null;
 
-	/**
-	 * The MLAI being trained.
-	 */
-	private static LearningAI MLAIPlayer;
-	private static PlayerType MLAIType = PlayerType.GENETIC_AI;
-	private static String MLAIFileName = "MemoizerDatabase.txt";
-	private static File MLAIFile = new File(MLAIFileName);
+	private static int playerCount = 3;
 
-	private static MemoizerAIPlayerDB database;
+	private static HashMap<String, Integer> wins;
+
+	private static int maxRounds = 1000;
 
 	public static void main(String[] args) {
 
-		//load MLAI data
-		try {
-			database = new MemoizerAIPlayerDB(MLAIFile);
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-			System.out.println("an error occured with the file.");
-			System.exit(0);
-		}
+		wins = new HashMap<String, Integer>();
 
 		types = new ArrayList<PlayerType>();
-		types.add(MLAIType);//add the MLAI
-		types.add(PlayerType.MERCHANT);
-		types.add(PlayerType.BASIC_PREDICTIVE_AI_V2);
-		types = randomizePlayerOrder(types);
-
-		int MLAIWins = 0;
-
-		for(int i = 0; i < games; i++) {
-			//make the game
-			GameState state = new GameState(types.size(), true);
-			ObservableGameState OGS = new ObservableGameState(state);
-
-			//make the players
-			names = new ArrayList<String>();
-			for(PlayerType type : types) {
-				names.add(type.toString());
-			}
-			Player[] players = null;
-
-			players = makePlayers(names, types, OGS);
-
-
-			//make the driver
-			GameDriver driver = new GameDriver(players, state, OGS, false);
-
-			//start the game
-			Player winner = driver.playGame();
-			System.out.println("Game " + i + " winner : " + winner.name);
-			if(winner.name == MLAIType.toString()) {
-				MLAIWins++;
-			}
-
-			//update the MLAI
-			if(winner.name == MLAIType.toString()) {
-				MLAIPlayer.learn(true);
-			} else {
-				MLAIPlayer.learn(false);
-			}
-
-
+		for(int i = 0; i < playerCount; i++) {
+			types.add(PlayerType.NNPlayer);
+			names.add("" + PlayerType.NNPlayer + " " + i);
 		}
 
-		System.out.println(MLAIWins);
+		Player[] players = makePlayers(names, types, null);
 
-		//save the database
-		database.saveData(MLAIFileName);
-		System.out.println("MLAI data saved");
+		for(int round = 0; round < maxRounds; round++) {
+			for(int game = 0; game < games; game++) {
 
+				for(Player p : players) {
+					wins.put(p.name, 0);
+				}
+
+				GameState state = new GameState(playerCount);
+				ObservableGameState OGS = new ObservableGameState(state);
+
+				for(Player p : players) {
+					NNPlayer nnp = ((NNPlayer)p);
+					nnp.updateOGS(OGS);
+				}
+
+				//shuffle player order
+				for(int i = 0; i < 20; i++) {
+					int slot = (int)(Math.random()*2)+1;
+					Player p = players[0];
+					players[0] = players[slot];
+					players[slot] = p;
+				}
+
+				GameDriver driver = new GameDriver(players, state, OGS);
+
+				Player winner = driver.playGame();
+
+				wins.put(winner.name, wins.get(winner.name));
+			}
+			
+			//after the round is over the update train the AIs
+			int bestIndex = -1;
+			int bestScore = -1;
+			for(int i = 0; i < players.length; i++) {
+				if(bestScore < wins.get(players[i].name)) {
+					bestScore = wins.get(players[i].name);
+					bestIndex = i;
+				}
+			}
+			
+			ArrayList<NNPlayer.Move> bestMoves = ((NNPlayer)players[bestIndex]).getMoves();
+			
+			for(int i = 0; i < players.length; i++) {
+				((NNPlayer)players[i]).learn(bestMoves);
+				((NNPlayer)players[i]).clearMoves();
+			}
+		}
 	}
 
 	/**
@@ -147,9 +143,8 @@ public class TrainingTournament {
 				players[i] = new HandStateCardPicker(names.get(i),OGS, players.length,i);
 			} else if(types.get(i) == PlayerType.BASIC_PREDICTIVE_AI_V3) {
 				players[i] = new BasicPredictiveAIPlayerV3(names.get(i),OGS, players.length,i);
-			} else if(types.get(i) == PlayerType.MEMOIZER_AI) {
-				MLAIPlayer = new MemoizerAIPlayer(names.get(i), OGS, players.length, i, database, 0.01, 0.5);
-				players[i] = (Player) MLAIPlayer;
+			} else if(types.get(i) == PlayerType.NNPlayer) {
+				players[i] = new NNPlayer(names.get(i),OGS,players.length,i);
 			} else {
 				players[i] = new RandomPlayer(names.get(i));
 			}

@@ -173,6 +173,19 @@ public class NNPlayer extends MemoryAIPlayer{
 
 		setWeights(biddingHLWeights,biddingInputs,biddingOutputs,pickingHLWeights,pickingInputs,pickingOutputs);
 	}
+	
+	public void updateOGS(ObservableGameState state) {
+		this.state = state;
+		OGS = state;
+	}
+	
+	public void clearMoves() {
+		moves = new ArrayList<Move>();
+	}
+	
+	public ArrayList<Move> getMoves(){
+		return moves;
+	}
 
 	private void setInputNodes(ArrayList<Node> inputs, ArrayList<Node> outputs, double[][] weights) {
 		for(int i = 0; i < outputs.size(); i++) {
