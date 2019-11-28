@@ -6,6 +6,9 @@ import java.util.Iterator;
 import java.util.Map;
 
 import core.Artist;
+import core.ArtistCount;
+import core.AuctionType;
+import core.Card;
 import core.ObservableGameState;
 import player.MemoryAIPlayer;
 
@@ -16,7 +19,7 @@ public class NNPlayer extends MemoryAIPlayer{
 	private final int HIDDEN_LAYERS = 1;
 	private final int HIDDEN_LAYER_NODES = 20;
 
-	private final int INPUT_NODE_COUNT = 31;
+	private final int INPUT_NODE_COUNT = 34;
 
 	//These do not include the outputs, however, they do include the inputs
 	private ArrayList<ArrayList<Node>> biddingLayers;
@@ -24,6 +27,12 @@ public class NNPlayer extends MemoryAIPlayer{
 
 	private HiddenNode biddingOutputNode;
 	private ArrayList<Node> pickingOutputNodes;
+	
+	//var for tracking moves made
+	private ArrayList<Move> moves;
+	
+	//things the AI needs to keep track of
+	private double totalCardsPlayed = 0;
 
 	public NNPlayer(String name, ObservableGameState state, int playerCount, int turnIndex, double[][][] biddingHLWeights, double[][] biddingInputWeights, double[] biddingOutputWeights , double[][][] pickingHLWeights, double[][] pickingInputWeights, double[][] pickingOutputWeights) {
 		super(name,state,playerCount,turnIndex);
@@ -32,6 +41,8 @@ public class NNPlayer extends MemoryAIPlayer{
 
 	public void setWeights(double[][][] biddingHLWeights, double[][] biddingInputWeights, double[] biddingOutputWeights , double[][][] pickingHLWeights, double[][] pickingInputWeights, double[][] pickingOutputWeights) {
 
+		moves = new ArrayList<Move>();
+		
 		ArrayList<Node> inputNodes = new ArrayList<Node>();
 		makeInputNodes(inputNodes);
 
@@ -193,7 +204,16 @@ public class NNPlayer extends MemoryAIPlayer{
 		((HiddenNode)node).updateWeight(input,newWeight);
 	}
 
-	//TODO
+	public void learn(ArrayList<Move> correctMoves) {
+		for(Move m : correctMoves) {
+			if(m.isBidding) {
+				learnBiddingMove(m.getInputs(), m.getOutputs()[0]);
+			} else {
+				learnPickingMove(m.getInputs(), m.getOutputs());
+			}
+		}
+	}
+	
 	private void learnBiddingMove(double[] inputs, double correctOutput) {
 		setInputs(inputs);
 		double output = biddingOutputNode.output();
@@ -203,7 +223,23 @@ public class NNPlayer extends MemoryAIPlayer{
 		backpropagate(biddingLayers);
 	}
 	
-	//TODO
+	private void learnPickingMove(double[] inputs, double[] correctOutputs) {
+		setInputs(inputs);
+		double[] outputs = new double[pickingOutputNodes.size()];
+		
+		//get initial outputs
+		for(int i = 0; i < outputs.length; i++) {
+			outputs[i] = pickingOutputNodes.get(i).output();
+		}
+		
+		//calculate error for the output nodes
+		for(int i = 0; i < outputs.length; i++) {
+			((HiddenNode)pickingOutputNodes.get(i)).setError(outputs[i]*(1-outputs[i])*(correctOutputs[i]-outputs[i]));
+		}
+		
+		backpropagate(pickingLayers);
+	}
+	
 	private void backpropagate(ArrayList<ArrayList<Node>> network) {
 		//calculate errors
 		for(int i = network.size()-1; i > 0; i--) {
@@ -227,11 +263,23 @@ public class NNPlayer extends MemoryAIPlayer{
 		}
 	}
 
+	/**
+	 * Sets the values for all of the input nodes in the current neural netowork.
+	 * @param inputs
+	 */
 	private void setInputs(double[] inputs) {
 		ArrayList<Node> inputNodes = biddingLayers.get(0);
 		for(int i = 0; i < inputs.length; i++) {
 			((InputNode)inputNodes.get(i)).setValue(inputs[i]);
 		}
+	}
+	
+	private double[] getCurrentInputValues() {
+		double[] inputs = new double[biddingLayers.get(0).size()];
+		for(int i = 0; i < inputs.length; i++) {
+			inputs[i] = biddingLayers.get(0).get(i).output();
+		}
+		return inputs;
 	}
 
 	private abstract class Node{
@@ -301,4 +349,180 @@ public class NNPlayer extends MemoryAIPlayer{
 			return error;
 		}
 	}
+	
+	public class Move {
+		private double[] inputs;
+		private double[] outputs;
+		private boolean isBidding = false;
+		
+		public Move(double[] i, double[] o, boolean isBidding) {
+			inputs = i;
+			outputs = o;
+		}
+		
+		public double[] getInputs() {
+			return inputs;
+		}
+		
+		public double[] getOutputs() {
+			return outputs;
+		}
+		
+		public boolean getIsBidding() {
+			return isBidding;
+		}
+	}
+	
+	//////////////////////////////////////////////////////////////////////////////////
+	//override
+	
+	private void getInputs() {
+		double[] inputs = new double[INPUT_NODE_COUNT];
+		
+		inputs[0] = turn;
+		inputs[1] = totalCardsPlayed;
+		
+		inputs[2] = state.getSeasonValue(Artist.values()[0]);
+		inputs[3] = state.getSeasonValue(Artist.values()[1]);
+		inputs[4] = state.getSeasonValue(Artist.values()[2]);
+		inputs[5] = state.getSeasonValue(Artist.values()[3]);
+		inputs[6] = state.getSeasonValue(Artist.values()[4]);
+		
+		inputs[7] = state.getArtistValue(Artist.values()[0]);
+		inputs[8] = state.getArtistValue(Artist.values()[1]);
+		inputs[9] = state.getArtistValue(Artist.values()[2]);
+		inputs[10] = state.getArtistValue(Artist.values()[3]);
+		inputs[11] = state.getArtistValue(Artist.values()[4]);
+		
+		for(int i = 12; i < 17; i++) {
+			if(biddingCard.getArtist() == Artist.values()[i-12]) {
+				inputs[i] = 1;
+			} else {
+				inputs[i] = 0;
+			}
+		}
+		
+		//coppied and pasted, does not need to be sorted
+		ArrayList<ArtistCount> sortedWinnings = new ArrayList<ArtistCount>();
+		for(Artist a : Artist.values()) {
+			int count = 0;
+			for(Card c : winnings) {
+				if(c.getArtist() == a) {
+					count++;
+				}
+			}
+			sortedWinnings.add(new ArtistCount(a,count));
+		}
+		//sortedWinnings.sort((ArtistCount a, ArtistCount b) -> a.compareTo(b));//love this
+		
+		for(int i = 18; i < 23; i++) {
+			inputs[i] = sortedWinnings.get(i-18).getCount();
+		}
+		
+		getBestOtherPlayer();
+		inputs[24] = ((double)money)/((double)bestPlayerMoney);
+		
+		inputs[25] = players.length;
+		
+		double[] artistHandCount = new double[Artist.values().length];
+		for(int i = 0; i < Artist.values().length; i++) {
+			artistHandCount[i] = 0;
+			for(Card c : hand) {
+				if(c.getArtist() == Artist.values()[i]) {
+					artistHandCount[i]++;
+				}
+			}
+		}
+		for(int i = 26; i < 31; i++) {
+			inputs[i] = artistHandCount[i-26];
+		}
+		
+		if(isDouble) {
+			inputs[32] = 1;
+		} else {
+			inputs[32] = 0;
+		}
+	}
+	
+	@Override
+	public void announceCard(Card card, boolean isDouble) {
+		this.biddingCard = card;
+		this.isDouble = isDouble;
+		totalCardsPlayed++;
+	}
+	
+	@Override
+	public int getBid(int highestBid) {
+		getInputs();
+		double bid = biddingOutputNode.output()*((double)money);
+		
+		if(bid > money) {
+			double[] outputNode = new double[1];
+			outputNode[0] = 1;
+			Move m = new Move(getCurrentInputValues(), outputNode, true); 
+			moves.add(m);
+			return money;
+		} else {
+			double[] outputNode = new double[1];
+			outputNode[0] = biddingOutputNode.output();
+			Move m = new Move(getCurrentInputValues(),outputNode,true);
+			moves.add(m);
+			return (int)bid;
+		}
+	}
+	
+	@Override
+	public boolean buy(int price) {
+		getInputs();
+		double bid = biddingOutputNode.output()*((double)money);
+		
+		if(bid > price) {
+			double[] outputNode = new double[1];
+			outputNode[0] = 1;
+			Move m = new Move(getCurrentInputValues(),outputNode,true);
+			moves.add(m);
+			return true;
+		} else {
+			double[] outputNode = new double[1];
+			outputNode[0] = 0;
+			Move m = new Move(getCurrentInputValues(),outputNode,true);
+			moves.add(m);
+			return false;
+		}
+	}
+	
+	@Override
+	public Card chooseCard() {
+		getInputs();
+		double[] outputs = new double[Artist.values().length];
+		for(int i = 0; i < Artist.values().length; i++) {
+			outputs[i] = pickingOutputNodes.get(i).output();
+		}
+		
+		Move m = new Move(getCurrentInputValues(), outputs, false);
+		
+		for(int i = 0; i < outputs.length; i++) {
+			int highestIndex = 0;
+			double highestValue = Double.NEGATIVE_INFINITY;
+			for(int k = 0; k < outputs.length; k++) {
+				if(outputs[k] > highestValue) {
+					highestIndex = k;
+					highestValue = outputs[k];
+				}
+			}
+			
+			Artist artist = Artist.values()[highestIndex];
+			
+			for(Card c : hand) {
+				if(c.getArtist() == artist && c.getAuctionType() != AuctionType.DOUBLE) {
+					hand.remove(c);
+					return c;
+				}
+			}
+		}
+		
+		return hand.remove(0);
+	}
+	
+	//TODO need fixed price stuff
 }
