@@ -57,6 +57,7 @@ public class NNTrainingTournament {
 		wins = new HashMap<String, Integer>();
 
 		types = new ArrayList<PlayerType>();
+		names = new ArrayList<String>();
 		for(int i = 0; i < playerCount; i++) {
 			types.add(PlayerType.NNPlayer);
 			names.add("" + PlayerType.NNPlayer + " " + i);
