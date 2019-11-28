@@ -27,7 +27,7 @@ public class NNTrainingTournament {
 	/**
 	 * The amount of games that the MLAI will play.
 	 */
-	private static int games = 1000;
+	private static int games = 100;
 
 	/**
 	 * This array holds the list of players the MLAI player will be training with.
@@ -66,11 +66,11 @@ public class NNTrainingTournament {
 		Player[] players = makePlayers(names, types, null);
 
 		for(int round = 0; round < maxRounds; round++) {
+			for(Player p : players) {
+				wins.put(p.name, 0);
+			}
 			for(int game = 0; game < games; game++) {
 
-				for(Player p : players) {
-					wins.put(p.name, 0);
-				}
 
 				GameState state = new GameState(playerCount);
 				ObservableGameState OGS = new ObservableGameState(state);
@@ -88,21 +88,35 @@ public class NNTrainingTournament {
 					players[slot] = p;
 				}
 
-				GameDriver driver = new GameDriver(players, state, OGS);
+				GameDriver driver = new GameDriver(players, state, OGS, false);
 
 				Player winner = driver.playGame();
 
-				wins.put(winner.name, wins.get(winner.name));
+				int winnerWins = wins.get(winner.name).intValue();
+//				System.out.println(winnerWins);
+				wins.put(winner.name, winnerWins+1);
+				System.out.println(game + " : " + winner.name + " : " + wins.get(winner.name) + " : " + winner.getMoney());
 			}
+			
+			System.out.println("Round over");
 			
 			//after the round is over the update train the AIs
 			int bestIndex = -1;
 			int bestScore = -1;
 			for(int i = 0; i < players.length; i++) {
+				System.out.println(players[i].name + " : " + wins.get(players[i].name));
 				if(bestScore < wins.get(players[i].name)) {
 					bestScore = wins.get(players[i].name);
 					bestIndex = i;
 				}
+			}
+			
+			//allow time to see results
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			
 			ArrayList<NNPlayer.Move> bestMoves = ((NNPlayer)players[bestIndex]).getMoves();

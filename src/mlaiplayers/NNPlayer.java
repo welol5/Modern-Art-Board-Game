@@ -48,6 +48,9 @@ public class NNPlayer extends MemoryAIPlayer{
 
 		biddingLayers = new ArrayList<ArrayList<Node>>();
 		biddingLayers.add(inputNodes);
+		
+		pickingLayers = new ArrayList<ArrayList<Node>>();
+		pickingLayers.add(inputNodes);
 
 		if(HIDDEN_LAYERS > 0) {
 			ArrayList<Node> biddingFirstLayer = new ArrayList<Node>();
@@ -59,22 +62,22 @@ public class NNPlayer extends MemoryAIPlayer{
 
 			setInputNodes(inputNodes, biddingFirstLayer, biddingInputWeights);
 
-			for(int i = 0; i < HIDDEN_LAYERS-1; i++) {
+			for(int i = 1; i < HIDDEN_LAYERS-1; i++) {
 				ArrayList<Node> layer = new ArrayList<Node>();
 				for(int k = 0; k < HIDDEN_LAYER_NODES; k++) {
 					layer.add(new HiddenNode());
 				}
 				biddingLayers.add(layer);
 
-				setInputNodes(layer, biddingLayers.get(i+1), biddingHLWeights[i]);
+				setInputNodes(biddingLayers.get(i), layer, biddingHLWeights[i-1]);
 			}
 
 			biddingOutputNode = new HiddenNode();
 			ArrayList<Node> biddingOutputLayer = new ArrayList<Node>();
 			biddingOutputLayer.add(biddingOutputNode);
 			biddingLayers.add(biddingOutputLayer);
-			for(int i = 0; i < biddingLayers.get(biddingLayers.size()-1).size(); i++) {
-				biddingOutputNode.addInput((HiddenNode)biddingLayers.get(biddingLayers.size()-1).get(i), biddingOutputWeights[i]);
+			for(int i = 0; i < biddingLayers.get(biddingLayers.size()-2).size(); i++) {
+				biddingOutputNode.addInput((HiddenNode)biddingLayers.get(biddingLayers.size()-2).get(i), biddingOutputWeights[i]);
 			}
 
 			//picking network
@@ -88,7 +91,7 @@ public class NNPlayer extends MemoryAIPlayer{
 			//input nodes are the same for both networks
 			setInputNodes(inputNodes, pickingFirstLayer, pickingInputWeights);
 
-			//make the hidden layers
+			//make the hidden layers//TODO fix this
 			for(int i = 0; i < HIDDEN_LAYERS-1; i++) {
 				ArrayList<Node> layer = new ArrayList<Node>();
 				for(int k = 0; k < HIDDEN_LAYER_NODES; k++) {
@@ -108,13 +111,14 @@ public class NNPlayer extends MemoryAIPlayer{
 
 			//set inputs for output nodes
 			for(int k = 0; k < pickingOutputNodes.size(); k++) {
-				for(int i = 0; i < pickingLayers.get(pickingLayers.size()-1).size(); i++) {
-					pickingOutputNodes.get(k).addInput((HiddenNode)pickingLayers.get(pickingLayers.size()-1).get(i), pickingOutputWeights[k][i]);
+				for(int i = 0; i < pickingLayers.get(pickingLayers.size()-2).size(); i++) {
+					pickingOutputNodes.get(k).addInput((HiddenNode)pickingLayers.get(pickingLayers.size()-2).get(i), pickingOutputWeights[k][i]);
 				}
 			}
 		} else {
 			//TODO deal with no hidden layers
 		}
+		
 	}
 
 	public NNPlayer(String name, ObservableGameState state, int playerCount, int turnIndex) {
@@ -188,11 +192,14 @@ public class NNPlayer extends MemoryAIPlayer{
 	}
 
 	private void setInputNodes(ArrayList<Node> inputs, ArrayList<Node> outputs, double[][] weights) {
+//		System.out.println("layer");
 		for(int i = 0; i < outputs.size(); i++) {
 			for(int k = 0; k < inputs.size(); k++) {
+//				System.out.println(outputs.get(i) + " contains " + inputs.get(k));
 				outputs.get(i).addInput(inputs.get(k), weights[i][k]);
 			}
 		}
+//		System.out.println("end layer");
 	}
 
 	private void makeInputNodes(ArrayList<Node> inputs) {
@@ -209,7 +216,7 @@ public class NNPlayer extends MemoryAIPlayer{
 		}
 
 		double error = node.output()*(1-node.output())*sumErrors;
-		((HiddenNode)node).setError(error);
+		((HiddenNode)node).setError(error);//TODO tries to cast input nodes to hidden nodes
 	}
 
 	private void updateWeight(Node node, Node input) {
@@ -219,6 +226,7 @@ public class NNPlayer extends MemoryAIPlayer{
 
 	public void learn(ArrayList<Move> correctMoves) {
 		for(Move m : correctMoves) {
+			System.out.println(m.isBidding + " : " + m.getOutputs().length);
 			if(m.isBidding) {
 				learnBiddingMove(m.getInputs(), m.getOutputs()[0]);
 			} else {
@@ -238,6 +246,7 @@ public class NNPlayer extends MemoryAIPlayer{
 	
 	private void learnPickingMove(double[] inputs, double[] correctOutputs) {
 		setInputs(inputs);
+		System.out.println(correctOutputs.length);
 		double[] outputs = new double[pickingOutputNodes.size()];
 		
 		//get initial outputs
@@ -333,12 +342,6 @@ public class NNPlayer extends MemoryAIPlayer{
 		}
 
 		public double output() {
-			//			double output = 0;
-			//			for(int i = 0; i < inputs.size(); i++) {
-			//				output += inputs.get(i).output()*weights.get(i).doubleValue();
-			//			}
-			//			return output;
-
 			double output = 0;
 			for(Map.Entry<Node, Double> entry : inputs.entrySet()) {
 				output += entry.getKey().output()*entry.getValue();
@@ -361,6 +364,10 @@ public class NNPlayer extends MemoryAIPlayer{
 		public double getError() {
 			return error;
 		}
+		
+		private HashMap<Node,Double> getInputNodes(){
+			return inputs;
+		}
 	}
 	
 	public class Move {
@@ -371,6 +378,7 @@ public class NNPlayer extends MemoryAIPlayer{
 		public Move(double[] i, double[] o, boolean isBidding) {
 			inputs = i;
 			outputs = o;
+			this.isBidding = isBidding;
 		}
 		
 		public double[] getInputs() {
@@ -408,7 +416,9 @@ public class NNPlayer extends MemoryAIPlayer{
 		inputs[11] = state.getArtistValue(Artist.values()[4]);
 		
 		for(int i = 12; i < 17; i++) {
-			if(biddingCard.getArtist() == Artist.values()[i-12]) {
+			if(biddingCard == null) {
+				inputs[i] = 0;
+			} else if(biddingCard.getArtist() == Artist.values()[i-12]) {
 				inputs[i] = 1;
 			} else {
 				inputs[i] = 0;
@@ -506,13 +516,22 @@ public class NNPlayer extends MemoryAIPlayer{
 	
 	@Override
 	public Card chooseCard() {
+//		System.out.println("picking");
 		getInputs();
 		double[] outputs = new double[Artist.values().length];
 		for(int i = 0; i < Artist.values().length; i++) {
 			outputs[i] = pickingOutputNodes.get(i).output();
 		}
+//		System.out.println(outputs.length);
 		
 		Move m = new Move(getCurrentInputValues(), outputs, false);
+		moves.add(m);
+		
+//		System.out.print("Move");
+//		for(int i = 0; i < outputs.length; i++) {
+//			System.out.print(" : " + outputs[i]);
+//		}
+//		System.out.println();
 		
 		for(int i = 0; i < outputs.length; i++) {
 			int highestIndex = 0;
@@ -528,14 +547,31 @@ public class NNPlayer extends MemoryAIPlayer{
 			
 			for(Card c : hand) {
 				if(c.getArtist() == artist && c.getAuctionType() != AuctionType.DOUBLE) {
+//					System.out.println("card chosen");
 					hand.remove(c);
 					return c;
 				}
 			}
+			outputs[highestIndex] = 0;
 		}
-		
+//		System.out.println("defaulted");
 		return hand.remove(0);
 	}
 	
 	//TODO need fixed price stuff
+	
+	
+	///////////////////////////////////////////////////////////////
+	//debug
+	
+	private void printNetwork() {
+		printInputs(biddingOutputNode);
+	}
+	
+	private void printInputs(HiddenNode n) {
+//		System.out.println(n);
+//		for(Map.Entry<Node, Double> entry : n.getInputNodes().entrySet()) {
+//			printInputs((HiddenNode)entry.getKey());
+//		}
+	}
 }

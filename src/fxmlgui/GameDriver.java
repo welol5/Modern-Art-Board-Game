@@ -76,8 +76,8 @@ public class GameDriver {
 			//debug
 			//show money amounts
 			for(Player p : players) {
-				if(debugPrinting)
-				System.out.println(p.name + " : " + p.getMoney());
+//				if(debugPrinting)
+				//System.out.println(p.name + " : " + p.getMoney());
 			}
 
 			state.resetSeason();
