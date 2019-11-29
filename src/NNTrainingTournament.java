@@ -27,7 +27,7 @@ public class NNTrainingTournament {
 	/**
 	 * The amount of games that the MLAI will play.
 	 */
-	private static int games = 100;
+	private static int games = 10;
 
 	/**
 	 * This array holds the list of players the MLAI player will be training with.
