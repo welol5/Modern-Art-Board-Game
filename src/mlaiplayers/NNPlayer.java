@@ -235,9 +235,9 @@ public class NNPlayer extends MemoryAIPlayer{
 		double newWeight = ((HiddenNode)node).getWeight(input)+alpha*(((HiddenNode)node).getError()*input.output());
 //		System.out.println( "old : " + ((HiddenNode)node).getWeight(input) + " : new : " + newWeight);
 		((HiddenNode)node).updateWeight(input,newWeight);
-		if(newWeight == Double.NaN) {
-			System.exit(0);
-		}
+//		if(newWeight == Double.NaN) {
+//			System.exit(0);
+//		}
 	}
 
 	public void learn(ArrayList<Move> correctMoves) {
