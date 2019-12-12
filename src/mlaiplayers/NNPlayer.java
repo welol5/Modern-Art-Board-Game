@@ -1,9 +1,17 @@
 package mlaiplayers;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
 
 import core.Artist;
 import core.ArtistCount;
@@ -14,12 +22,12 @@ import player.MemoryAIPlayer;
 
 public class NNPlayer extends MemoryAIPlayer{
 
-	private final double alpha = 0.1;
+	private final double alpha = 0.05;
 
-	private final int HIDDEN_LAYERS = 1;
-	private final int HIDDEN_LAYER_NODES = 20;
+	public static final int HIDDEN_LAYERS = 1;
+	public static final int HIDDEN_LAYER_NODES = 20;
 
-	private final int INPUT_NODE_COUNT = 34;
+	public static final int INPUT_NODE_COUNT = 34;
 
 	//These do not include the outputs, however, they do include the inputs
 	private ArrayList<ArrayList<Node>> biddingLayers;
@@ -181,7 +189,7 @@ public class NNPlayer extends MemoryAIPlayer{
 	public void updateOGS(ObservableGameState state) {
 		this.state = state;
 		OGS = state;
-		
+
 		money = 100;
 	}
 
@@ -195,7 +203,9 @@ public class NNPlayer extends MemoryAIPlayer{
 
 	private void setInputNodes(ArrayList<Node> inputs, ArrayList<Node> outputs, double[][] weights) {
 		//		System.out.println("layer");
+		//		System.out.println("weights : " + weights.length);
 		for(int i = 0; i < outputs.size(); i++) {
+			//			System.out.println("weights[" + i + "] : " + weights[i].length);
 			for(int k = 0; k < inputs.size(); k++) {
 				//				System.out.println(outputs.get(i) + " contains " + inputs.get(k));
 				outputs.get(i).addInput(inputs.get(k), weights[i][k]);
@@ -216,7 +226,7 @@ public class NNPlayer extends MemoryAIPlayer{
 		for(Node n : outputs) {
 			sumErrors += ((HiddenNode)n).getWeight(node)*((HiddenNode)n).getError();
 		}
-//		System.out.println("sumErrors " + sumErrors);
+		//		System.out.println("sumErrors " + sumErrors);
 
 		double error = node.output()*(1-node.output())*sumErrors;
 		try {
@@ -227,22 +237,22 @@ public class NNPlayer extends MemoryAIPlayer{
 	}
 
 	private void updateWeight(Node node, Node input) {
-//		System.out.println("update " + node + " to " + input);
-//		System.out.println(input);
-//		System.out.println(node);
-//		System.out.println(input.output());
-//		System.out.println(((HiddenNode)node).getError());
+		//		System.out.println("update " + node + " to " + input);
+		//		System.out.println(input);
+		//		System.out.println(node);
+		//		System.out.println(input.output());
+		//		System.out.println(((HiddenNode)node).getError());
 		double newWeight = ((HiddenNode)node).getWeight(input)+alpha*(((HiddenNode)node).getError()*input.output());
-//		System.out.println( "old : " + ((HiddenNode)node).getWeight(input) + " : new : " + newWeight);
+		//		System.out.println( "old : " + ((HiddenNode)node).getWeight(input) + " : new : " + newWeight);
 		((HiddenNode)node).updateWeight(input,newWeight);
-//		if(newWeight == Double.NaN) {
-//			System.exit(0);
-//		}
+		//		if(newWeight == Double.NaN) {
+		//			System.exit(0);
+		//		}
 	}
 
 	public void learn(ArrayList<Move> correctMoves) {
 		for(Move m : correctMoves) {
-//			System.out.println(m.isBidding + " : " + m.getOutputs().length);
+			//			System.out.println(m.isBidding + " : " + m.getOutputs().length);
 			if(m.isBidding) {
 				learnBiddingMove(m.getInputs(), m.getOutputs()[0]);
 			} else {
@@ -262,7 +272,7 @@ public class NNPlayer extends MemoryAIPlayer{
 
 	private void learnPickingMove(double[] inputs, double[] correctOutputs) {
 		setInputs(inputs);
-//		System.out.println(correctOutputs.length);
+		//		System.out.println(correctOutputs.length);
 		double[] outputs = new double[pickingOutputNodes.size()];
 
 		//get initial outputs
@@ -280,20 +290,20 @@ public class NNPlayer extends MemoryAIPlayer{
 
 	private void backpropagate(ArrayList<ArrayList<Node>> network) {
 		//calculate errors
-		System.out.println(network.size());
+		//		System.out.println(network.size());
 		for(int i = network.size()-1; i > 0; i--) {
-//			System.out.println("layer");
+			//			System.out.println("layer");
 			//get the current layer
 			ArrayList<Node> outputLayer = network.get(i);
 			ArrayList<Node> layer = network.get(i-1);
-			System.out.println(layer.size());
+			//			System.out.println(layer.size());
 			for(Node n: layer) {
 				calcError(n, outputLayer);
 				try {
-				System.out.println(((HiddenNode)n).getError());
+					//				System.out.println(((HiddenNode)n).getError());
 				} catch (Exception e) {}
 			}
-//			System.out.println("end layer");
+			//			System.out.println("end layer");
 		}
 
 		//update weights
@@ -306,7 +316,7 @@ public class NNPlayer extends MemoryAIPlayer{
 				}
 			}
 		}
-		System.out.println("done updateing");
+		//		System.out.println("done updateing");
 	}
 
 	/**
@@ -343,7 +353,7 @@ public class NNPlayer extends MemoryAIPlayer{
 
 	private class InputNode extends Node{
 		private double value;
-		
+
 		public InputNode() {
 			super();
 		}
@@ -389,7 +399,7 @@ public class NNPlayer extends MemoryAIPlayer{
 			double output = 0;
 			for(Node n : inputNodes) {
 				output += n.output()*inputs.get(n.ID);
-//				System.out.println(inputs.get(n.ID));
+				//				System.out.println(inputs.get(n.ID));
 			}
 			return 1/(1+Math.exp(-1*output));
 		}
@@ -410,9 +420,13 @@ public class NNPlayer extends MemoryAIPlayer{
 			return error;
 		}
 
-//		private ArrayList<Node> getInputNodes(){
-//			return inputNodes;
-//		}
+		public int getInputNodeCount(){
+			return inputNodes.size();
+		}
+
+		public double getWeight(int index) {
+			return inputs.get(inputNodes.get(index).ID);
+		}
 	}
 
 	public class Move {
@@ -510,9 +524,9 @@ public class NNPlayer extends MemoryAIPlayer{
 		} else {
 			inputs[32] = 0;
 		}
-		
+
 		ArrayList<Node> inputLayer = biddingLayers.get(0);
-		
+
 		for(int i = 0; i < inputs.length; i++) {
 			((InputNode)inputLayer.get(i)).setValue(inputs[i]);
 		}
@@ -567,6 +581,11 @@ public class NNPlayer extends MemoryAIPlayer{
 
 	@Override
 	public Card chooseCard() {
+		
+		if(hand.size() < 1) {
+			return null;
+		}
+		
 		//		System.out.println("picking");
 		getInputs();
 		double[] outputs = new double[Artist.values().length];
@@ -613,16 +632,174 @@ public class NNPlayer extends MemoryAIPlayer{
 
 
 	///////////////////////////////////////////////////////////////
-	//debug
+	//saving
 
-	private void printNetwork() {
-		printInputs(biddingOutputNode);
+	public void printNetworkToFile(PrintWriter writer) throws IOException {
+
+		writer.println("--network start--");
+		writer.println("" + INPUT_NODE_COUNT + ":input node count");
+		writer.println("" + HIDDEN_LAYER_NODES + ":hidden layer nodes");
+		writer.println("" + HIDDEN_LAYERS + ":hidden layers");
+		writer.println("" + alpha + ":alpha");
+
+		//print the bidding network
+		writer.println("-=bidding network start=-");
+		//starts at 1 to ignore the input layer
+		for(int i = 1; i < biddingLayers.size(); i++) {
+			writer.println("$$layer start");
+			for(int k = 0; k < biddingLayers.get(i).size(); k++) {
+				writer.print("[");
+				for(int w = 0; w < ((HiddenNode)biddingLayers.get(i).get(k)).getInputNodeCount(); w++) {
+					writer.print(((HiddenNode)biddingLayers.get(i).get(k)).getWeight(w));
+					if(w+1 < ((HiddenNode)biddingLayers.get(i).get(k)).getInputNodeCount()) {
+						writer.print(",");
+					}
+				}
+				writer.println("]");
+			}
+		}
+
+		//print the picking network
+		writer.println("-=picking network start=-");
+		//starts at 1 to ignore the input layer
+		for(int i = 1; i < pickingLayers.size(); i++) {
+			writer.println("$$layer start");
+			for(int k = 0; k < pickingLayers.get(i).size(); k++) {
+				//				System.out.println(pickingLayers.get(i).size());
+				writer.print("[");
+				for(int w = 0; w < ((HiddenNode)pickingLayers.get(i).get(k)).getInputNodeCount(); w++) {
+					writer.print(((HiddenNode)pickingLayers.get(i).get(k)).getWeight(w));
+					if(w+1 < ((HiddenNode)pickingLayers.get(i).get(k)).getInputNodeCount()) {
+						writer.print(",");
+					}
+				}
+				writer.println("]");
+			}
+		}
+		writer.println("--network printed--");
+		writer.flush();
+		System.out.println("network saved");
 	}
 
-	private void printInputs(HiddenNode n) {
-		//		System.out.println(n);
-		//		for(Map.Entry<Node, Double> entry : n.getInputNodes().entrySet()) {
-		//			printInputs((HiddenNode)entry.getKey());
-		//		}
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//loading
+
+	public static double[][][] loadWeights(Scanner reader) {
+		System.out.println("loading network");
+		double[][][] weights = new double[HIDDEN_LAYERS+1][][];
+		reader.nextLine();//remove the first layer start line
+
+		//for every layer including the output layer
+		for(int i = 0; i < NNPlayer.HIDDEN_LAYERS+1; i++) {
+			ArrayList<double[]> layerValues = new ArrayList<double[]>();
+			for(int k = 0; true; k++) {
+				String line;
+				try {
+					line = reader.nextLine();
+				} catch(NoSuchElementException e) {
+					break;
+				}
+				if(line.equals("$$layer start") || line.equals("--network printed--") || line.equals("-=picking network start=-")) {
+					break;
+				} else {
+					line = line.substring(1, line.length()-2);
+					String[] values = line.split(",");
+					double[] nodeWeights = new double[values.length];
+					for(int j = 0; j < values.length; j++) {
+						nodeWeights[j] = Double.parseDouble(values[j]);
+					}
+					layerValues.add(nodeWeights);
+				}
+			}
+
+			double[][] layerWeights = layerValues.toArray(new double[1][]);
+			//			if(layerWeights.length < 20) {
+			//				System.out.println("layerWeights : " + layerWeights.length);
+			//				System.out.println(layerWeights[0][0]);
+			//			}
+
+			//			System.out.println(layerValues);
+
+			//			for(int j = 0; j < layerWeights.length; j++) {
+			//				System.out.println(layerWeights[j] + " : " + i);
+			//			}
+
+			//only include valid layers
+			if(layerWeights != null) {
+				//				System.out.println("layer weight " + layerWeights);
+				weights[i] = layerWeights;
+			}
+
+		}
+
+		return weights;
+	}
+
+	public NNPlayer(String name, ObservableGameState state, int playerCount, int turnIndex, double[][][] biddingWeights, double[][][] pickingWeights) {
+		super(name,state,playerCount,turnIndex);
+
+		//Separate out the parts of the input for the constructor
+		double[][] biddingInputWeights = biddingWeights[0];
+		double[][][] biddingHiddenLayerWeights = new double[biddingWeights.length-2][][];
+		for(int i = 0; i < biddingHiddenLayerWeights.length; i++) {
+			biddingHiddenLayerWeights[i] = biddingWeights[i+1];
+		}
+		double[][] biddingOutputWeights = biddingWeights[biddingWeights.length-1];
+		//			System.out.println(biddingOutputWeights);
+
+		double[][] pickingInputWeights = pickingWeights[0];
+		double[][][] pickingHiddenLayerWeights = new double[pickingWeights.length-2][][];
+		for(int i = 0; i < pickingHiddenLayerWeights.length; i++) {
+			pickingHiddenLayerWeights[i] = pickingWeights[i+1];
+		}
+		double[][] pickingOutputWeights = pickingWeights[biddingWeights.length-1];
+
+		setWeights(biddingHiddenLayerWeights, biddingInputWeights, biddingOutputWeights[0], pickingHiddenLayerWeights, pickingInputWeights, pickingOutputWeights);
+	}
+
+	public NNPlayer(String name, ObservableGameState state, int playerCount, int turnIndex, Scanner fileInput) {
+		super(name,state,playerCount,turnIndex);
+
+		System.out.println("loading player");
+		String checkNetworkFile = fileInput.nextLine();
+		//System.out.println(checkNetworkFile);
+		if(!checkNetworkFile.equalsIgnoreCase("--network start--")) {
+			throw new IllegalArgumentException("File scanner did not start at the begining of a network");
+		} else {
+			//assumes network settings match current settings
+			String inputNodeCount = fileInput.nextLine().split(":")[0];
+			String hiddenLayerNodes = fileInput.nextLine().split(":")[0];
+			String hiddenLayers = fileInput.nextLine().split(":")[0];
+			String alpha = fileInput.nextLine().split(":")[0];
+			fileInput.nextLine();//read in the bidding network start line
+			double[][][] biddingWeights = loadWeights(fileInput);
+			//			fileInput.nextLine();//read in the bidding network end line
+			//			fileInput.nextLine();//read in the picking network start line
+			double[][][] pickingWeights = loadWeights(fileInput);
+			//			fileInput.nextLine();//read in the picking network end line
+
+			//debug
+			//			for(int i = 0; i < biddingWeights.length; i++) {
+			//				System.out.println("BW: " + biddingWeights[i]);
+			//			}
+
+			//Separate out the parts of the input for the constructor
+			double[][] biddingInputWeights = biddingWeights[0];
+			double[][][] biddingHiddenLayerWeights = new double[biddingWeights.length-2][][];
+			for(int i = 0; i < biddingHiddenLayerWeights.length; i++) {
+				biddingHiddenLayerWeights[i] = biddingWeights[i+1];
+			}
+			double[][] biddingOutputWeights = biddingWeights[biddingWeights.length-1];
+			//			System.out.println(biddingOutputWeights);
+
+			double[][] pickingInputWeights = pickingWeights[0];
+			double[][][] pickingHiddenLayerWeights = new double[pickingWeights.length-2][][];
+			for(int i = 0; i < pickingHiddenLayerWeights.length; i++) {
+				pickingHiddenLayerWeights[i] = pickingWeights[i+1];
+			}
+			double[][] pickingOutputWeights = pickingWeights[biddingWeights.length-1];
+
+			setWeights(biddingHiddenLayerWeights, biddingInputWeights, biddingOutputWeights[0], pickingHiddenLayerWeights, pickingInputWeights, pickingOutputWeights);
+		}
 	}
 }

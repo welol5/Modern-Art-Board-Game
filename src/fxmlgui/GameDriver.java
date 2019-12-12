@@ -87,7 +87,7 @@ public class GameDriver {
 				
 				turnCount++;
 				if(turnCount > 1000) {
-					System.exit(0);
+//					System.exit(0);
 				}
 				
 				//have a player play a card

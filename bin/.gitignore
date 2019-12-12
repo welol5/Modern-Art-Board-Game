@@ -1,14 +1,4 @@
-/GameRunner$1.class
-/GameRunner.class
-/GameRunnerTrainer$1.class
-/GameRunnerTrainer.class
-/GeneticTrainingTournament$IWEV.class
-/GeneticTrainingTournament.class
-/TournamentGame.class
-/TrainingTournament.class
-/core/
-/fxmlgui/
 /mlaiplayers/
+/TournamentGame$NNPlayerParts.class
+/fxmlgui/
 /player/
-/NNTrainingTournament2.class
-/NNTrainingTournament.class

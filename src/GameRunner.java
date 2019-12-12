@@ -4,6 +4,7 @@ import core.Artist;
 import core.GameState;
 import core.ObservableGameState;
 import fxmlgui.GameDriver;
+import mlaiplayers.NNPlayer;
 import player.BasicPredictiveAIPlayer;
 import player.BasicPredictiveAIPlayerV2;
 import player.BasicPredictiveAIPlayerV3;
@@ -174,6 +175,8 @@ public class GameRunner extends Thread{
 				players[i] = new HandStateCardPicker(names.get(i),OGS, players.length,i);
 			} else if(types.get(i) == PlayerType.BASIC_PREDICTIVE_AI_V3) {
 				players[i] = new BasicPredictiveAIPlayerV3(names.get(i),OGS, players.length,i);
+			} else if(types.get(i) == PlayerType.NNPlayer){
+				players[i] = new NNPlayer(names.get(i), OGS, players.length, i, TournamentGame.getNNPlayerParts().getBiddingWeights(), TournamentGame.getNNPlayerParts().getPickingWeights());
 			} else {
 				players[i] = new RandomPlayer(names.get(i));
 			}

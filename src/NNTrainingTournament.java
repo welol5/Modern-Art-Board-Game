@@ -1,7 +1,11 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 
 import core.GameState;
 import core.ObservableGameState;
@@ -27,7 +31,7 @@ public class NNTrainingTournament {
 	/**
 	 * The amount of games that the MLAI will play.
 	 */
-	private static int games = 10;
+	private static int games = 100;
 
 	/**
 	 * This array holds the list of players the MLAI player will be training with.
@@ -52,7 +56,23 @@ public class NNTrainingTournament {
 
 	private static int maxRounds = 1000;
 
+	private static final String fileName = "NNWeightsFile.txt";
+
+	private static boolean loadNetworks = true;
+	private static Scanner fileInput;
+
 	public static void main(String[] args) {
+		
+		if(loadNetworks) {
+			try {
+				fileInput = new Scanner(new File(fileName));
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+//				e.printStackTrace();
+				loadNetworks = false;
+				System.out.println("Failed to load networks, defaulting to random networks");
+			}
+		}
 
 		wins = new HashMap<String, Integer>();
 
@@ -93,13 +113,13 @@ public class NNTrainingTournament {
 				Player winner = driver.playGame();
 
 				int winnerWins = wins.get(winner.name).intValue();
-//				System.out.println(winnerWins);
+				//				System.out.println(winnerWins);
 				wins.put(winner.name, winnerWins+1);
 				System.out.println(game + " : " + winner.name + " : " + wins.get(winner.name) + " : " + winner.getMoney());
 			}
-			
-			System.out.println("Round over");
-			
+
+			System.out.println("Round " + round + " over");
+
 			//after the round is over the update train the AIs
 			int bestIndex = -1;
 			int bestScore = -1;
@@ -110,20 +130,37 @@ public class NNTrainingTournament {
 					bestIndex = i;
 				}
 			}
-			
-			//allow time to see results
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
+
 			ArrayList<NNPlayer.Move> bestMoves = ((NNPlayer)players[bestIndex]).getMoves();
-			
+
 			for(int i = 0; i < players.length; i++) {
 				((NNPlayer)players[i]).learn(bestMoves);
 				((NNPlayer)players[i]).clearMoves();
+			}
+
+			//save the players after every round
+			saveNNPlayers(players);
+		}
+
+	}
+
+	private static void saveNNPlayers(Player[] players) {
+		File outputFile = new File(fileName);
+		FileWriter fo = null;
+		try {
+			fo = new FileWriter(outputFile);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			System.exit(0);
+		}
+		PrintWriter writer = new PrintWriter(fo);
+		for(Player p : players) {
+			try {
+				((NNPlayer)p).printNetworkToFile(writer);
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.err.println("Failed to write the AIs to a file");
 			}
 		}
 	}
@@ -159,7 +196,11 @@ public class NNTrainingTournament {
 			} else if(types.get(i) == PlayerType.BASIC_PREDICTIVE_AI_V3) {
 				players[i] = new BasicPredictiveAIPlayerV3(names.get(i),OGS, players.length,i);
 			} else if(types.get(i) == PlayerType.NNPlayer) {
-				players[i] = new NNPlayer(names.get(i),OGS,players.length,i);
+				if(!loadNetworks) {
+					players[i] = new NNPlayer(names.get(i),OGS,players.length,i);
+				} else {
+					players[i] = new NNPlayer(names.get(i),OGS,players.length,i,fileInput);
+				}
 			} else {
 				players[i] = new RandomPlayer(names.get(i));
 			}

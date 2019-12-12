@@ -61,6 +61,10 @@ public class MemoryAIPlayer extends ReactiveAIPlayer{
 		}
 		//need to know if the player is still bidding
 		//if the player is still bidding, do not let them win if it will make a profit
+//		if(bestPlayer < 0) {
+//			System.out.println(name);
+//			System.exit(0);
+//		}
 		if((biddingCard.getAuctionType() == AuctionType.ONCE_AROUND || biddingCard.getAuctionType() == AuctionType.SEALED) || state.stillBidding[bestPlayer]) {
 			//find the cards value
 			//if the card is the bestPlayes, they will profit more from this AI if more than half the value is paid

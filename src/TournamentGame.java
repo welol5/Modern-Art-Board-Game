@@ -1,6 +1,10 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 
+import mlaiplayers.NNPlayer;
 import player.Player;
 import player.PlayerType;
 
@@ -21,7 +25,7 @@ public class TournamentGame {
 	 * Multiple games are run here so that the best AI will prove
 	 * it by winning most of the games.
 	 */
-	private static final int trials = 1;
+	private static final int trials = 100;
 	
 	/**
 	 * The time a {@link GameRunner} Thread will allow for a game to be
@@ -35,7 +39,7 @@ public class TournamentGame {
 	 * I found that this should be far larger than the actual amount of
 	 * threads that a computer has.
 	 */
-	private static final int threadCount = 1024;
+	private static final int threadCount = 64;
 
 	/**
 	 * The set of lists of AIs that will play the games.
@@ -46,6 +50,9 @@ public class TournamentGame {
 	 * This keeps the counts of how many games each player has won.
 	 */
 	private static HashMap<String,Integer> wins;
+	
+	private static String NNPlayerFile = "NNWeightsFile.txt";
+	private static NNPlayerParts NNPlayerWeights = null;
 
 	public static void main(String[] args) {
 
@@ -56,13 +63,28 @@ public class TournamentGame {
 		ArrayList<PlayerType> playerTypeList = new ArrayList<PlayerType>();
 		playerTypeList.add(PlayerType.RANDOM);
 		playerTypeList.add(PlayerType.REACTIVE_AI);
-		playerTypeList.add(PlayerType.MEMORY_AI);
-		playerTypeList.add(PlayerType.BASIC_PREDICTIVE_AI);
+//		playerTypeList.add(PlayerType.MEMORY_AI);
+//		playerTypeList.add(PlayerType.BASIC_PREDICTIVE_AI);
 		playerTypeList.add(PlayerType.BASIC_PREDICTIVE_AI_V2);
 		playerTypeList.add(PlayerType.HIGH_ROLLER);
 		playerTypeList.add(PlayerType.MERCHANT);
 		playerTypeList.add(PlayerType.HAND_STATE_CARD_PICKER);
 		playerTypeList.add(PlayerType.BASIC_PREDICTIVE_AI_V3);
+		
+		playerTypeList.add(PlayerType.NNPlayer);
+		
+		if(playerTypeList.contains(PlayerType.NNPlayer)) {
+			Scanner fileInput;
+			try {
+				fileInput = new Scanner(new File(NNPlayerFile));
+				NNPlayerWeights = loadNNPlayerPieces(fileInput);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				System.out.println("Loading NNPlayer failed");
+//				System.exit(0);
+			}
+		}
 
 		//init
 		wins = new HashMap<String,Integer>();
@@ -79,7 +101,7 @@ public class TournamentGame {
 		for(int playerOneSlot = 0; playerOneSlot < playerTypeList.size(); playerOneSlot++) {
 			for(int playerTwoSlot = 0; playerTwoSlot < playerTypeList.size(); playerTwoSlot++) {
 				for(int playerThreeSlot = 0; playerThreeSlot < playerTypeList.size(); playerThreeSlot++) {
-					for(int playerFourSlot = 0; playerFourSlot < playerTypeList.size(); playerFourSlot++) {
+//					for(int playerFourSlot = 0; playerFourSlot < playerTypeList.size(); playerFourSlot++) {
 
 						//run each order for (trials) iterations
 						for(int i = 0; i < trials; i++) {
@@ -90,13 +112,13 @@ public class TournamentGame {
 							currentPlayerTypes.add(playerTypeList.get(playerOneSlot));
 							currentPlayerTypes.add(playerTypeList.get(playerTwoSlot));
 							currentPlayerTypes.add(playerTypeList.get(playerThreeSlot));
-							currentPlayerTypes.add(playerTypeList.get(playerFourSlot));
+//							currentPlayerTypes.add(playerTypeList.get(playerFourSlot));
 
 							//add the list to the set of lists
 							allGames.add(currentPlayerTypes);
 
 						}
-					}
+//					}
 				}
 			}
 		}
@@ -168,5 +190,50 @@ public class TournamentGame {
 				return null;
 			}
 		}
+	}
+	
+	private static NNPlayerParts loadNNPlayerPieces(Scanner fileInput) {
+		System.out.println("loading player");
+		String checkNetworkFile = fileInput.nextLine();
+//		System.out.println(checkNetworkFile);
+		if(!checkNetworkFile.equalsIgnoreCase("--network start--")) {
+			throw new IllegalArgumentException("File scanner did not start at the begining of a network");
+		} else {
+			//assumes network settings match current settings
+			String inputNodeCount = fileInput.nextLine().split(":")[0];
+			String hiddenLayerNodes = fileInput.nextLine().split(":")[0];
+			String hiddenLayers = fileInput.nextLine().split(":")[0];
+			String alpha = fileInput.nextLine().split(":")[0];
+			fileInput.nextLine();//read in the bidding network start line
+			double[][][] biddingWeights = NNPlayer.loadWeights(fileInput);
+			//			fileInput.nextLine();//read in the bidding network end line
+			//			fileInput.nextLine();//read in the picking network start line
+			double[][][] pickingWeights = NNPlayer.loadWeights(fileInput);
+			//			fileInput.nextLine();//read in the picking network end line
+			
+			return new NNPlayerParts(biddingWeights,pickingWeights);
+		}
+	}
+	
+	public static class NNPlayerParts{
+		private double[][][] biddingWeights;
+		private double[][][] pickingWeights;
+		
+		public NNPlayerParts(double[][][] bWeights, double[][][] pWeights) {
+			biddingWeights = bWeights;
+			pickingWeights = pWeights;
+		}
+		
+		public double[][][] getBiddingWeights(){
+			return biddingWeights;
+		}
+		
+		public double[][][] getPickingWeights(){
+			return pickingWeights;
+		}
+	}
+	
+	public static NNPlayerParts getNNPlayerParts() {
+		return NNPlayerWeights;
 	}
 }
